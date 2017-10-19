@@ -38,20 +38,20 @@ class HomeView extends Component {
       // Then pick data from the user profile
       var data = client.currentUser
       var card = this.state.myCard
-      if (card.name == null) card = Object.assign({}, card, { name: data.firstName + " " + data.lastName })
-      if (card.title == null) card = Object.assign({}, card, { title: data.title })
-      if (card.company == null) card = Object.assign({}, card, { company: data.company })
-      this.setState(Object.assign({}, this.state, { myCard: card }), () => {
+      if (card.name == null) card = {...card, name: data.firstName + ' ' + data.lastName }
+      if (card.title == null) card = {...card, title: data.title }
+      if (card.company == null) card = {...card, company: data.company }
+      this.setState({ myCard: card }, () => {
         // Finally, load data from api
         client.api.getUser(userId).then(data => {
           var card = this.state.myCard
-          if (card.name == null) card = Object.assign({}, card, { name: data.firstName + " " + data.lastName })
-          if (card.title == null) card = Object.assign({}, card, { title: data.title })
-          if (card.company == null) card = Object.assign({}, card, { company: data.company })
-          if (card.email == null) card = Object.assign({}, card, { email: data.email })
-          if (card.twitter == null) card = Object.assign({}, card, { twitter: data.twitter })
-          if (card.linkedin == null) card = Object.assign({}, card, { linkedin: data.linkedins })
-          this.setState(Object.assign({}, this.state, { myCard: card }))// ,cards:[card]}))
+          if (card.name == null) card = {...card, name: data.firstName + " " + data.lastName }
+          if (card.title == null) card = {...card, title: data.title }
+          if (card.company == null) card = {...card, company: data.company }
+          if (card.email == null) card = {...card, email: data.email }
+          if (card.twitter == null) card = {...card, twitter: data.twitter }
+          if (card.linkedin == null) card = {...card, linkedin: data.linkedins }
+          this.setState({ myCard: card })// ,cards:[card]}))
         })
       })
     })
@@ -72,7 +72,7 @@ class HomeView extends Component {
           </View>
         </TouchableOpacity> 
         <View style={{ flexDirection: 'row', margin: 8 }}>
-          <FlatButton onPress={this.showCode} title='Share Card' style={{ marginRight: 4, backgroundColor: '#FF0088', color: '#FFFFFF' }} />
+          <FlatButton onPress={this.showCode} title='Share Card' style={{ marginRight: 4, backgroundColor: client.primaryColor, color: '#FFFFFF' }} />
           <FlatButton onPress={this.scanCode} title='Scan Card' style={{ marginLeft: 4, backgroundColor: '#0055FF', color: '#FFFFFF' }} />
         </View>
         <ScrollView style={s.scroll}>
@@ -132,66 +132,55 @@ class HomeView extends Component {
   }
 
   showCode = () => {
-    this.setState(Object.assign({}, this.state, { showCode: true }))
+    this.setState({ showCode: true })
   }
 
   scanCode = () => {
-    this.setState(Object.assign({}, this.state, { showScanner: true }))
+    this.setState({ showScanner: true })
   }
 
   exportCards = () => {
-    var data = ""
-    this.state.cards.map((card, index) => {
-      if (index != 0) {
-          data += "\n\n\n"
-      }
-
-      data += card.name + "\n"
+    var data = this.state.cards.map(card => {
+      let data = card.name + "\n"
       if (card.title != null && card.title != "") data += card.title + "\n"
       if (card.company != null && card.company != "") data += card.company + "\n"
       if (card.mobile != null && card.mobile != "") data += "mobile: " + card.mobile + "\n"
       if (card.email != null && card.email != "") data += "email : " + card.email + "\n"
       if (card.linkedin != null && card.linkedin != "") data += "linkedin : " + card.linkedin + "\n"
       if (card.twitter != null && card.twitter != "") data += "twitter : " + card.twitter + "\n"
-    })
+      return data
+    }).join('\n\n')
     Share.share({ message: data, title: 'Exported Cards' }, {})
   }
 
   addCard = (newCard) => {
-    var cards = []
-    this.state.cards.map((card) => {
-      cards.push(card)
-    })
-    cards.push(newCard)
-    this.setState(Object.assign({}, this.state, { cards: cards, showScanner: false }), () => { this.saveState() })
+    var cards = [...this.state.cards, newCard]
+    this.setState({ cards, showScanner: false }, () => { this.saveState() })
   }
 
   showCard(index) {
     if (this.state.selectedCard == index) {
-      this.setState(Object.assign({}, this.state, { selectedCard: null }))
+      this.setState({ selectedCard: null })
     } else {
-      this.setState(Object.assign({}, this.state, { selectedCard: index }))
+      this.setState({ selectedCard: index })
     }
   }
 
   hideModal = () => {
-    this.setState(Object.assign({}, this.state, { showCode: false, showScanner: false, showEditor: false }))
+    this.setState({ showCode: false, showScanner: false, showEditor: false })
   }
 
   editCard = () => {
-    this.setState(Object.assign({}, this.state, { showEditor: true }))
+    this.setState({ showEditor: true })
   }
 
   updateCard = (card) => {
-    this.setState(Object.assign({}, this.state, { showEditor: false, myCard: card }), () => { this.saveState() })
+    this.setState({ showEditor: false, myCard: card }, () => { this.saveState() })
   }
 
   deleteCard(index) {
-    var cards = []
-    this.state.cards.map((card, i) => {
-      if (i != index) cards.push(card)
-    })
-    this.setState(Object.assign({}, this.state, { cards: cards }))
+    const cards = this.state.cards.filter((_, i) => i !== index)
+    this.setState({ cards })
   }
 }
 

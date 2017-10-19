@@ -10,15 +10,15 @@ const { Alert, TouchableOpacity, TouchableHighlight, Text, View, ScrollView, Ima
 export class LabeledTextInput extends Component{
 	constructor(props){
     	super(props)
-    	this.state={
-    		data:props.value!=null?props.value:""
+    	this.state = {
+    		data: props.value == null ? '' : props.value
     	}
     }
 
 	onChangeText(text){
-		this.setState(Object.assign({},this.state,{data:text}))
-		if(this.props.onChangeText!=null){
-			this.props.onChangeText(text,this.props.id)
+		this.setState({data: text})
+		if(this.props.onChangeText) {
+			this.props.onChangeText(text, this.props.id)
 		}
 	}
 
@@ -27,12 +27,12 @@ export class LabeledTextInput extends Component{
 	}
 
 	render(){
-		var labelColor=this.props.style!=null && this.props.style.labelColor!=null?this.props.style.labelColor:'#AAAAAA'
-		var labelMarkColor=this.props.style!=null && this.props.style.labelMarkColor!=null?this.props.style.labelMarkColor:'#FF0055'
+		const labelColor=this.props.style!=null && this.props.style.labelColor!=null?this.props.style.labelColor:'#AAAAAA'
+		const labelMarkColor=this.props.style!=null && this.props.style.labelMarkColor!=null?this.props.style.labelMarkColor:'#FF0055'
 		return(
 			<View style={[{backgroundColor:'#FFFFFF',marginBottom:2,height:48,paddingTop:4},this.props.style]}>
 				<TextInput underlineColorAndroid='transparent' value={this.state.data} onEndEditing={()=>this.onFocusChange()} onFocus={()=>this.onFocusChange()} ref={(input) => { this.textInput = input; }} 
-						style={{paddingLeft:8,flex:1}} onChangeText={this.onChangeText.bind(this)}/>
+					style={{paddingLeft:8,flex:1}} onChangeText={this.onChangeText.bind(this)}/>
 				<Text style={{position:'absolute',
 					top:this.state.data.length==0 && !(this.textInput!=null && this.textInput.isFocused())?12:2,
 					left:8,
@@ -74,13 +74,13 @@ export class FlatButton extends Component{
 		}
 		return(
 			<TouchableOpacity onPress={this.props.onPress} style={[{flex:1},passInStyles]}>
-	            <View style={{backgroundColor:backgroundColor,padding:0,marginTop:0,marginLeft:0,marginRight:0}}>
-	              <View style={{height:1,backgroundColor:'rgba(255,255,255,0.25)'}} />
-	              <View style={{height:2,backgroundColor:'rgba(255,255,255,0.125)'}} />
-	              <Text style={{color:color,textAlign:'center',marginBottom:3,padding:8}}>{this.props.title}</Text>
-	            </View>
-	            <View style={{height:2,backgroundColor:'rgba(0,0,0,0.1)',marginLeft:4,marginRight:4}}></View>
-	        </TouchableOpacity>
-	    )
+				<View style={{backgroundColor:backgroundColor,padding:0,marginTop:0,marginLeft:0,marginRight:0}}>
+					<View style={{height:1,backgroundColor:'rgba(255,255,255,0.25)'}} />
+					<View style={{height:2,backgroundColor:'rgba(255,255,255,0.125)'}} />
+					<Text style={{color:color,textAlign:'center',marginBottom:3,padding:8}}>{this.props.title}</Text>
+				</View>
+				<View style={{height:2,backgroundColor:'rgba(0,0,0,0.1)',marginLeft:4,marginRight:4}}></View>
+			</TouchableOpacity>
+	  )
 	}
 }

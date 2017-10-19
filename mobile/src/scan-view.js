@@ -11,17 +11,17 @@ export class CodeView extends Component{
   constructor() {
     super()
     this.state = {
-      message:"",
-      showCode:true
+      message: '',
+      showCode: true
     }
   }
 
-  setText(txt) {
-    this.setState(Object.assign({},this.state,{message:txt}))
+  setText(message) {
+    this.setState({message})
   }
 
   generateCode() {
-    this.setState(Object.assign({},this.state,{showCode:true}))
+    this.setState({showCode:true})
   }
 
   render() {
@@ -32,7 +32,7 @@ export class CodeView extends Component{
           <View style={{flex:1}}>
             <View style={{justifyContent:'center',flex:1,flexDirection:'row',paddingTop:16,paddingBottom:42}}>
               <QRCode
-                value={JSON.stringify(Object.assign({},this.props.myCard,{message:this.state.message}))}
+                value={JSON.stringify({...this.props.myCard, message:this.state.message})}
                 size={256}
                 bgColor='black'
                 fgColor='white' />

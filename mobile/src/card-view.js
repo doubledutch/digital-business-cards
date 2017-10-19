@@ -23,12 +23,8 @@ export class EditCardView extends Component{
   }
 
   // Use the supplied key to assign the value
-	onChange(value,key){
-		// Build key value pair object
-		var obj={}
-		obj[key]=value
-		// Merge into state object using Object.assign to preserve immutability
-		this.setState(Object.assign({},this.state,obj))
+	onChange = (value,key) => {
+		this.setState({[key]: value})
 	}
 
 	// Hand form state over to function passed in through props
@@ -39,13 +35,13 @@ export class EditCardView extends Component{
 	render(){
 		return(
 			<View style={{backgroundColor:'#dedede',paddingTop:32,paddingLeft:8,paddingRight:8,position:'absolute',top:0,bottom:0,left:0,right:0}}>
-				<LabeledTextInput id={"name"} label={"Name"} value={this.props.name} onChangeText={this.onChange.bind(this)}/>
-				<LabeledTextInput id={"title"} label={"Title"} value={this.props.title} onChangeText={this.onChange.bind(this)} />
-				<LabeledTextInput id={"company"} label={"Company"} value={this.props.company} onChangeText={this.onChange.bind(this)} />
-				<LabeledTextInput id={"mobile"} label={"Phone number"} value={this.props.mobile} onChangeText={this.onChange.bind(this)} />
-				<LabeledTextInput id={"email"} label={"Email"} value={this.props.email} onChangeText={this.onChange.bind(this)} />
-				<LabeledTextInput id={"linkedin"} label={"LinkedIn"} value={this.props.linkedin} onChangeText={this.onChange.bind(this)} />
-				<LabeledTextInput id={"twitter"} label={"Twitter"} value={this.props.twitter} onChangeText={this.onChange.bind(this)} />
+				<LabeledTextInput id="name" label="Name" value={this.props.name} onChangeText={this.onChange}/>
+				<LabeledTextInput id="title" label="Title" value={this.props.title} onChangeText={this.onChange} />
+				<LabeledTextInput id="company" label="Company" value={this.props.company} onChangeText={this.onChange} />
+				<LabeledTextInput id="mobile" label="Phone number" value={this.props.mobile} onChangeText={this.onChange} />
+				<LabeledTextInput id="email" label="Email" value={this.props.email} onChangeText={this.onChange} />
+				<LabeledTextInput id="linkedin" label="LinkedIn" value={this.props.linkedin} onChangeText={this.onChange} />
+				<LabeledTextInput id="twitter" label="Twitter" value={this.props.twitter} onChangeText={this.onChange} />
 				<View style={{flexDirection:'row',marginTop:6}}>
 					<FlatButton onPress={this.props.hideModal} title='Cancel' style={{marginRight:4}} />
 			    <FlatButton onPress={this.onSave.bind(this)} title='Save' style={{marginLeft:4}} />
