@@ -1,0 +1,20 @@
+{
+  "name": "personalleads",
+  "version": "0.0.1",
+  "baseBundleVersion": "0.46.4",
+  "private": true,
+  "scripts": {
+    "start": "react-native start",
+    "run" : "node_modules/react-native/local-cli/cli.js run-ios"
+  },
+  "dependencies": {
+    "react": "15.6.1",
+    "react-native": "0.46.4",
+    "react-native-cli": "^2.0.1"
+  },
+  "devDependencies": {
+  },
+  "doubledutch": {
+    "extension": true
+  }
+}
