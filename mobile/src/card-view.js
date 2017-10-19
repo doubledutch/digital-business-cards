@@ -60,7 +60,7 @@ export class CardView extends Component{
 		return(
 			<View style={{margin: 8}}>
 				<View style={{padding: 8, backgroundColor:"#FFFFFF",borderRadius:4,flexDirection:'row'}}>
-          <Avatar userId={this.props.id} client={client} size={64} style={{marginRight: 8}} />
+          <Avatar userId={this.props.id} user={this.props.user} client={client} size={64} style={{marginRight: 8}} />
 					<View style={{flexDirection:'column',flex:1}}>
 						<Text style={{fontSize:18}}>{this.props.name}</Text>
 						<Text style={{fontWeight:'bold',marginBottom:8}}>{this.props.title}</Text>
