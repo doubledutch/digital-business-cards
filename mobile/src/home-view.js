@@ -180,7 +180,7 @@ class HomeView extends Component {
 
   deleteCard(index) {
     const cards = this.state.cards.filter((_, i) => i !== index)
-    this.setState({ cards })
+    this.setState({ cards }, () => { this.saveState() })
   }
 }
 
