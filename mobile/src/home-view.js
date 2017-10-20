@@ -73,7 +73,7 @@ class HomeView extends Component {
         </TouchableOpacity> 
         <View style={{ flexDirection: 'row', margin: 8 }}>
           <FlatButton onPress={this.showCode} title='Share Card' style={{ marginRight: 4, backgroundColor: client.primaryColor, color: '#FFFFFF' }} />
-          <FlatButton onPress={this.scanCode} title='Scan Card' style={{ marginLeft: 4, backgroundColor: '#0055FF', color: '#FFFFFF' }} />
+          <FlatButton onPress={this.scanCode} title='Scan Card' style={{ marginLeft: 4, backgroundColor: client.secondaryColor, color: '#FFFFFF' }} />
         </View>
         <ScrollView style={s.scroll}>
           {this.state.cards.map((card, index) => 
