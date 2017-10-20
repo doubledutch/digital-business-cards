@@ -2,16 +2,16 @@
 # yarn lockfile v1
 
 
-"@doubledutch/base-client@^2.0.0":
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/@doubledutch/base-client/-/base-client-2.0.3.tgz#f4cd68690adeb2b2f9bd0fac0471226075a47891"
+"@doubledutch/base-client@^2.0.4":
+  version "2.0.4"
+  resolved "https://registry.yarnpkg.com/@doubledutch/base-client/-/base-client-2.0.4.tgz#03f8ae740b2d07a34b9755418d62813c0ba6d237"
 
 "@doubledutch/rn-client@^2.0.0":
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/@doubledutch/rn-client/-/rn-client-2.1.1.tgz#7a4cc6ee1a337353961424d8922fdb62bfae21fc"
+  version "2.1.6"
+  resolved "https://registry.yarnpkg.com/@doubledutch/rn-client/-/rn-client-2.1.6.tgz#bb6ff845ad7051b2f45a859426c9b86b0ba3116d"
   dependencies:
-    "@doubledutch/base-client" "^2.0.0"
-    react "^16.0.0"
+    "@doubledutch/base-client" "^2.0.4"
+    react "~16.0.0-alpha.12"
     react-native "0.46.4"
 
 abbrev@1:
@@ -3263,7 +3263,7 @@ react-transform-hmr@^1.0.4:
     global "^4.3.0"
     react-proxy "^1.1.7"
 
-react@^16.0.0, react@~16.0.0-alpha.12:
+react@~16.0.0-alpha.12:
   version "16.0.0"
   resolved "https://registry.yarnpkg.com/react/-/react-16.0.0.tgz#ce7df8f1941b036f02b2cca9dbd0cb1f0e855e2d"
   dependencies:
