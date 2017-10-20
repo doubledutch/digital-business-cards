@@ -38,14 +38,16 @@ class HomeView extends Component {
       // Then pick data from the user profile
       var data = client.currentUser
       var card = this.state.myCard
-      if (card.name == null) card = {...card, name: data.firstName + ' ' + data.lastName }
+      if (card.firstName == null) card = {...card, firstName: data.firstName}
+      if (card.lastName == null) card = {...card, lastName: data.lastName}
       if (card.title == null) card = {...card, title: data.title }
       if (card.company == null) card = {...card, company: data.company }
       this.setState({ myCard: card }, () => {
         // Finally, load data from api
         client.api.getUser(userId).then(data => {
           var card = this.state.myCard
-          if (card.name == null) card = {...card, name: data.firstName + " " + data.lastName }
+          if (card.firstName == null) card = {...card, firstName: data.firstName}
+          if (card.lastName == null) card = {...card, lastName: data.lastName}
           if (card.title == null) card = {...card, title: data.title }
           if (card.company == null) card = {...card, company: data.company }
           if (card.email == null) card = {...card, email: data.email }
@@ -82,7 +84,7 @@ class HomeView extends Component {
               onDelete={() => this.deleteCard(index)}
               showExpanded={index == this.state.selectedCard}
               showCard={() => this.showCard(index)}
-              user={{id: card.id}}
+              user={card}
               {...card} />
           )}
         </ScrollView>
@@ -142,7 +144,7 @@ class HomeView extends Component {
 
   exportCards = () => {
     var data = this.state.cards.map(card => {
-      let data = card.name + "\n"
+      let data = card.firstName + ' ' + card.lastName + "\n"
       if (card.title != null && card.title != "") data += card.title + "\n"
       if (card.company != null && card.company != "") data += card.company + "\n"
       if (card.mobile != null && card.mobile != "") data += "mobile: " + card.mobile + "\n"

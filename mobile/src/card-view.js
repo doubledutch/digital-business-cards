@@ -12,7 +12,8 @@ export class EditCardView extends Component{
     // Initialize all values from props
     this.state={
       id:props.id,
-      name:props.name,
+      firstName:props.firstName,
+      lastName:props.lastName,
       title:props.title,
       company:props.company,
       mobile:props.mobile,
@@ -35,7 +36,8 @@ export class EditCardView extends Component{
 	render(){
 		return(
 			<View style={{backgroundColor:'#dedede',paddingTop:32,paddingLeft:8,paddingRight:8,position:'absolute',top:0,bottom:0,left:0,right:0}}>
-				<LabeledTextInput id="name" label="Name" value={this.props.name} onChangeText={this.onChange}/>
+				<LabeledTextInput id="firstName" label="First Name" value={this.props.firstName} onChangeText={this.onChange}/>
+				<LabeledTextInput id="lastName" label="Last Name" value={this.props.lastName} onChangeText={this.onChange}/>
 				<LabeledTextInput id="title" label="Title" value={this.props.title} onChangeText={this.onChange} />
 				<LabeledTextInput id="company" label="Company" value={this.props.company} onChangeText={this.onChange} />
 				<LabeledTextInput id="mobile" label="Phone number" value={this.props.mobile} onChangeText={this.onChange} />
@@ -58,7 +60,7 @@ export class CardView extends Component{
 				<View style={{padding: 8, backgroundColor:"#FFFFFF",borderRadius:4,flexDirection:'row'}}>
           <Avatar user={this.props.user} client={client} size={64} style={{marginRight: 8}} />
 					<View style={{flexDirection:'column',flex:1}}>
-						<Text style={{fontSize:18}}>{this.props.name}</Text>
+						<Text style={{fontSize:18}}>{this.props.firstName} {this.props.lastName}</Text>
 						<Text style={{fontWeight:'bold',marginBottom:8}}>{this.props.title}</Text>
 						<Text>{this.props.company}</Text>
 						<Text>{this.props.email}</Text>
@@ -92,7 +94,7 @@ export class CardListItem extends Component{
 				<View style={{padding:8,backgroundColor:"#FFFFFF",borderBottomWidth:2,borderColor:'#dedede',flexDirection:'row'}}>
           <Avatar user={this.props.user} client={client} size={32} style={{marginRight: 8}} />
 					<View style={{flex:1}}>
-						<Text style={{fontWeight:'bold',flexWrap:'wrap'}}>{this.props.name}</Text>
+						<Text style={{fontWeight:'bold',flexWrap:'wrap'}}>{this.props.firstName} {this.props.lastName}</Text>
 						<Text style={{flexWrap:'wrap'}}>{this.props.title}</Text>
 					</View>
 				</View>
