@@ -82,6 +82,7 @@ class HomeView extends Component {
               onDelete={() => this.deleteCard(index)}
               showExpanded={index == this.state.selectedCard}
               showCard={() => this.showCard(index)}
+              user={{id: card.id}}
               {...card} />
           )}
         </ScrollView>

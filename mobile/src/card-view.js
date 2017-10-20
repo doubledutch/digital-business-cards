@@ -52,11 +52,11 @@ export class EditCardView extends Component{
 }
 
 export class CardView extends Component{
-	render(){
+	render() {
 		return(
 			<View style={{margin: 8}}>
 				<View style={{padding: 8, backgroundColor:"#FFFFFF",borderRadius:4,flexDirection:'row'}}>
-          <Avatar userId={this.props.id} user={this.props.user} client={client} size={64} style={{marginRight: 8}} />
+          <Avatar user={this.props.user} client={client} size={64} style={{marginRight: 8}} />
 					<View style={{flexDirection:'column',flex:1}}>
 						<Text style={{fontSize:18}}>{this.props.name}</Text>
 						<Text style={{fontWeight:'bold',marginBottom:8}}>{this.props.title}</Text>
@@ -74,7 +74,7 @@ export class CardView extends Component{
 }
 
 export class CardListItem extends Component{
-	render(){
+	render() {
 		if(this.props.showExpanded){
 			return(
 				<TouchableOpacity onPress={this.props.showCard} style={{flex:1,marginBottom:8}}>
@@ -90,7 +90,7 @@ export class CardListItem extends Component{
 		return(
 			<TouchableOpacity onPress={this.props.showCard} style={{flex:1}}>
 				<View style={{padding:8,backgroundColor:"#FFFFFF",borderBottomWidth:2,borderColor:'#dedede',flexDirection:'row'}}>
-          <Avatar userId={this.props.id} client={client} size={32} style={{marginRight: 8}} />
+          <Avatar user={this.props.user} client={client} size={32} style={{marginRight: 8}} />
 					<View style={{flex:1}}>
 						<Text style={{fontWeight:'bold',flexWrap:'wrap'}}>{this.props.name}</Text>
 						<Text style={{flexWrap:'wrap'}}>{this.props.title}</Text>

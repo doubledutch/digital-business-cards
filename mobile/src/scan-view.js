@@ -27,7 +27,7 @@ export class CodeView extends Component{
   render() {
     return(
       <View style={{backgroundColor:'#dedede',paddingTop:32,position:'absolute',top:0,bottom:0,left:0,right:0}}>
-        <CardView ddapi={this.props.ddapi} {...this.props.myCard} />
+        <CardView ddapi={this.props.ddapi} user={{id: this.props.myCard.id}} {...this.props.myCard} />
         <View style={{paddingLeft:8,paddingRight:8,flex:1}}>
           <View style={{flex:1}}>
             <View style={{justifyContent:'center',flex:1,flexDirection:'row',paddingTop:16,paddingBottom:42}}>
