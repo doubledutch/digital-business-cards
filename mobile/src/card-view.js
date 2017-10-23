@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import { LabeledTextInput, FlatButton } from './dd-ui'
 
-import { Alert, TouchableOpacity, TouchableHighlight, Text, View, ScrollView, Image, Modal, TextInput, Button, StyleSheet} from 'react-native'
+import { Alert, KeyboardAvoidingView, Platform, TouchableOpacity, TouchableHighlight, Text, View, ScrollView, Image, Modal, TextInput, Button, StyleSheet} from 'react-native'
 import client, { Avatar } from '@doubledutch/rn-client'
 
 export class EditCardView extends Component{
@@ -35,20 +35,22 @@ export class EditCardView extends Component{
 
 	render(){
 		return(
-			<View style={{backgroundColor:'#dedede',paddingTop:32,paddingLeft:8,paddingRight:8,position:'absolute',top:0,bottom:0,left:0,right:0}}>
-				<LabeledTextInput id="firstName" label="First Name" value={this.props.firstName} onChangeText={this.onChange}/>
-				<LabeledTextInput id="lastName" label="Last Name" value={this.props.lastName} onChangeText={this.onChange}/>
-				<LabeledTextInput id="title" label="Title" value={this.props.title} onChangeText={this.onChange} />
-				<LabeledTextInput id="company" label="Company" value={this.props.company} onChangeText={this.onChange} />
-				<LabeledTextInput id="mobile" label="Phone number" value={this.props.mobile} onChangeText={this.onChange} />
-				<LabeledTextInput id="email" label="Email" value={this.props.email} onChangeText={this.onChange} />
-				<LabeledTextInput id="linkedin" label="LinkedIn" value={this.props.linkedin} onChangeText={this.onChange} />
-				<LabeledTextInput id="twitter" label="Twitter" value={this.props.twitter} onChangeText={this.onChange} />
-				<View style={{flexDirection:'row',marginTop:6}}>
-					<FlatButton onPress={this.props.hideModal} title='Cancel' style={{marginRight:4}} />
-			    <FlatButton onPress={this.onSave.bind(this)} title='Save' style={{marginLeft:4}} />
-		    </View>
-			</View>
+			<KeyboardAvoidingView behavior={Platform.select({ios: "padding", android: null})} style={{backgroundColor:'#dedede',paddingTop:32,paddingLeft:8,paddingRight:8,position:'absolute',top:0,bottom:0,left:0,right:0}}>
+				<ScrollView>
+					<LabeledTextInput id="firstName" label="First Name" value={this.props.firstName} onChangeText={this.onChange}/>
+					<LabeledTextInput id="lastName" label="Last Name" value={this.props.lastName} onChangeText={this.onChange}/>
+					<LabeledTextInput id="title" label="Title" value={this.props.title} onChangeText={this.onChange} />
+					<LabeledTextInput id="company" label="Company" value={this.props.company} onChangeText={this.onChange} />
+					<LabeledTextInput id="mobile" label="Phone number" value={this.props.mobile} onChangeText={this.onChange} />
+					<LabeledTextInput id="email" label="Email" value={this.props.email} onChangeText={this.onChange} />
+					<LabeledTextInput id="linkedin" label="LinkedIn" value={this.props.linkedin} onChangeText={this.onChange} />
+					<LabeledTextInput id="twitter" label="Twitter" value={this.props.twitter} onChangeText={this.onChange} />
+					<View style={{flexDirection:'row',marginTop:6}}>
+						<FlatButton onPress={this.props.hideModal} title='Cancel' style={{marginRight:4}} />
+						<FlatButton onPress={this.onSave.bind(this)} title='Save' style={{marginLeft:4}} />
+					</View>
+				</ScrollView>
+			</KeyboardAvoidingView>
 		)
 	}
 }

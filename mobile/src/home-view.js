@@ -4,62 +4,60 @@ import ReactNative, {
 } from 'react-native'
 
 import client, { Avatar, TitleBar } from '@doubledutch/rn-client'
-const eventId = client.currentEvent.id
-const userId = client.currentUser.id
 
 import { LabeledTextInput, FlatButton } from './dd-ui'
 import { CardView, CardListItem, EditCardView } from './card-view'
 import { ScanView, CodeView } from './scan-view'
 
+import FirebaseConnector from '@doubledutch/firebase-connector'
+const fbc = FirebaseConnector(client, 'personalleads')
+fbc.initializeAppWithSimpleBackend()
+
+const { currentEvent, currentUser } = client
+
+const cardsRef = fbc.database.private.userRef('cards')
+const myCardRef = fbc.database.private.userRef('myCard')
+
 class HomeView extends Component {
   constructor() {
     super()
 
-    // Initially, create a blank state filled out only with the current users id
+    // Initially, create a blank state filled out only with the current user's id
     this.state = {
-      myCard: {
-        name: null,
-        title: null,
-        company: null,
-        email: null,
-        mobile: null,
-        id: userId,
-        twitter: null,
-        linkedin: null
-      },
+      myCard: Object.assign({mobile: null, linkedin: null, twitter: null}, currentUser),
       cards: [],
       selectedCard: null,
       showCode: false,
       showScanner: false,
       showEditor: false
     }
-
-    this.loadState().then(() => {
-      // Then pick data from the user profile
-      var data = client.currentUser
-      var card = this.state.myCard
-      if (card.firstName == null) card = {...card, firstName: data.firstName}
-      if (card.lastName == null) card = {...card, lastName: data.lastName}
-      if (card.title == null) card = {...card, title: data.title }
-      if (card.company == null) card = {...card, company: data.company }
-      this.setState({ myCard: card }, () => {
-        // Finally, load data from api
-        client.api.getUser(userId).then(data => {
-          var card = this.state.myCard
-          if (card.firstName == null) card = {...card, firstName: data.firstName}
-          if (card.lastName == null) card = {...card, lastName: data.lastName}
-          if (card.title == null) card = {...card, title: data.title }
-          if (card.company == null) card = {...card, company: data.company }
-          if (card.email == null) card = {...card, email: data.email }
-          if (card.twitter == null) card = {...card, twitter: data.twitter }
-          if (card.linkedin == null) card = {...card, linkedin: data.linkedins }
-          this.setState({ myCard: card })// ,cards:[card]}))
-        })
-      })
-    })
   }
 
-  componentWillMount() {
+  componentDidMount() {
+    fbc.signin().catch(err => console.log(err))
+    
+    this.loadLocalCards()
+    .then(localCards => {
+      // Load current user data from api, but don't overwrite any local values.
+      client.api.getUser(currentUser.id).then(data => {
+        var card = this.state.myCard;
+        ['firstName', 'lastName', 'title', 'company', 'email', 'twitter', 'linkedin'].forEach(field => {
+          if (card[field] == null && data[field]) card = {...card, [field]: data[field]}
+        })
+        this.setState({ myCard: card })
+      })
+      .catch(err => console.log('error fetching user from api', err))
+
+      // Load from DB only if local copy not found
+      if (!localCards) {
+        myCardRef.on('value', data => {
+          this.setState({ myCard: data.val() })
+        })
+        cardsRef.on('value', data => {
+          this.setState({ cards: data.val() })
+        })
+      }
+    })
   }
 
   render() {
@@ -72,7 +70,7 @@ class HomeView extends Component {
           <View style={{ position: 'absolute', top: 16, right: 16, backgroundColor: 'rgba(0,0,0,0.05)', paddingTop: 2, paddingBottom: 2, paddingLeft: 8, paddingRight: 8, borderRadius: 8 }}>
             <Text style={{ color: '#888888', backgroundColor: 'rgba(0,0,0,0)' }}>tap to edit</Text>
           </View>
-        </TouchableOpacity> 
+        </TouchableOpacity>
         <View style={{ flexDirection: 'row', margin: 8 }}>
           <FlatButton onPress={this.showCode} title='Share Card' style={{ marginRight: 4, backgroundColor: client.primaryColor, color: '#FFFFFF' }} />
           <FlatButton onPress={this.scanCode} title='Scan Card' style={{ marginLeft: 4, backgroundColor: client.secondaryColor, color: '#FFFFFF' }} />
@@ -116,49 +114,38 @@ class HomeView extends Component {
     )
   }
 
-  loadState() {
-    return new Promise((resolve, reject) => {
-      AsyncStorage.getItem(leadStorageKey()).then((value) => {
-        if (value !== null) {
-          this.setState(Object.assign({}, this.state, JSON.parse(value), { showCode: false, showScanner: false, showEditor: false }), () => {
-            resolve()
-          })
-        } else {
-          resolve()
-        }
-      })
+  loadLocalCards() {
+    return AsyncStorage.getItem(leadStorageKey())
+    .then(value => {
+      if (value) {
+        const parsed = JSON.parse(value)
+        this.setState(parsed)
+        return parsed
+      }
+      return null
     })
   }
 
-  saveState() {
-    AsyncStorage.setItem(leadStorageKey(), JSON.stringify(this.state))
+  saveLocalCards({myCard, cards}) {
+    return AsyncStorage.setItem(leadStorageKey(), JSON.stringify({myCard, cards}))
   }
 
-  showCode = () => {
-    this.setState({ showCode: true })
-  }
+  showCode = () => this.setState({ showCode: true })
 
-  scanCode = () => {
-    this.setState({ showScanner: true })
-  }
+  scanCode = () => this.setState({ showScanner: true })
 
   exportCards = () => {
     var data = this.state.cards.map(card => {
       let data = card.firstName + ' ' + card.lastName + "\n"
-      if (card.title != null && card.title != "") data += card.title + "\n"
-      if (card.company != null && card.company != "") data += card.company + "\n"
-      if (card.mobile != null && card.mobile != "") data += "mobile: " + card.mobile + "\n"
-      if (card.email != null && card.email != "") data += "email : " + card.email + "\n"
-      if (card.linkedin != null && card.linkedin != "") data += "linkedin : " + card.linkedin + "\n"
-      if (card.twitter != null && card.twitter != "") data += "twitter : " + card.twitter + "\n"
+      if (card.title) data += card.title + "\n"
+      if (card.company) data += card.company + "\n"
+      if (card.mobile) data += "mobile: " + card.mobile + "\n"
+      if (card.email) data += "email : " + card.email + "\n"
+      if (card.linkedin) data += "linkedin : " + card.linkedin + "\n"
+      if (card.twitter) data += "twitter : " + card.twitter + "\n"
       return data
     }).join('\n\n')
     Share.share({ message: data, title: 'Exported Cards' }, {})
-  }
-
-  addCard = (newCard) => {
-    var cards = [...this.state.cards, newCard]
-    this.setState({ cards, showScanner: false }, () => { this.saveState() })
   }
 
   showCard(index) {
@@ -177,17 +164,28 @@ class HomeView extends Component {
     this.setState({ showEditor: true })
   }
 
-  updateCard = (card) => {
-    this.setState({ showEditor: false, myCard: card }, () => { this.saveState() })
+  updateCard = (myCard) => {
+    myCardRef.set(myCard)
+    this.setState({ myCard, showEditor: false })
+    this.saveLocalCards({myCard, cards: this.state.cards})
+  }
+
+  addCard = (newCard) => {
+    var cards = [...this.state.cards, newCard]
+    cardsRef.set(cards)
+    this.saveLocalCards({myCard: this.state.myCard, cards})
+    this.setState({cards, showScanner: false})
   }
 
   deleteCard(index) {
     const cards = this.state.cards.filter((_, i) => i !== index)
-    this.setState({ cards }, () => { this.saveState() })
+    cardsRef.set(cards)
+    this.setState({cards})
+    this.saveLocalCards({myCard: this.state.myCard, cards})
   }
 }
 
-function leadStorageKey() { return `@DD:personal_leads_${eventId}_${userId}` }
+function leadStorageKey() { return `@DD:personal_leads_${currentEvent.id}_${currentUser.id}` }
 
 const s = ReactNative.StyleSheet.create({
   main: {

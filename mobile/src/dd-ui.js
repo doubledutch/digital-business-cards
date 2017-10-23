@@ -1,43 +1,37 @@
 import React, { Component } from 'react'
-import ReactNative from 'react-native'
-
-const { Alert, TouchableOpacity, TouchableHighlight, Text, View, ScrollView, Image, Modal,TextInput,Button,StyleSheet} = ReactNative
-
-/*
- * style={{labelColor:'#FF00FF',labelMarkColor:'#0000FF'}}
- */
+import { Alert, Button, Image, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableHighlight, TouchableOpacity, View} from 'react-native'
 
 export class LabeledTextInput extends Component{
-	constructor(props){
-    	super(props)
-    	this.state = {
-    		data: props.value == null ? '' : props.value
-    	}
-    }
+	constructor(props) {
+		super(props)
+		this.state = {
+			data: props.value == null ? '' : props.value
+		}
+	}
 
-	onChangeText(text){
+	onChangeText(text) {
 		this.setState({data: text})
 		if(this.props.onChangeText) {
 			this.props.onChangeText(text, this.props.id)
 		}
 	}
 
-	onFocusChange(){
-		this.setState(Object.assign({},this.state))
+	onFocusChange() {
+		this.setState({isFocused: this.textInput && this.textInput.isFocused()})
 	}
 
-	render(){
+	render() {
 		const labelColor=this.props.style!=null && this.props.style.labelColor!=null?this.props.style.labelColor:'#AAAAAA'
 		const labelMarkColor=this.props.style!=null && this.props.style.labelMarkColor!=null?this.props.style.labelMarkColor:'#FF0055'
 		return(
 			<View style={[{backgroundColor:'#FFFFFF',marginBottom:2,height:48,paddingTop:4},this.props.style]}>
-				<TextInput underlineColorAndroid='transparent' value={this.state.data} onEndEditing={()=>this.onFocusChange()} onFocus={()=>this.onFocusChange()} ref={(input) => { this.textInput = input; }} 
+				<TextInput underlineColorAndroid='transparent' value={this.state.data} onEndEditing={()=>this.onFocusChange()} onFocus={()=>this.onFocusChange()} ref={input => this.textInput = input} 
 					style={{paddingLeft:8,flex:1}} onChangeText={this.onChangeText.bind(this)}/>
-				<Text style={{position:'absolute',
-					top:this.state.data.length==0 && !(this.textInput!=null && this.textInput.isFocused())?12:2,
+				<Text onPress={() => this.textInput.focus()} style={{position:'absolute',
+					top: (this.state.data.length==0 && !this.state.isFocused) ? 12 : 2,
 					left:8,
-					fontSize:this.state.data.length==0 && !(this.textInput!=null && this.textInput.isFocused())?18:12,
-					color:(this.textInput!=null && this.textInput.isFocused())?labelMarkColor:labelColor,
+					fontSize: (this.state.data.length==0 && !this.state.isFocused) ? 18 : 12,
+					color: this.state.isFocused ? labelMarkColor : labelColor,
 					backgroundColor:'rgba(0,0,0,0)'}}>{this.props.label}</Text>
 			</View>
 		)
