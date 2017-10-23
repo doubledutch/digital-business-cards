@@ -51,10 +51,12 @@ class HomeView extends Component {
       // Load from DB only if local copy not found
       if (!localCards) {
         myCardRef.on('value', data => {
-          this.setState({ myCard: data.val() })
+          const myCard = data.val()
+          myCard && this.setState({ myCard: data.val() })
         })
         cardsRef.on('value', data => {
-          this.setState({ cards: data.val() })
+          const cards = data.val()
+          cards && this.setState({ cards: data.val() })
         })
       }
     })
