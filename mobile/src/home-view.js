@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import ReactNative, {
-  AsyncStorage, Modal, Platform, ScrollView, Share, Text, TouchableOpacity, View
+  AsyncStorage, Modal, Platform, ScrollView, Share, Text, TouchableOpacity, View, PermissionsAndroid
 } from 'react-native'
 
 import client, { Avatar, TitleBar } from '@doubledutch/rn-client'
@@ -75,7 +75,7 @@ class HomeView extends Component {
         </TouchableOpacity>
         <View style={{ flexDirection: 'row', margin: 8 }}>
           <FlatButton onPress={this.showCode} title='Share Card' style={{ marginRight: 4, backgroundColor: client.primaryColor, color: '#FFFFFF' }} />
-          <FlatButton onPress={this.scanCode} title='Scan Card' style={{ marginLeft: 4, backgroundColor: client.secondaryColor, color: '#FFFFFF' }} />
+          <FlatButton onPress={() => this.scanCode()} title='Scan Card' style={{ marginLeft: 4, backgroundColor: client.secondaryColor, color: '#FFFFFF' }} />
         </View>
         <ScrollView style={s.scroll}>
           {this.state.cards.map((card, index) => 
@@ -134,7 +134,32 @@ class HomeView extends Component {
 
   showCode = () => this.setState({ showCode: true })
 
-  scanCode = () => this.setState({ showScanner: true })
+    async scanCode() {
+    if (Platform.OS === 'android') {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          'title': 'Personal Leads Camera Permission',
+          'message': 'Personal Leads needs access to your camera ' +
+                     'so you can scan codes'
+        }
+      )
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log("You can use the camera")
+        this.setState({ showScanner: true })
+      } else {
+        console.log("Camera permission denied")
+      }
+    } catch (err) {
+      console.warn(err)
+    }
+  }
+  if (Platform.OS === 'ios') {
+    this.setState({ showScanner: true })
+    console.log("You can use the camera")
+  }
+}
 
   exportCards = () => {
     var data = this.state.cards.map(card => {
