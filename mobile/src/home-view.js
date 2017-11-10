@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import ReactNative, {
-  AsyncStorage, Modal, Platform, ScrollView, Share, Text, TouchableOpacity, View
+  AsyncStorage, Modal, Platform, ScrollView, Share, Text, TouchableOpacity, View, PermissionsAndroid
 } from 'react-native'
 
 import client, { Avatar, TitleBar } from '@doubledutch/rn-client'
