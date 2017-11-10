@@ -134,32 +134,30 @@ class HomeView extends Component {
 
   showCode = () => this.setState({ showCode: true })
 
-    async scanCode() {
+  async scanCode() {
     if (Platform.OS === 'android') {
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.CAMERA,
-        {
-          'title': 'Personal Leads Camera Permission',
-          'message': 'Personal Leads needs access to your camera ' +
-                     'so you can scan codes'
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.CAMERA, {
+            title: 'Personal Leads Camera Permission',
+            message: 'Camera access is required to be able to scan codes.'
+          }
+        )
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          console.log("You can use the camera")
+          this.setState({ showScanner: true })
+        } else {
+          console.log("Camera permission denied")
         }
-      )
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log("You can use the camera")
-        this.setState({ showScanner: true })
-      } else {
-        console.log("Camera permission denied")
+      } catch (err) {
+        console.warn(err)
       }
-    } catch (err) {
-      console.warn(err)
+    }
+    if (Platform.OS === 'ios') {
+      this.setState({ showScanner: true })
+      console.log("You can use the camera")
     }
   }
-  if (Platform.OS === 'ios') {
-    this.setState({ showScanner: true })
-    console.log("You can use the camera")
-  }
-}
 
   exportCards = () => {
     var data = this.state.cards.map(card => {
