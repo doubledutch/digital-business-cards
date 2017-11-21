@@ -12,9 +12,9 @@
   dependencies:
     firebase "^4.6.0"
 
-"@doubledutch/rn-client@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@doubledutch/rn-client/-/rn-client-3.0.0.tgz#dd1524998500d3a3e5fbd826cffda3091011ddb1"
+"@doubledutch/rn-client@^3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@doubledutch/rn-client/-/rn-client-3.0.1.tgz#d9a71245638451890c774d0f1c624f958f66bc44"
   dependencies:
     "@doubledutch/base-client" "^3.0.0"
     react "~16.0.0-alpha.12"

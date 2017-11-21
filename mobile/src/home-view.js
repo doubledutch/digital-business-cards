@@ -68,7 +68,7 @@ class HomeView extends Component {
       <View style={s.main}>
         <TitleBar title="Personal Leads" client={client} />
         <TouchableOpacity onPress={this.editCard.bind(this)}>
-          <CardView ddapi={client.api} user={client.currentUser} {...this.state.myCard} />
+          <CardView user={client.currentUser} {...this.state.myCard} />
           <View style={{ position: 'absolute', top: 16, right: 16, backgroundColor: 'rgba(0,0,0,0.05)', paddingTop: 2, paddingBottom: 2, paddingLeft: 8, paddingRight: 8, borderRadius: 8 }}>
             <Text style={{ color: '#888888', backgroundColor: 'rgba(0,0,0,0)' }}>tap to edit</Text>
           </View>
@@ -80,7 +80,6 @@ class HomeView extends Component {
         <ScrollView style={s.scroll}>
           {this.state.cards.map((card, index) => 
             <CardListItem
-              ddapi={client.api}
               onDelete={() => this.deleteCard(index)}
               showExpanded={index == this.state.selectedCard}
               showCard={() => this.showCard(index)}
@@ -96,7 +95,7 @@ class HomeView extends Component {
             transparent={true}
             visible={this.state.showCode}
             onRequestClose={() => { }}>
-          <CodeView ddapi={client.api} {...this.state} hideModal={this.hideModal} />
+          <CodeView {...this.state} hideModal={this.hideModal} />
         </Modal>
         <Modal
             animationType={"slide"}
