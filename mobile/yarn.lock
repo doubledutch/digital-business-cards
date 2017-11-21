@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@doubledutch/base-client@^2.0.4":
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/@doubledutch/base-client/-/base-client-2.0.4.tgz#03f8ae740b2d07a34b9755418d62813c0ba6d237"
+"@doubledutch/base-client@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@doubledutch/base-client/-/base-client-3.0.0.tgz#b9bbb79725c0aaa83e1e21ebafc81964c1681751"
 
 "@doubledutch/firebase-connector@^3.0.0":
   version "3.0.0"
@@ -12,11 +12,11 @@
   dependencies:
     firebase "^4.6.0"
 
-"@doubledutch/rn-client@^2.0.0":
-  version "2.1.6"
-  resolved "https://registry.yarnpkg.com/@doubledutch/rn-client/-/rn-client-2.1.6.tgz#bb6ff845ad7051b2f45a859426c9b86b0ba3116d"
+"@doubledutch/rn-client@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@doubledutch/rn-client/-/rn-client-3.0.0.tgz#dd1524998500d3a3e5fbd826cffda3091011ddb1"
   dependencies:
-    "@doubledutch/base-client" "^2.0.4"
+    "@doubledutch/base-client" "^3.0.0"
     react "~16.0.0-alpha.12"
     react-native "0.46.4"
 

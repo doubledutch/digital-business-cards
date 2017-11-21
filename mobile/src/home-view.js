@@ -39,7 +39,7 @@ class HomeView extends Component {
     this.loadLocalCards()
     .then(localCards => {
       // Load current user data from api, but don't overwrite any local values.
-      client.api.getUser(currentUser.id).then(data => {
+      client.getUser(currentUser.id).then(data => {
         var card = this.state.myCard;
         ['firstName', 'lastName', 'title', 'company', 'email', 'twitter', 'linkedin'].forEach(field => {
           if (card[field] == null && data[field]) card = {...card, [field]: data[field]}
