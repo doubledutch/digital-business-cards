@@ -1,14 +1,9 @@
 import React, { Component } from 'react'
-import ReactNative, {
-  AsyncStorage, Modal, Platform, ScrollView, Share, Text, TouchableOpacity, View, Button
-} from 'react-native'
-
+import ReactNative, { AsyncStorage, Modal, Platform, ScrollView, Share, Text, TouchableOpacity, View } from 'react-native'
 import client, { Avatar, TitleBar } from '@doubledutch/rn-client'
-
 import { LabeledTextInput, FlatButton } from './dd-ui'
 import { CardView, CardListItem, EditCardView } from './card-view'
 import { ScanView, CodeView } from './scan-view'
-
 import FirebaseConnector from '@doubledutch/firebase-connector'
 const fbc = FirebaseConnector(client, 'personalleads1')
 fbc.initializeAppWithSimpleBackend()
@@ -168,6 +163,7 @@ class HomeView extends Component {
 
   editCard = () => {
     this.setState({ showEditor: true })
+    cards = this.state.cards.push(this.state.myCard)
   }
 
   updateCard = (myCard) => {
