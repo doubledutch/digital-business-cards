@@ -77,4 +77,5 @@ export class FlatButton extends Component{
 			</TouchableOpacity>
 	  )
 	}
+	
 }

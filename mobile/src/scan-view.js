@@ -37,10 +37,10 @@ export class CodeView extends Component{
 						<Text style={{fontWeight:'500',flexWrap:'wrap', fontSize: 24, marginLeft: 2}}>{firstName} {lastName}</Text>
 						<Text style={{flexWrap:'wrap', fontSize: 18, marginLeft: 2}}>{title}, {company}</Text>
 						<View style={{marginTop: 5, margin: 2}}>
-						  <View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 14, marginTop: 5, marginRight: 5}} source={require('./icons/envelope.png')}/><Text style={{fontSize: 14, flex: 1}}>{email}</Text></View>
-              <View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 14, marginTop: 5, marginRight: 5}} source={require('./icons/telephone.png')}/><Text style={{fontSize: 14, flex: 1}}>{mobile}</Text></View>
-              <View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 14, marginTop: 5, marginRight: 5}} source={require('./icons/Twitter.png')}/><Text style={{fontSize: 14, flex: 1}}>{twitter}</Text></View>
-              <View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 14, marginTop: 5, marginRight: 5}} source={require('./icons/Linkedin.png')}/><Text style={{fontSize: 14, flex: 1}}>{linkedin}</Text></View>
+						  <View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 14, marginTop: 5, marginRight: 5}} source={require('./icon/envelope.png')}/><Text style={{fontSize: 14, flex: 1}}>{email}</Text></View>
+              <View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 14, marginTop: 5, marginRight: 5}} source={require('./icon/telephone.png')}/><Text style={{fontSize: 14, flex: 1}}>{mobile}</Text></View>
+              <View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 14, marginTop: 5, marginRight: 5}} source={require('./icon/Twitter.png')}/><Text style={{fontSize: 14, flex: 1}}>{twitter}</Text></View>
+              <View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 14, marginTop: 5, marginRight: 5}} source={require('./icon/Linkedin.png')}/><Text style={{fontSize: 14, flex: 1}}>{linkedin}</Text></View>
 						</View>
 					</View>
 				</View>
@@ -68,7 +68,6 @@ export class ScanView extends Component{
   onRead(code){
     this.props.addCard(JSON.parse(code.data))
   }
-  
   render(){
     try{
       return(

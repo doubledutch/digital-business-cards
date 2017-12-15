@@ -63,7 +63,6 @@ class HomeView extends Component {
   }
 
   render() {
-
     return (
       <View style={s.main}>
         <TitleBar title="Personal Leads" client={client} />
