@@ -1,14 +1,9 @@
 import React, { Component } from 'react'
-import ReactNative, {
-  AsyncStorage, Modal, Platform, ScrollView, Share, Text, TouchableOpacity, View
-} from 'react-native'
-
+import ReactNative, { AsyncStorage, Modal, Platform, ScrollView, Share, Text, TouchableOpacity, View } from 'react-native'
 import client, { Avatar, TitleBar } from '@doubledutch/rn-client'
-
 import { LabeledTextInput, FlatButton } from './dd-ui'
 import { CardView, CardListItem, EditCardView } from './card-view'
 import { ScanView, CodeView } from './scan-view'
-
 import FirebaseConnector from '@doubledutch/firebase-connector'
 const fbc = FirebaseConnector(client, 'personalleads')
 fbc.initializeAppWithSimpleBackend()
@@ -63,21 +58,23 @@ class HomeView extends Component {
   }
 
   render() {
-
     return (
       <View style={s.main}>
         <TitleBar title="Personal Leads" client={client} />
         <TouchableOpacity onPress={this.editCard.bind(this)}>
           <CardView user={client.currentUser} {...this.state.myCard} />
-          <View style={{ position: 'absolute', top: 16, right: 16, backgroundColor: 'rgba(0,0,0,0.05)', paddingTop: 2, paddingBottom: 2, paddingLeft: 8, paddingRight: 8, borderRadius: 8 }}>
-            <Text style={{ color: '#888888', backgroundColor: 'rgba(0,0,0,0)' }}>tap to edit</Text>
+          <View style={{ position: 'absolute', marginTop: 22, right: 10, backgroundColor: 'white'}}>
+            <Text style={{ color: '#888888', backgroundColor: 'white', fontSize: 14, marginTop: 8}}>Edit Info</Text>
           </View>
         </TouchableOpacity>
-        <View style={{ flexDirection: 'row', margin: 8 }}>
-          <FlatButton onPress={this.showCode} title='Share Card' style={{ marginRight: 4, backgroundColor: client.primaryColor, color: '#FFFFFF' }} />
-          <FlatButton onPress={this.scanCode} title='Scan Card' style={{ marginLeft: 4, backgroundColor: client.secondaryColor, color: '#FFFFFF' }} />
-        </View>
+
         <ScrollView style={s.scroll}>
+        <View style={{backgroundColor: 'white', height: 41, borderBottomColor: '#E8E8EE', borderBottomWidth: 1, flex: 1, flexDirection: 'row'}}>
+        <Text style={{fontSize: 18, marginLeft: 10, marginTop: 10, height: 21}}>My Connections</Text>
+        {this.state.cards.length > 0 &&
+          <TouchableOpacity style={{height: 16, flex: 1, marginRight: 18, marginLeft: 50, marginTop: 13}}  onPress={this.exportCards}><Text style={{fontSize: 14, textAlign: "right", color: client.primaryColor}}>Export All</Text></TouchableOpacity>
+        }
+        </View>
           {this.state.cards.map((card, index) => 
             <CardListItem
               onDelete={() => this.deleteCard(index)}
@@ -87,9 +84,11 @@ class HomeView extends Component {
               {...card} />
           )}
         </ScrollView>
-        {this.state.cards.length > 0 &&
-          <FlatButton onPress={this.exportCards} title='Export Cards' style={{ marginLeft: 64, marginRight: 64, marginBottom: 8, flex: 0 }} />
-        }
+        <View style={{ flexDirection: 'row', padding: 2, marginBottom: 20, marginTop: 20}}>
+          <TouchableOpacity onPress={this.showCode} style={{ flex: 1, marginLeft: 10, marginRight: 5, borderColor: client.primaryColor, backgroundColor: "white", borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: client.primaryColor, textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 12, marginLeft: 10, marginBottom: 12, marginRight: 10, fontSize: 18, height: 21}}>Share My Info</Text></TouchableOpacity>
+          <TouchableOpacity onPress={this.scanCode} style={{flex: 1, marginLeft: 5, marginRight: 10, borderColor: client.primaryColor, backgroundColor: client.primaryColor, borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: "white", textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 12, marginLeft: 10, marginBottom: 12, marginRight: 10, fontSize: 18, height: 21}}>Scan Info</Text></TouchableOpacity>
+        </View>
+        
         <Modal
             animationType={"slide"}
             transparent={true}
@@ -102,13 +101,14 @@ class HomeView extends Component {
             transparent={true}
             visible={this.state.showScanner}
             onRequestClose={() => { }}>
-          <ScanView {...this.state} addCard={this.addCard} hideModal={this.hideModal} />
+          <ScanView {...this.state} addCard={this.addCard} hideModal={this.hideModal} color={client.primaryColor}/>
         </Modal>
         <Modal
             animationType={"slide"}
             transparent={true}
             visible={this.state.showEditor}
             onRequestClose={() => { }}>
+          <TitleBar title="Personal Leads" client={client} />
           <EditCardView {...this.state.myCard} updateCard={this.updateCard} hideModal={this.hideModal} />
         </Modal>
       </View>
@@ -196,7 +196,8 @@ const s = ReactNative.StyleSheet.create({
   scroll: {
     flex: 1,
     backgroundColor: '#dedede',
-    padding: 10
+    paddingTop: 20,
+    flexDirection: 'column'
   }
 })
 
