@@ -5,7 +5,7 @@ import { LabeledTextInput, FlatButton } from './dd-ui'
 import { CardView, CardListItem, EditCardView } from './card-view'
 import { ScanView, CodeView } from './scan-view'
 import FirebaseConnector from '@doubledutch/firebase-connector'
-const fbc = FirebaseConnector(client, 'personalleads1')
+const fbc = FirebaseConnector(client, 'personalleads')
 fbc.initializeAppWithSimpleBackend()
 
 const { currentEvent, currentUser } = client
