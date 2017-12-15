@@ -1,14 +1,9 @@
 import React, { Component } from 'react'
-import ReactNative, {
-  AsyncStorage, Modal, Platform, ScrollView, Share, Text, TouchableOpacity, View, Button
-} from 'react-native'
-
+import ReactNative, { AsyncStorage, Modal, Platform, ScrollView, Share, Text, TouchableOpacity, View } from 'react-native'
 import client, { Avatar, TitleBar } from '@doubledutch/rn-client'
-
 import { LabeledTextInput, FlatButton } from './dd-ui'
 import { CardView, CardListItem, EditCardView } from './card-view'
 import { ScanView, CodeView } from './scan-view'
-
 import FirebaseConnector from '@doubledutch/firebase-connector'
 const fbc = FirebaseConnector(client, 'personalleads1')
 fbc.initializeAppWithSimpleBackend()
@@ -72,7 +67,7 @@ class HomeView extends Component {
             <Text style={{ color: '#888888', backgroundColor: 'white', fontSize: 14, marginTop: 8}}>Edit Info</Text>
           </View>
         </TouchableOpacity>
-       
+
         <ScrollView style={s.scroll}>
         <View style={{backgroundColor: 'white', height: 41, borderBottomColor: '#E8E8EE', borderBottomWidth: 1, flex: 1, flexDirection: 'row'}}>
         <Text style={{fontSize: 18, marginLeft: 10, marginTop: 10, height: 21}}>My Connections</Text>
