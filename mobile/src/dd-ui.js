@@ -27,7 +27,7 @@ export class LabeledTextInput extends Component{
 			<View style={[{backgroundColor:'#FFFFFF',marginBottom:2,height:48,paddingTop:4},this.props.style]}>
 				<TextInput underlineColorAndroid='transparent' value={this.state.data} onEndEditing={()=>this.onFocusChange()} onFocus={()=>this.onFocusChange()} ref={input => this.textInput = input} 
 					style={{paddingLeft:8,flex:1}} onChangeText={this.onChangeText.bind(this)}/>
-				<Text onPress={() => this.textInput.focus()} style={{position:'absolute',
+				<Text onPress={() => this.textInput.focus()} style={{position:'absolute', marginTop: -5,
 					top: (this.state.data.length==0 && !this.state.isFocused) ? 12 : 2,
 					left:8,
 					fontSize: (this.state.data.length==0 && !this.state.isFocused) ? 18 : 12,

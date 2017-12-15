@@ -35,19 +35,27 @@ export class EditCardView extends Component{
 
 	render(){
 		return(
-			<KeyboardAvoidingView behavior={Platform.select({ios: "padding", android: null})} style={{backgroundColor:'#dedede',paddingTop:32,paddingLeft:8,paddingRight:8,position:'absolute',top:0,bottom:0,left:0,right:0}}>
-				<ScrollView>
-					<LabeledTextInput id="firstName" label="First Name" value={this.props.firstName} onChangeText={this.onChange}/>
-					<LabeledTextInput id="lastName" label="Last Name" value={this.props.lastName} onChangeText={this.onChange}/>
-					<LabeledTextInput id="title" label="Title" value={this.props.title} onChangeText={this.onChange} />
-					<LabeledTextInput id="company" label="Company" value={this.props.company} onChangeText={this.onChange} />
-					<LabeledTextInput id="mobile" label="Phone number" value={this.props.mobile} onChangeText={this.onChange} />
-					<LabeledTextInput id="email" label="Email" value={this.props.email} onChangeText={this.onChange} />
-					<LabeledTextInput id="linkedin" label="LinkedIn" value={this.props.linkedin} onChangeText={this.onChange} />
-					<LabeledTextInput id="twitter" label="Twitter" value={this.props.twitter} onChangeText={this.onChange} />
-					<View style={{flexDirection:'row',marginTop:6}}>
-						<FlatButton onPress={this.props.hideModal} title='Cancel' style={{marginRight:4}} />
-						<FlatButton onPress={this.onSave.bind(this)} title='Save' style={{marginLeft:4}} />
+			<KeyboardAvoidingView behavior={Platform.select({ios: "padding", android: null})} style={{backgroundColor:"white" ,paddingTop:32,paddingLeft:8,paddingRight:8,position:'absolute',top:0,bottom:0,left:0,right:0}}>
+				<ScrollView style={{marginTop: 40}}>
+					<View style={{flexDirection: 'row'}}>
+						<LabeledTextInput style={{flex: 1, borderBottomColor: "#E8E8EE", borderBottomWidth: 1, height: 43, marginRight: 10, marginLeft: 5, marginTop: 10}}id="firstName" label="First" value={this.props.firstName} onChangeText={this.onChange}/>
+						<LabeledTextInput style={{flex: 1, borderBottomColor: "#E8E8EE", borderBottomWidth: 1, height: 43, marginLeft: 10, marginRight: 5, marginTop: 10}} id="lastName" label="Last" value={this.props.lastName} onChangeText={this.onChange}/>
+					</View>
+					<View style={{flexDirection: 'row'}}>
+						<LabeledTextInput style={{flex: 1, borderBottomColor: "#E8E8EE", borderBottomWidth: 1, height: 43, marginRight: 10, marginLeft: 5, marginTop: 10}} id="title" label="Title" value={this.props.title} onChangeText={this.onChange} />
+						<LabeledTextInput style={{flex: 1, borderBottomColor: "#E8E8EE", borderBottomWidth: 1, height: 43, marginLeft: 10, marginRight: 5, marginTop: 10}} id="company" label="Company" value={this.props.company} onChangeText={this.onChange} />
+					</View>
+					<View style={{flexDirection: 'row'}}>
+						<LabeledTextInput style={{flex: 1, borderBottomColor: "#E8E8EE", borderBottomWidth: 1, height: 43, marginRight: 10, marginLeft: 5, marginTop: 10}} id="email" label="Email" value={this.props.email} onChangeText={this.onChange} />
+						<LabeledTextInput style={{flex: 1, borderBottomColor: "#E8E8EE", borderBottomWidth: 1, height: 43, marginLeft: 10, marginRight: 5, marginTop: 10}} id="mobile" label="Phone number" value={this.props.mobile} onChangeText={this.onChange} />
+					</View>
+					<View style={{flexDirection: 'row'}}>
+						<LabeledTextInput style={{flex: 1, borderBottomColor: "#E8E8EE", borderBottomWidth: 1, height: 43, marginRight: 10, marginLeft: 5, marginTop: 10}} id="linkedin" label="LinkedIn" value={this.props.linkedin} onChangeText={this.onChange} />
+						<LabeledTextInput style={{flex: 1, borderBottomColor: "#E8E8EE", borderBottomWidth: 1, height: 43, marginLeft: 10, marginRight: 5, marginTop: 10}} id="twitter" label="Twitter" value={this.props.twitter} onChangeText={this.onChange} />
+					</View>
+					<View style={{flexDirection:'row',marginTop:20}}>
+						<TouchableOpacity onPress={this.props.hideModal} style={{ flex: 1, marginLeft: 10, marginRight: 5, borderColor: client.primaryColor, backgroundColor: "white", borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: client.primaryColor, textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 12, marginLeft: 10, marginBottom: 12, marginRight: 10, fontSize: 18, height: 21}}>Cancel</Text></TouchableOpacity>
+          				<TouchableOpacity onPress={this.onSave.bind(this)} style={{flex: 1, marginLeft: 5, marginRight: 10, borderColor: client.primaryColor, backgroundColor: client.primaryColor, borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: "white", textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 12, marginLeft: 10, marginBottom: 12, marginRight: 10, fontSize: 18, height: 21}}>Save</Text></TouchableOpacity>
 					</View>
 				</ScrollView>
 			</KeyboardAvoidingView>
@@ -58,20 +66,38 @@ export class EditCardView extends Component{
 export class CardView extends Component{
 	render() {
 		return(
-			<View style={{margin: 8}}>
-				<View style={{padding: 8, backgroundColor:"#FFFFFF",borderRadius:4,flexDirection:'row'}}>
-          <Avatar user={this.props.user} client={client} size={64} style={{marginRight: 8}} />
+			<View style={{marginTop: 10}}>
+				<View style={{height: 80, backgroundColor:"#FFFFFF",borderRadius:4,flexDirection:'row'}}>
+          			<Avatar user={this.props.user} client={client} size={64} style={{marginRight: 8, marginTop: 8, marginLeft: 8}} />
 					<View style={{flexDirection:'column',flex:1}}>
-						<Text style={{fontSize:18}}>{this.props.firstName} {this.props.lastName}</Text>
-						<Text style={{fontWeight:'bold',marginBottom:8}}>{this.props.title}</Text>
-						<Text>{this.props.company}</Text>
-						<Text>{this.props.email}</Text>
-						<Text>{this.props.mobile}</Text>
-            { this.props.twitter && <Text>Twitter: @{this.props.twitter}</Text> }
-            { this.props.linkedin && <Text>LinkedIn: {this.props.linkedin}</Text> }
+						<Text style={{fontSize:24, fontWeight: "500", marginTop: 12}}>{this.props.firstName} {this.props.lastName}</Text>
+						<Text style={{fontSize: 18 ,marginBottom:0}}>{this.props.title}, {this.props.company}</Text>
 					</View>
 				</View>
 				<View style={{backgroundColor:'rgba(0,0,0,0.1)',height:2,marginLeft:16,marginRight:16}}></View>
+			</View>
+		)
+	}
+}
+
+export class CardListView extends Component{
+	render() {
+		return(
+			<View style={{ backgroundColor:"#FFFFFF", borderBottomColor: "#E8E8EE", borderBottomWidth: 1}}>
+				<View style={{borderRadius:4,flexDirection:'row', padding: 8}}>
+          			<Avatar user={this.props.user} client={client} size={38} style={{marginRight: 8}} />
+					<View style={{flexDirection:'column',flex:1}}>
+						<Text style={{fontWeight:'500',flexWrap:'wrap', fontSize: 18, marginLeft: 2}}>{this.props.firstName} {this.props.lastName}</Text>
+						<Text style={{flexWrap:'wrap', fontSize: 14, color: "#A8A8A8", marginLeft: 2}}>{this.props.title}, {this.props.company}</Text>
+						<View style={{marginTop: 5, margin: 2}}>
+							<View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 14, marginTop: 5, marginRight: 5}} source={require('./icons/envelope.png')}/><Text style={{fontSize: 14, flex: 1}}>{this.props.email}</Text></View>
+            				<View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 14, marginTop: 5, marginRight: 5}} source={require('./icons/telephone.png')}/><Text style={{fontSize: 14, flex: 1}}>{this.props.mobile}</Text></View>
+            				<View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 14, marginTop: 5, marginRight: 5}} source={require('./icons/Twitter.png')}/><Text style={{fontSize: 14, flex: 1}}>{this.props.twitter}</Text></View>
+            				<View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 14, marginTop: 5, marginRight: 5}} source={require('./icons/Linkedin.png')}/><Text style={{fontSize: 14, flex: 1}}>{this.props.linkedin}</Text></View>
+						</View>
+					</View>
+				</View>
+				<TouchableOpacity style={{height: 16, flex: 1, marginLeft: 200, marginRight: 18, marginTop: 13, marginBottom: 10}}  onPress={this.props.onDelete}><Text style={{fontSize: 14, textAlign: "right", color: client.primaryColor}}>Remove</Text></TouchableOpacity>
 			</View>
 		)
 	}
@@ -83,24 +109,23 @@ export class CardListItem extends Component{
 			return(
 				<TouchableOpacity onPress={this.props.showCard} style={{flex:1,marginBottom:8}}>
 					<View style={{flex:1}}>
-						<CardView {...this.props} />
-						<View>
-							<FlatButton onPress={this.props.onDelete} title='Delete' style={{backgroundColor:"#FF5500",marginLeft:60,marginRight:60,color:'#FFFFFF',marginTop:8}} />
-						</View>
+						<CardListView {...this.props} />
 					</View>
 				</TouchableOpacity>
 			)
 		}
 		return(
 			<TouchableOpacity onPress={this.props.showCard} style={{flex:1}}>
-				<View style={{padding:8,backgroundColor:"#FFFFFF",borderBottomWidth:2,borderColor:'#dedede',flexDirection:'row'}}>
-          <Avatar user={this.props.user} client={client} size={32} style={{marginRight: 8}} />
+				<View style={{padding:8,backgroundColor:"#FFFFFF",borderBottomWidth:1,borderColor:'#dedede',flexDirection:'row'}}>
+          			<Avatar user={this.props.user} client={client} size={38} style={{marginRight: 8}} />
 					<View style={{flex:1}}>
-						<Text style={{fontWeight:'bold',flexWrap:'wrap'}}>{this.props.firstName} {this.props.lastName}</Text>
-						<Text style={{flexWrap:'wrap'}}>{this.props.title}</Text>
+						<Text style={{fontWeight:'500',flexWrap:'wrap', fontSize: 18}}>{this.props.firstName} {this.props.lastName}</Text>
+						<Text style={{flexWrap:'wrap', fontSize: 14, color: "#A8A8A8"}}>{this.props.title}, {this.props.company}</Text>
 					</View>
 				</View>
 			</TouchableOpacity>
 		)
 	}
 }
+
+
