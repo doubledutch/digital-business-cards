@@ -176,7 +176,6 @@ class HomeView extends Component {
 
   editCard = () => {
     this.setState({ showEditor: true })
-    cards = this.state.cards.push(this.state.myCard)
   }
 
   updateCard = (myCard) => {
