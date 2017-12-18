@@ -62,6 +62,23 @@ export class EditCardView extends Component{
 	}
 }
 
+export class ConfirmView extends Component{
+	render(){
+			return(
+				<View style={{backgroundColor:'#dedede',position:'absolute',top:0,bottom:0,left:0,right:0,paddingTop:32}}>
+				  <View style={{flexDirection:'column',flex:1,marginTop:"40%"}}>
+				  	<Text style={{textAlign: "center", fontSize: 18}}>Are you sure you want to delete this contact?</Text>
+					<View style={{flexDirection:"row", flex: 1, marginTop: 20}}>
+						<TouchableOpacity onPress={this.props.onDelete} style={{ flex: 1, marginLeft: 10, marginRight: 5, borderColor: client.primaryColor, backgroundColor: "white", borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: client.primaryColor, textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 12, marginLeft: 10, marginBottom: 12, marginRight: 10, fontSize: 18, height: 21}}>Delete</Text></TouchableOpacity>
+          				<TouchableOpacity onPress={this.props.hideModal} style={{flex: 1, marginLeft: 5, marginRight: 10, borderColor: client.primaryColor, backgroundColor: client.primaryColor, borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: "white", textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 12, marginLeft: 10, marginBottom: 12, marginRight: 10, fontSize: 18, height: 21}}>Cancel</Text></TouchableOpacity>
+		  			</View>
+				  </View>
+				</View>
+			  )
+	}
+
+}
+
 export class CardView extends Component{
 	render() {
 		return(
@@ -73,7 +90,6 @@ export class CardView extends Component{
 						<Text style={{fontSize: 18 ,marginBottom:0}}>{this.props.title}, {this.props.company}</Text>
 					</View>
 				</View>
-				<View style={{backgroundColor:'rgba(0,0,0,0.1)',height:2,marginLeft:16,marginRight:16}}></View>
 			</View>
 		)
 	}
@@ -96,7 +112,7 @@ export class CardListView extends Component{
 						</View>
 					</View>
 				</View>
-				<TouchableOpacity style={{height: 16, flex: 1, marginLeft: 200, marginRight: 18, marginTop: 13, marginBottom: 10}}  onPress={this.props.onDelete}><Text style={{fontSize: 14, textAlign: "right", color: client.primaryColor}}>Remove</Text></TouchableOpacity>
+				<TouchableOpacity style={{height: 16, flex: 1, marginLeft: 200, marginRight: 18, marginTop: 13, marginBottom: 10}}  onPress={this.props.showAlert}><Text style={{fontSize: 14, textAlign: "right", color: client.primaryColor}}>Remove</Text></TouchableOpacity>
 			</View>
 		)
 	}

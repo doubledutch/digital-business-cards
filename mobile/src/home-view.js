@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import ReactNative, { AsyncStorage, Modal, Platform, ScrollView, Share, Text, TouchableOpacity, View } from 'react-native'
+import ReactNative, { AsyncStorage, Modal, Platform, ScrollView, Share, Text, TouchableOpacity, View, Alert } from 'react-native'
 import client, { Avatar, TitleBar } from '@doubledutch/rn-client'
 import { LabeledTextInput, FlatButton } from './dd-ui'
 import { CardView, CardListItem, EditCardView } from './card-view'
 import { ScanView, CodeView } from './scan-view'
 import FirebaseConnector from '@doubledutch/firebase-connector'
-const fbc = FirebaseConnector(client, 'personalleads1')
+const fbc = FirebaseConnector(client, 'personalleads')
 fbc.initializeAppWithSimpleBackend()
 
 const { currentEvent, currentUser } = client
@@ -24,7 +24,8 @@ class HomeView extends Component {
       selectedCard: null,
       showCode: false,
       showScanner: false,
-      showEditor: false
+      showEditor: false,
+      showConfirm: false,
     }
   }
 
@@ -77,9 +78,10 @@ class HomeView extends Component {
         </View>
           {this.state.cards.map((card, index) => 
             <CardListItem
-              onDelete={() => this.deleteCard(index)}
               showExpanded={index == this.state.selectedCard}
               showCard={() => this.showCard(index)}
+              showConfirm={() => this.showConfirm(index)}
+              showAlert = {() => this.showAlert()}
               user={card}
               {...card} />
           )}
@@ -88,7 +90,6 @@ class HomeView extends Component {
           <TouchableOpacity onPress={this.showCode} style={{ flex: 1, marginLeft: 10, marginRight: 5, borderColor: client.primaryColor, backgroundColor: "white", borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: client.primaryColor, textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 12, marginLeft: 10, marginBottom: 12, marginRight: 10, fontSize: 18, height: 21}}>Share My Info</Text></TouchableOpacity>
           <TouchableOpacity onPress={this.scanCode} style={{flex: 1, marginLeft: 5, marginRight: 10, borderColor: client.primaryColor, backgroundColor: client.primaryColor, borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: "white", textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 12, marginLeft: 10, marginBottom: 12, marginRight: 10, fontSize: 18, height: 21}}>Scan Info</Text></TouchableOpacity>
         </View>
-        
         <Modal
             animationType={"slide"}
             transparent={true}
@@ -114,6 +115,20 @@ class HomeView extends Component {
       </View>
     )
   }
+ 
+ 
+    showAlert = () => {
+       Alert.alert(
+        'Confirm Delete',
+        'Are you sure you want to remove this contact?',
+        [
+          {text: 'Cancel', style: 'cancel'},
+          {text: 'OK', onPress: () => this.deleteCard ('OK Pressed')},
+        ],
+        { cancelable: false }
+       )
+    }
+  
 
   loadLocalCards() {
     return AsyncStorage.getItem(leadStorageKey())
@@ -132,6 +147,8 @@ class HomeView extends Component {
   }
 
   showCode = () => this.setState({ showCode: true })
+
+  showConfirm = (index) => this.setState({showConfirm: true})
 
   scanCode = () => this.setState({showScanner: true})
 
@@ -158,7 +175,7 @@ class HomeView extends Component {
   }
 
   hideModal = () => {
-    this.setState({ showCode: false, showScanner: false, showEditor: false })
+    this.setState({ showCode: false, showScanner: false, showEditor: false, showConfirm: false })
   }
 
   editCard = () => {
@@ -179,11 +196,15 @@ class HomeView extends Component {
     this.setState({cards, showScanner: false})
   }
 
-  deleteCard(index) {
-    const cards = this.state.cards.filter((_, i) => i !== index)
+  
+
+  deleteCard = () => {
+    console.log("hhhhi")
+    const cards = this.state.cards.filter((_, i) => i !== this.state.selectedCard)
     cardsRef.set(cards)
     this.setState({cards})
     this.saveLocalCards({myCard: this.state.myCard, cards})
+    this.hideModal()
   }
 }
 
