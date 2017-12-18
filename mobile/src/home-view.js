@@ -116,9 +116,11 @@ class HomeView extends Component {
  
  
     showAlert = () => {
+      const currentCard = this.state.cards[this.state.selectedCard]
+      const alertText = 'Are you sure you want to remove ' + currentCard.firstName + " " + currentCard.lastName + " from your connections?"
        Alert.alert(
-        'Confirm Delete',
-        'Are you sure you want to remove this contact?',
+        'Confirm',
+        alertText,
         [
           {text: 'Cancel', style: 'cancel'},
           {text: 'OK', onPress: () => this.deleteCard ('OK Pressed')},
