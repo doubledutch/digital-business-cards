@@ -24,8 +24,7 @@ class HomeView extends Component {
       selectedCard: null,
       showCode: false,
       showScanner: false,
-      showEditor: false,
-      showConfirm: false,
+      showEditor: false
     }
   }
 
@@ -80,7 +79,6 @@ class HomeView extends Component {
             <CardListItem
               showExpanded={index == this.state.selectedCard}
               showCard={() => this.showCard(index)}
-              showConfirm={() => this.showConfirm(index)}
               showAlert = {() => this.showAlert()}
               user={card}
               {...card} />
@@ -148,8 +146,6 @@ class HomeView extends Component {
 
   showCode = () => this.setState({ showCode: true })
 
-  showConfirm = (index) => this.setState({showConfirm: true})
-
   scanCode = () => this.setState({showScanner: true})
 
   exportCards = () => {
@@ -175,7 +171,7 @@ class HomeView extends Component {
   }
 
   hideModal = () => {
-    this.setState({ showCode: false, showScanner: false, showEditor: false, showConfirm: false })
+    this.setState({ showCode: false, showScanner: false, showEditor: false })
   }
 
   editCard = () => {
