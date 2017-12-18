@@ -194,7 +194,6 @@ class HomeView extends Component {
   
 
   deleteCard = () => {
-    console.log("hhhhi")
     const cards = this.state.cards.filter((_, i) => i !== this.state.selectedCard)
     cardsRef.set(cards)
     this.setState({cards})
