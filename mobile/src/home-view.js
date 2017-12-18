@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import ReactNative, { AsyncStorage, Modal, Platform, ScrollView, Share, Text, TouchableOpacity, View } from 'react-native'
+import ReactNative, { AsyncStorage, Modal, Platform, ScrollView, Share, Text, TouchableOpacity, View, Alert } from 'react-native'
 import client, { Avatar, TitleBar } from '@doubledutch/rn-client'
 import { LabeledTextInput, FlatButton } from './dd-ui'
 import { CardView, CardListItem, EditCardView } from './card-view'
@@ -67,7 +67,7 @@ class HomeView extends Component {
             <Text style={{ color: '#888888', backgroundColor: 'white', fontSize: 14, marginTop: 8}}>Edit Info</Text>
           </View>
         </TouchableOpacity>
-
+       
         <ScrollView style={s.scroll}>
         <View style={{backgroundColor: 'white', height: 41, borderBottomColor: '#E8E8EE', borderBottomWidth: 1, flex: 1, flexDirection: 'row'}}>
         <Text style={{fontSize: 18, marginLeft: 10, marginTop: 10, height: 21}}>My Connections</Text>
@@ -77,9 +77,9 @@ class HomeView extends Component {
         </View>
           {this.state.cards.map((card, index) => 
             <CardListItem
-              onDelete={() => this.deleteCard(index)}
               showExpanded={index == this.state.selectedCard}
               showCard={() => this.showCard(index)}
+              showAlert = {() => this.showAlert()}
               user={card}
               {...card} />
           )}
@@ -88,7 +88,6 @@ class HomeView extends Component {
           <TouchableOpacity onPress={this.showCode} style={{ flex: 1, marginLeft: 10, marginRight: 5, borderColor: client.primaryColor, backgroundColor: "white", borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: client.primaryColor, textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 12, marginLeft: 10, marginBottom: 12, marginRight: 10, fontSize: 18, height: 21}}>Share My Info</Text></TouchableOpacity>
           <TouchableOpacity onPress={this.scanCode} style={{flex: 1, marginLeft: 5, marginRight: 10, borderColor: client.primaryColor, backgroundColor: client.primaryColor, borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: "white", textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 12, marginLeft: 10, marginBottom: 12, marginRight: 10, fontSize: 18, height: 21}}>Scan Info</Text></TouchableOpacity>
         </View>
-        
         <Modal
             animationType={"slide"}
             transparent={true}
@@ -114,6 +113,22 @@ class HomeView extends Component {
       </View>
     )
   }
+ 
+ 
+    showAlert = () => {
+      const currentCard = this.state.cards[this.state.selectedCard]
+      const alertText = 'Are you sure you want to remove ' + currentCard.firstName + " " + currentCard.lastName + " from your connections?"
+       Alert.alert(
+        'Confirm',
+        alertText,
+        [
+          {text: 'Cancel', style: 'cancel'},
+          {text: 'OK', onPress: () => this.deleteCard ('OK Pressed')},
+        ],
+        { cancelable: false }
+       )
+    }
+  
 
   loadLocalCards() {
     return AsyncStorage.getItem(leadStorageKey())
@@ -178,11 +193,14 @@ class HomeView extends Component {
     this.setState({cards, showScanner: false})
   }
 
-  deleteCard(index) {
-    const cards = this.state.cards.filter((_, i) => i !== index)
+  
+
+  deleteCard = () => {
+    const cards = this.state.cards.filter((_, i) => i !== this.state.selectedCard)
     cardsRef.set(cards)
     this.setState({cards})
     this.saveLocalCards({myCard: this.state.myCard, cards})
+    this.hideModal()
   }
 }
 
