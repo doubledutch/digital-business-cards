@@ -23,7 +23,7 @@ export class EditCardView extends Component{
     }
   }
 
-  // Use the supplied key to assign the value
+  // Use the supplied key to assign the value.
 	onChange = (value,key) => {
 		this.setState({[key]: value})
 	}

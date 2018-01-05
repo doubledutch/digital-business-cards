@@ -17,7 +17,7 @@ class HomeView extends Component {
   constructor() {
     super()
 
-    // Initially, create a blank state filled out only with the current user's id
+    // Initially, create a blank state filled out only with the current user's id.
     this.state = {
       myCard: Object.assign({mobile: null, linkedin: null, twitter: null}, currentUser),
       cards: [],
@@ -79,7 +79,7 @@ class HomeView extends Component {
             <CardListItem
               showExpanded={index == this.state.selectedCard}
               showCard={() => this.showCard(index)}
-              showAlert = {() => this.showAlert(index)}
+              showAlert = {() => this.showAlert()}
               user={card}
               {...card} />
           )}
