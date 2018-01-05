@@ -37,10 +37,10 @@ export class CodeView extends Component{
 						<Text style={{fontWeight:'500',flexWrap:'wrap', fontSize: 24, marginLeft: 2}}>{firstName} {lastName}</Text>
 						<Text style={{flexWrap:'wrap', fontSize: 18, marginLeft: 2}}>{title}, {company}</Text>
 						<View style={{marginTop: 5, margin: 2}}>
-						  <View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 14, marginTop: 5, marginRight: 5}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/personal-leads/envelope.png"}}/><Text style={{fontSize: 14, flex: 1, marginTop: 1}}>{email}</Text></View>
-              <View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 14, marginTop: 5, marginRight: 5}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/personal-leads/telephone.png"}}/><Text style={{fontSize: 14, flex: 1, marginTop: 2}}>{mobile}</Text></View>
-              <View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 14, marginTop: 5, marginRight: 5}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/personal-leads/Twitter.png"}}/><Text style={{fontSize: 14, flex: 1, marginTop: 2}}>{twitter}</Text></View>
-              <View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 14, marginTop: 5, marginRight: 5}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/personal-leads/Linkedin.png"}}/><Text style={{fontSize: 14, flex: 1, marginTop: 3}}>{linkedin}</Text></View>
+						  <View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 15, height: 10, marginTop: 5, marginRight: 5}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/personal-leads/envelope.png"}}/><Text style={{fontSize: 14, flex: 1, marginTop: 1}}>{email}</Text></View>
+              <View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 12, height: 12, marginTop: 5, marginRight: 5}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/personal-leads/telephone.png"}}/><Text style={{fontSize: 14, flex: 1, marginTop: 2}}>{mobile}</Text></View>
+              <View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 14, height: 12, marginTop: 5, marginRight: 5}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/personal-leads/Twitter.png"}}/><Text style={{fontSize: 14, flex: 1, marginTop: 2}}>{twitter}</Text></View>
+              <View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 13, height: 12, marginTop: 5, marginRight: 5}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/personal-leads/Linkedin.png"}}/><Text style={{fontSize: 14, flex: 1, marginTop: 3}}>{linkedin}</Text></View>
 						</View>
 					</View>
 				</View>

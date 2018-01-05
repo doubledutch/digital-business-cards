@@ -85,8 +85,8 @@ class HomeView extends Component {
           )}
         </ScrollView>
         <View style={{ flexDirection: 'row', padding: 2, marginBottom: 20, marginTop: 20}}>
-          <TouchableOpacity onPress={this.showCode} style={{ flex: 1, marginLeft: 10, marginRight: 5, borderColor: client.primaryColor, backgroundColor: "white", borderWidth: 1, borderRadius: 20, height: 45}}><Text style={{color: client.primaryColor, textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 10, marginLeft: 10, marginBottom: 10, marginRight: 10, fontSize: 18, height: 21}}>Share My Info</Text></TouchableOpacity>
-          <TouchableOpacity onPress={this.scanCode} style={{flex: 1, marginLeft: 5, marginRight: 10, borderColor: client.primaryColor, backgroundColor: client.primaryColor, borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: "white", textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 10, marginLeft: 10, marginBottom: 10, marginRight: 10, fontSize: 18, height: 21}}>Scan Info</Text></TouchableOpacity>
+          <TouchableOpacity onPress={this.showCode} style={{flex: 1, marginLeft: 10, marginRight: 5, borderColor: client.primaryColor, backgroundColor: "white", borderWidth: 1, borderRadius: 20, height: 45}}><Text style={{color: client.primaryColor, textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 10, marginLeft: 10, marginBottom: 10, marginRight: 10, fontSize: 18, height: 21}}>Share My Info</Text></TouchableOpacity>
+          <TouchableOpacity onPress={this.scanCode} style={{ flex: 1, marginLeft: 5, marginRight: 10, borderColor: client.primaryColor, backgroundColor: client.primaryColor, borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: "white", textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 10, marginLeft: 10, marginBottom: 10, marginRight: 10, fontSize: 18, height: 21}}>Scan Info</Text></TouchableOpacity>
         </View>
         <Modal
             animationType={"slide"}
