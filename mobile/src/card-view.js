@@ -53,8 +53,8 @@ export class EditCardView extends Component{
 						<LabeledTextInput style={{flex: 1, borderBottomColor: "#E8E8EE", borderBottomWidth: 1, height: 43, marginLeft: 10, marginRight: 5, marginTop: 10}} id="twitter" label="Twitter" value={this.props.twitter} onChangeText={this.onChange} />
 					</View>
 					<View style={{flexDirection:'row',marginTop:20}}>
-						<TouchableOpacity onPress={this.props.hideModal} style={{ flex: 1, marginLeft: 10, marginRight: 5, borderColor: client.primaryColor, backgroundColor: "white", borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: client.primaryColor, textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 12, marginLeft: 10, marginBottom: 12, marginRight: 10, fontSize: 18, height: 21}}>Cancel</Text></TouchableOpacity>
-          				<TouchableOpacity onPress={this.onSave.bind(this)} style={{flex: 1, marginLeft: 5, marginRight: 10, borderColor: client.primaryColor, backgroundColor: client.primaryColor, borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: "white", textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 12, marginLeft: 10, marginBottom: 12, marginRight: 10, fontSize: 18, height: 21}}>Save</Text></TouchableOpacity>
+						<TouchableOpacity onPress={this.props.hideModal} style={{ flex: 1, marginLeft: 10, marginRight: 5, borderColor: client.primaryColor, backgroundColor: "white", borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: client.primaryColor, textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 10, marginLeft: 10, marginBottom: 10, marginRight: 10, fontSize: 18, height: 21}}>Cancel</Text></TouchableOpacity>
+          				<TouchableOpacity onPress={this.onSave.bind(this)} style={{flex: 1, marginLeft: 5, marginRight: 10, borderColor: client.primaryColor, backgroundColor: client.primaryColor, borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: "white", textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 10, marginLeft: 10, marginBottom: 10, marginRight: 10, fontSize: 18, height: 21}}>Save</Text></TouchableOpacity>
 					</View>
 				</ScrollView>
 			</KeyboardAvoidingView>
@@ -105,10 +105,10 @@ export class CardListView extends Component{
 						<Text style={{fontWeight:'500',flexWrap:'wrap', fontSize: 18, marginLeft: 2}}>{this.props.firstName} {this.props.lastName}</Text>
 						<Text style={{flexWrap:'wrap', fontSize: 14, color: "#A8A8A8", marginLeft: 2}}>{this.props.title}, {this.props.company}</Text>
 						<View style={{marginTop: 5, margin: 2}}>
-							<View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 14, marginTop: 5, marginRight: 5}} source={require('./icon/envelope.png')}/><Text style={{fontSize: 14, flex: 1}}>{this.props.email}</Text></View>
-            				<View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 14, marginTop: 5, marginRight: 5}} source={require('./icon/telephone.png')}/><Text style={{fontSize: 14, flex: 1}}>{this.props.mobile}</Text></View>
-            				<View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 14, marginTop: 5, marginRight: 5}} source={require('./icon/Twitter.png')}/><Text style={{fontSize: 14, flex: 1}}>{this.props.twitter}</Text></View>
-            				<View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 14, marginTop: 5, marginRight: 5}} source={require('./icon/Linkedin.png')}/><Text style={{fontSize: 14, flex: 1}}>{this.props.linkedin}</Text></View>
+							<View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 14, marginTop: 5, marginRight: 5}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/personal-leads/envelope.png"}}/><Text style={{fontSize: 14, flex: 1, marginTop: 1}}>{this.props.email}</Text></View>
+            				<View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 14, marginTop: 5, marginRight: 5}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/personal-leads/telephone.png"}}/><Text style={{fontSize: 14, flex: 1, marginTop: 2}}>{this.props.mobile}</Text></View>
+            				<View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 14, marginTop: 5, marginRight: 5}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/personal-leads/Twitter.png"}}/><Text style={{fontSize: 14, flex: 1, marginTop: 2}}>{this.props.twitter}</Text></View>
+            				<View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 14, marginTop: 5, marginRight: 5}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/personal-leads/Linkedin.png"}}/><Text style={{fontSize: 14, flex: 1, marginTop: 3}}>{this.props.linkedin}</Text></View>
 						</View>
 					</View>
 				</View>
