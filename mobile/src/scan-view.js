@@ -37,10 +37,10 @@ export class CodeView extends Component{
 						<Text style={{fontWeight:'500',flexWrap:'wrap', fontSize: 24, marginLeft: 2}}>{firstName} {lastName}</Text>
 						<Text style={{flexWrap:'wrap', fontSize: 18, marginLeft: 2}}>{title}, {company}</Text>
 						<View style={{marginTop: 5, margin: 2}}>
-						  <View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 15, height: 10, marginTop: 5, marginRight: 5}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/personal-leads/envelope.png"}}/><Text style={{fontSize: 14, flex: 1, marginTop: 1}}>{email}</Text></View>
-              <View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 12, height: 12, marginTop: 5, marginRight: 5}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/personal-leads/telephone.png"}}/><Text style={{fontSize: 14, flex: 1, marginTop: 2}}>{mobile}</Text></View>
-              <View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 14, height: 12, marginTop: 5, marginRight: 5}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/personal-leads/Twitter.png"}}/><Text style={{fontSize: 14, flex: 1, marginTop: 2}}>{twitter}</Text></View>
-              <View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 13, height: 12, marginTop: 5, marginRight: 5}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/personal-leads/Linkedin.png"}}/><Text style={{fontSize: 14, flex: 1, marginTop: 3}}>{linkedin}</Text></View>
+						  <View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 14, marginTop: 5, marginRight: 5}} source={require('./icon/envelope.png')}/><Text style={{fontSize: 14, flex: 1}}>{email}</Text></View>
+              <View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 14, marginTop: 5, marginRight: 5}} source={require('./icon/telephone.png')}/><Text style={{fontSize: 14, flex: 1}}>{mobile}</Text></View>
+              <View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 14, marginTop: 5, marginRight: 5}} source={require('./icon/Twitter.png')}/><Text style={{fontSize: 14, flex: 1}}>{twitter}</Text></View>
+              <View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 14, marginTop: 5, marginRight: 5}} source={require('./icon/Linkedin.png')}/><Text style={{fontSize: 14, flex: 1}}>{linkedin}</Text></View>
 						</View>
 					</View>
 				</View>
@@ -54,7 +54,7 @@ export class CodeView extends Component{
                 bgColor='black'
                 fgColor='white' />
             </View>
-            <View style={{height: 40, marginBottom: 10}}>
+            <View style={{flexDirection:'row',flex:1}}>
               <TouchableOpacity style={{flex: 1, marginLeft: 64, marginRight: 64, marginBottom: 8}}  onPress={this.props.hideModal}><Text style={{fontSize: 24, textAlign: "center", color: client.primaryColor}}>Exit</Text></TouchableOpacity>
             </View>
           </View>
@@ -73,8 +73,8 @@ export class ScanView extends Component{
       return(
         <View style={{backgroundColor:'#dedede',position:'absolute',top:0,bottom:0,left:0,right:0,paddingTop:32}}>
           <QRCodeScanner onRead={this.onRead.bind(this)} />
-          <View style={{height: 40, marginBottom: 10}}>
-            <TouchableOpacity style={{flex: 1, marginLeft: 64, marginRight: 64, marginBottom: 8}}  onPress={this.props.hideModal}><Text style={{fontSize: 24, textAlign: "center", color: client.primaryColor}}>Close</Text></TouchableOpacity>
+          <View style={{flexDirection:'row',flex:1,marginTop:128}}>
+            <TouchableOpacity style={{flex: 1, marginLeft: 64, marginRight: 64, marginBottom: 8, marginTop: 10}}  onPress={this.props.hideModal}><Text style={{fontSize: 24, textAlign: "center", color: client.primaryColor}}>Close</Text></TouchableOpacity>
           </View>
         </View>
       )

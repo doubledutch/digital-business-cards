@@ -24,7 +24,8 @@ class HomeView extends Component {
       selectedCard: null,
       showCode: false,
       showScanner: false,
-      showEditor: false
+      showEditor: false,
+      showConfirm: false,
     }
   }
 
@@ -79,14 +80,23 @@ class HomeView extends Component {
             <CardListItem
               showExpanded={index == this.state.selectedCard}
               showCard={() => this.showCard(index)}
+<<<<<<< HEAD
+=======
+              showConfirm={() => this.showConfirm(index)}
+>>>>>>> parent of 79aff28... Icon, Alert, and Button updates
               showAlert = {() => this.showAlert()}
               user={card}
               {...card} />
           )}
         </ScrollView>
         <View style={{ flexDirection: 'row', padding: 2, marginBottom: 20, marginTop: 20}}>
+<<<<<<< HEAD
           <TouchableOpacity onPress={this.showCode} style={{flex: 1, marginLeft: 10, marginRight: 5, borderColor: client.primaryColor, backgroundColor: "white", borderWidth: 1, borderRadius: 20, height: 45}}><Text style={{color: client.primaryColor, textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 10, marginLeft: 10, marginBottom: 10, marginRight: 10, fontSize: 18, height: 21}}>Share My Info</Text></TouchableOpacity>
           <TouchableOpacity onPress={this.scanCode} style={{ flex: 1, marginLeft: 5, marginRight: 10, borderColor: client.primaryColor, backgroundColor: client.primaryColor, borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: "white", textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 10, marginLeft: 10, marginBottom: 10, marginRight: 10, fontSize: 18, height: 21}}>Scan Info</Text></TouchableOpacity>
+=======
+          <TouchableOpacity onPress={this.showCode} style={{ flex: 1, marginLeft: 10, marginRight: 5, borderColor: client.primaryColor, backgroundColor: "white", borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: client.primaryColor, textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 12, marginLeft: 10, marginBottom: 12, marginRight: 10, fontSize: 18, height: 21}}>Share My Info</Text></TouchableOpacity>
+          <TouchableOpacity onPress={this.scanCode} style={{flex: 1, marginLeft: 5, marginRight: 10, borderColor: client.primaryColor, backgroundColor: client.primaryColor, borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: "white", textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 12, marginLeft: 10, marginBottom: 12, marginRight: 10, fontSize: 18, height: 21}}>Scan Info</Text></TouchableOpacity>
+>>>>>>> parent of 79aff28... Icon, Alert, and Button updates
         </View>
         <Modal
             animationType={"slide"}
@@ -116,11 +126,9 @@ class HomeView extends Component {
  
  
     showAlert = () => {
-      const currentCard = this.state.cards[this.state.selectedCard]
-      const alertText = 'Are you sure you want to remove ' + currentCard.firstName + " " + currentCard.lastName + " from your connections?"
        Alert.alert(
-        'Confirm',
-        alertText,
+        'Confirm Delete',
+        'Are you sure you want to remove this contact?',
         [
           {text: 'Cancel', style: 'cancel'},
           {text: 'OK', onPress: () => this.deleteCard ('OK Pressed')},
@@ -148,6 +156,8 @@ class HomeView extends Component {
 
   showCode = () => this.setState({ showCode: true })
 
+  showConfirm = (index) => this.setState({showConfirm: true})
+
   scanCode = () => this.setState({showScanner: true})
 
   exportCards = () => {
@@ -173,12 +183,12 @@ class HomeView extends Component {
   }
 
   hideModal = () => {
-    this.setState({ showCode: false, showScanner: false, showEditor: false })
+    this.setState({ showCode: false, showScanner: false, showEditor: false, showConfirm: false })
   }
 
   editCard = () => {
     this.setState({ showEditor: true })
-    // cards = this.state.cards.push(this.state.myCard)
+    cards = this.state.cards.push(this.state.myCard)
   }
 
   updateCard = (myCard) => {
@@ -197,6 +207,7 @@ class HomeView extends Component {
   
 
   deleteCard = () => {
+    console.log("hhhhi")
     const cards = this.state.cards.filter((_, i) => i !== this.state.selectedCard)
     cardsRef.set(cards)
     this.setState({cards})
