@@ -67,7 +67,7 @@ export class CodeView extends Component{
                 bgColor='black'
                 fgColor='white' />
             </View>
-            <View style={{flexDirection:'row',flex:1}}>
+            <View style={{height: 40, marginBottom: 10}}>
               <TouchableOpacity style={{flex: 1, marginLeft: 64, marginRight: 64, marginBottom: 8}}  onPress={this.props.hideModal}><Text style={{fontSize: 24, textAlign: "center", color: client.primaryColor}}>Exit</Text></TouchableOpacity>
             </View>
           </View>
@@ -86,8 +86,8 @@ export class ScanView extends Component{
       return(
         <View style={{backgroundColor:'#dedede',position:'absolute',top:0,bottom:0,left:0,right:0,paddingTop:32}}>
           <QRCodeScanner onRead={this.onRead.bind(this)} />
-          <View style={{flexDirection:'row',flex:1,marginTop:128}}>
-            <TouchableOpacity style={{flex: 1, marginLeft: 64, marginRight: 64, marginBottom: 8, marginTop: 10}}  onPress={this.props.hideModal}><Text style={{fontSize: 24, textAlign: "center", color: client.primaryColor}}>Close</Text></TouchableOpacity>
+          <View style={{height: 40, marginBottom: 10}}>
+            <TouchableOpacity style={{flex: 1, marginLeft: 64, marginRight: 64, marginBottom: 8}}  onPress={this.props.hideModal}><Text style={{fontSize: 24, textAlign: "center", color: client.primaryColor}}>Close</Text></TouchableOpacity>
           </View>
         </View>
       )
