@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
-import ReactNative from 'react-native'
+import {
+  Alert, Button, Image, Modal, ScrollView, StyleSheet, Text, TextInput,
+  TouchableHighlight, TouchableOpacity, View
+} from 'react-native'
 import { CardView, CardListView } from './card-view'
 import QRCode from 'react-native-qrcode'
 import QRCodeScanner from 'react-native-qrcode-scanner'
-import { LabeledTextInput, FlatButton } from './dd-ui'
+import { LabeledTextInput, FlatButton, assetRoot } from './dd-ui'
 import client, { Avatar } from '@doubledutch/rn-client'
-
-const { Alert, TouchableOpacity, TouchableHighlight, Text, View, ScrollView, Image, Modal,TextInput,Button,StyleSheet} = ReactNative
 
 export class CodeView extends Component{
   constructor() {
@@ -26,7 +27,7 @@ export class CodeView extends Component{
   }
 
   render() {
-    const { id, firstName, lastName, title, company, email, twitter, mobile , linkedin} = this.props.myCard
+    const {id, firstName, lastName, title, company, email, twitter, mobile, linkedin} = this.props.myCard
     const user= client.currentUser
     return(
       <View style={{backgroundColor:'#dedede',paddingTop:32,position:'absolute',top:0,bottom:0,left:0,right:0}}>
@@ -37,10 +38,22 @@ export class CodeView extends Component{
 						<Text style={{fontWeight:'500',flexWrap:'wrap', fontSize: 24, marginLeft: 2}}>{firstName} {lastName}</Text>
 						<Text style={{flexWrap:'wrap', fontSize: 18, marginLeft: 2}}>{title}, {company}</Text>
 						<View style={{marginTop: 5, margin: 2}}>
-              <View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 15, height: 10, marginTop: 5, marginRight: 5}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/personal-leads/envelope.png"}}/><Text style={{fontSize: 14, flex: 1, marginTop: 1}}>{this.props.email}</Text></View>
-              <View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 12, height: 12, marginTop: 5, marginRight: 5}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/personal-leads/telephone.png"}}/><Text style={{fontSize: 14, flex: 1, marginTop: 2}}>{this.props.mobile}</Text></View>
-              <View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 14, height: 12, marginTop: 5, marginRight: 5}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/personal-leads/Twitter.png"}}/><Text style={{fontSize: 14, flex: 1, marginTop: 2}}>{this.props.twitter}</Text></View>
-              <View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 13, height: 12, marginTop: 5, marginRight: 5}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/personal-leads/Linkedin.png"}}/><Text style={{fontSize: 14, flex: 1, marginTop: 3}}>{this.props.linkedin}</Text></View>
+              { email ? <View style={{flexDirection: "row", marginTop: 5}}>
+                <Image style={{width: 15, height: 10, marginTop: 5, marginRight: 5}} source={{uri: `${assetRoot}/envelope.png`}}/>
+                <Text style={{fontSize: 14, flex: 1, marginTop: 1}}>{email}</Text>
+              </View> : null }
+              { mobile ?  <View style={{flexDirection: "row", marginTop: 5}}>
+                <Image style={{width: 12, height: 12, marginTop: 5, marginRight: 5}} source={{uri: `${assetRoot}/telephone.png`}}/>
+                <Text style={{fontSize: 14, flex: 1, marginTop: 2}}>{mobile}</Text>
+              </View> : null }
+              { twitter ? <View style={{flexDirection: "row", marginTop: 5}}>
+                <Image style={{width: 14, height: 12, marginTop: 5, marginRight: 5}} source={{uri: `${assetRoot}/Twitter.png`}}/>
+                <Text style={{fontSize: 14, flex: 1, marginTop: 2}}>{twitter}</Text>
+              </View> : null }
+              { linkedin ? <View style={{flexDirection: "row", marginTop: 5}}>
+                <Image style={{width: 13, height: 12, marginTop: 5, marginRight: 5}} source={{uri: `${assetRoot}/Linkedin.png`}}/>
+                <Text style={{fontSize: 14, flex: 1, marginTop: 3}}>{linkedin}</Text>
+              </View> : null }
 						</View>
 					</View>
 				</View>
