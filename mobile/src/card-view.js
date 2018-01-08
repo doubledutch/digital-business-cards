@@ -23,7 +23,7 @@ export class EditCardView extends Component{
     }
   }
 
-  // Use the supplied key to assign the value
+  // Use the supplied key to assign the value.
 	onChange = (value,key) => {
 		this.setState({[key]: value})
 	}
@@ -105,10 +105,17 @@ export class CardListView extends Component{
 						<Text style={{fontWeight:'500',flexWrap:'wrap', fontSize: 18, marginLeft: 2}}>{this.props.firstName} {this.props.lastName}</Text>
 						<Text style={{flexWrap:'wrap', fontSize: 14, color: "#A8A8A8", marginLeft: 2}}>{this.props.title}, {this.props.company}</Text>
 						<View style={{marginTop: 5, margin: 2}}>
+<<<<<<< HEAD
+							<View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 15, height: 10, marginTop: 5, marginRight: 5}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/personal-leads/envelope.png"}}/><Text style={{fontSize: 14, flex: 1, marginTop: 1}}>{this.props.email}</Text></View>
+            				<View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 12, height: 12, marginTop: 5, marginRight: 5}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/personal-leads/telephone.png"}}/><Text style={{fontSize: 14, flex: 1, marginTop: 2}}>{this.props.mobile}</Text></View>
+            				<View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 14, height: 12, marginTop: 5, marginRight: 5}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/personal-leads/Twitter.png"}}/><Text style={{fontSize: 14, flex: 1, marginTop: 2}}>{this.props.twitter}</Text></View>
+            				<View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 13, height: 12, marginTop: 5, marginRight: 5}} source={{uri: "https://dml2n2dpleynv.cloudfront.net/extensions/personal-leads/Linkedin.png"}}/><Text style={{fontSize: 14, flex: 1, marginTop: 3}}>{this.props.linkedin}</Text></View>
+=======
 							<View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 14, marginTop: 5, marginRight: 5}} source={require('./icon/envelope.png')}/><Text style={{fontSize: 14, flex: 1}}>{this.props.email}</Text></View>
             				<View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 14, marginTop: 5, marginRight: 5}} source={require('./icon/telephone.png')}/><Text style={{fontSize: 14, flex: 1}}>{this.props.mobile}</Text></View>
             				<View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 14, marginTop: 5, marginRight: 5}} source={require('./icon/Twitter.png')}/><Text style={{fontSize: 14, flex: 1}}>{this.props.twitter}</Text></View>
             				<View style={{flexDirection: "row", marginTop: 5}}><Image style={{width: 14, marginTop: 5, marginRight: 5}} source={require('./icon/Linkedin.png')}/><Text style={{fontSize: 14, flex: 1}}>{this.props.linkedin}</Text></View>
+>>>>>>> parent of 79aff28... Icon, Alert, and Button updates
 						</View>
 					</View>
 				</View>

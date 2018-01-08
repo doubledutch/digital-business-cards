@@ -79,7 +79,7 @@ export class ScanView extends Component{
         </View>
       )
     } catch(e){
-      console.log(e)
+      
     }
   }
 }
