@@ -105,22 +105,22 @@ export class CardListView extends Component{
 						<Text style={{fontWeight:'500',flexWrap:'wrap', fontSize: 18, marginLeft: 2}}>{this.props.firstName} {this.props.lastName}</Text>
 						<Text style={{flexWrap:'wrap', fontSize: 14, color: "#A8A8A8", marginLeft: 2}}>{this.props.title}, {this.props.company}</Text>
 						<View style={{marginTop: 5, margin: 2}}>
-							<View style={{flexDirection: "row", marginTop: 5}}>
+							{ this.props.email ? <View style={{flexDirection: "row", marginTop: 5}}>
 								<Image style={{width: 15, height: 10, marginTop: 5, marginRight: 5}} source={{uri: `${assetRoot}/envelope.png`}}/>
 								<Text style={{fontSize: 14, flex: 1, marginTop: 1}}>{this.props.email}</Text>
-							</View>
-							<View style={{flexDirection: "row", marginTop: 5}}>
+							</View> : null }
+							{ this.props.mobile ? <View style={{flexDirection: "row", marginTop: 5}}>
 								<Image style={{width: 12, height: 12, marginTop: 5, marginRight: 5}} source={{uri: `${assetRoot}/telephone.png`}}/>
 								<Text style={{fontSize: 14, flex: 1, marginTop: 2}}>{this.props.mobile}</Text>
-							</View>
-							<View style={{flexDirection: "row", marginTop: 5}}>
+							</View> : null }
+							{ this.props.twitter ? <View style={{flexDirection: "row", marginTop: 5}}>
 								<Image style={{width: 14, height: 12, marginTop: 5, marginRight: 5}} source={{uri: `${assetRoot}/Twitter.png`}}/>
 								<Text style={{fontSize: 14, flex: 1, marginTop: 2}}>{this.props.twitter}</Text>
-							</View>
-							<View style={{flexDirection: "row", marginTop: 5}}>
+							</View> : null }
+							{ this.props.linkedin ? <View style={{flexDirection: "row", marginTop: 5}}>
 								<Image style={{width: 13, height: 12, marginTop: 5, marginRight: 5}} source={{uri: `${assetRoot}/Linkedin.png`}}/>
 								<Text style={{fontSize: 14, flex: 1, marginTop: 3}}>{this.props.linkedin}</Text>
-							</View>
+							</View> : null }
 						</View>
 					</View>
 				</View>
