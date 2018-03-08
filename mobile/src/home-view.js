@@ -81,7 +81,6 @@ class HomeView extends Component {
         </View>
           { this.state.cards.length === 0 && <Text style={s.noConnections}>No connections scanned yet.</Text> }
           {this.state.cards.map((card, index) =>
-            console.log('card', card) ||
             <CardListItem
               showExpanded={index == this.state.selectedCard}
               showCard={() => this.showCard(index)}
@@ -184,10 +183,6 @@ class HomeView extends Component {
 
   editCard = () => {
     this.setState({ showEditor: true })
-    var cards = [...this.state.cards, this.state.myCard]
-    cardsRef.set(cards)
-    this.saveLocalCards({myCard: this.state.myCard, cards})
-    this.setState({cards, showScanner: false})
   }
 
   updateCard = (myCard) => {
@@ -204,8 +199,6 @@ class HomeView extends Component {
   }
 
   updateScannedCard = (index, updatedCard) => {
-    console.log(index)
-    console.log(updatedCard)
     var cards = [...this.state.cards.slice(0, index), updatedCard, ...this.state.cards.slice(index + 1)]
     cardsRef.set(cards)
     this.saveLocalCards({myCard: this.state.myCard, cards})
