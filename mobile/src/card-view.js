@@ -34,7 +34,7 @@ export class EditCardView extends Component{
 
 	render(){
 		return(
-			<KeyboardAvoidingView behavior={Platform.select({ios: "padding", android: null})} style={{backgroundColor:"white" ,paddingTop:32,paddingLeft:8,paddingRight:8,position:'absolute',top:0,bottom:0,left:0,right:0}}>
+			<View style={{backgroundColor:"white" ,paddingTop:32,paddingLeft:8,paddingRight:8,position:'absolute',top:0,bottom:0,left:0,right:0}}>
 				<ScrollView style={{marginTop: 40}}>
 					<View style={{flexDirection: 'row'}}>
 						<LabeledTextInput style={{flex: 1, borderBottomColor: "#E8E8EE", borderBottomWidth: 1, height: 43, marginRight: 10, marginLeft: 5, marginTop: 10}}id="firstName" label="First" value={this.props.firstName} onChangeText={this.onChange}/>
@@ -57,7 +57,7 @@ export class EditCardView extends Component{
           	<TouchableOpacity onPress={this.onSave.bind(this)} style={{flex: 1, marginLeft: 5, marginRight: 10, borderColor: client.primaryColor, backgroundColor: client.primaryColor, borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: "white", textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 12, marginLeft: 10, marginBottom: 12, marginRight: 10, fontSize: 18, height: 21}}>Save</Text></TouchableOpacity>
 					</View>
 				</ScrollView>
-			</KeyboardAvoidingView>
+			</View>
 		)
 	}
 }
@@ -84,7 +84,7 @@ export class CardView extends Component{
 		return(
 			<View style={{marginTop: 10}}>
 				<View style={{height: 80, backgroundColor:"#FFFFFF",borderRadius:4,flexDirection:'row'}}>
-          			<Avatar user={this.props.user} client={client} size={64} style={{marginRight: 8, marginTop: 8, marginLeft: 8}} />
+          	<Avatar user={this.props.user} client={client} size={64} style={{marginRight: 8, marginTop: 8, marginLeft: 8}} />
 					<View style={{flexDirection:'column',flex:1}}>
 						<Text style={{fontSize:24, fontWeight: "500", marginTop: 12}}>{this.props.firstName} {this.props.lastName}</Text>
 						<Text style={{fontSize: 18 ,marginBottom:0}}>{this.props.title}, {this.props.company}</Text>
@@ -96,11 +96,63 @@ export class CardView extends Component{
 }
 
 export class CardListView extends Component{
+  constructor(props) {
+    super(props);
+    this.state = { notes: this.props.notes, isFocused: false, inputHeight: 0 }
+  }
+
+  updateLead = () => {
+    this.props.onUpdateNotes(this.state.notes)
+    this.onBlur()
+  }
+
+  onFocus = () => {
+    this.handleInputFocus()
+    this.refs.NotesInput.focus(); 
+  }
+  onBlur = () => {
+    this.handleInputBlur()
+    this.refs.NotesInput.blur(); 
+  }
+
+  onCancel = () => {
+    this.onBlur()
+    this.setState({notes: this.props.notes})
+  }
+  handleInputFocus = () => this.setState({ isFocused: true })
+
+  handleInputBlur = () => this.setState({ isFocused: false })
+
+  _handleSizeChange = event => {
+    this.setState({
+      inputHeight: event.nativeEvent.contentSize.height + 5
+    });
+  };
+
+  renderButtons = () => {
+    if (this.state.isFocused) {
+      return (
+        <View style={{flexDirection:"row"}}>
+          <View style={{flex:1}}/>
+          <TouchableOpacity style={{height: 16, paddingRight: 15, paddingLeft:15}}  onPress={this.onCancel}><Text style={{fontSize: 14, textAlign: "right", color: client.primaryColor}}>Cancel</Text></TouchableOpacity>
+          <TouchableOpacity onPress={this.updateLead} style={{height: 16, paddingLeft: 15}}><Text style={{fontSize: 14, textAlign: "right", color: client.primaryColor}}>Save</Text></TouchableOpacity>
+        </View>
+      )
+    }
+    else {
+      return (
+        <TouchableOpacity style={{height: 16, flex: 1}}  onPress={this.onFocus}><Text style={{fontSize: 14, textAlign: "right", color: client.primaryColor}}>Edit</Text></TouchableOpacity>
+      )
+    }
+  }
+
+
+
 	render() {
 		return(
 			<View style={{ backgroundColor:"#FFFFFF", borderBottomColor: "#E8E8EE", borderBottomWidth: 1}}>
 				<View style={{borderRadius:4,flexDirection:'row', padding: 8}}>
-          			<Avatar user={this.props.user} client={client} size={38} style={{marginRight: 8}} />
+          <Avatar user={this.props.user} client={client} size={38} style={{marginRight: 8}} />
 					<View style={{flexDirection:'column',flex:1}}>
 						<Text style={{fontWeight:'500',flexWrap:'wrap', fontSize: 18, marginLeft: 2}}>{this.props.firstName} {this.props.lastName}</Text>
 						<Text style={{flexWrap:'wrap', fontSize: 14, color: "#A8A8A8", marginLeft: 2}}>{this.props.title}, {this.props.company}</Text>
@@ -124,10 +176,21 @@ export class CardListView extends Component{
 						</View>
 					</View>
 				</View>
-				<TouchableOpacity style={{height: 16, flex: 1, marginLeft: 200, marginRight: 18, marginTop: 13, marginBottom: 10}}  onPress={this.props.showAlert}><Text style={{fontSize: 14, textAlign: "right", color: client.primaryColor}}>Remove</Text></TouchableOpacity>
+        <View style={{minHeight: 60, borderBottomColor: "#E8E8EE", borderBottomWidth: 2, borderTopColor: "#E8E8EE", borderTopWidth: 1}}>
+          <View style={{flexDirection:"row"}}>
+            <Text style={{fontSize: 14, marginTop: 11, marginLeft: 11, marginBottom: 0}}>Notes</Text>
+            <View style={{marginTop: 11, marginRight: 11, flex: 1}}>
+              {this.renderButtons()}
+            </View>
+          </View>
+          <TextInput ref='NotesInput' placeholderTextColor="#E1E1E1" placeholder="Tap to add text" onContentSizeChange={(event) => this._handleSizeChange(event)} multiline={true} onFocus={this.handleInputFocus} style={{height: Math.max(25, this.state.inputHeight), textAlignVertical: 'top', flex: 1, marginRight: 10, marginLeft: 10, marginBottom: 5, fontSize: 14 }} id="notes" key="notes" value={this.state.notes} onChangeText={(notes) => this.setState({notes})} />
+        </View>
+				<TouchableOpacity style={{height: 16, flex: 1, marginLeft: 18, marginRight: 18, marginTop: 13, marginBottom: 10}}  onPress={this.props.showAlert}><Text style={{fontSize: 14, fontWeight: "bold", textAlign: "center", color: client.primaryColor}}>Remove Lead</Text></TouchableOpacity>
 			</View>
 		)
-	}
+  }
+  
+
 }
 
 export class CardListItem extends Component{
@@ -136,7 +199,7 @@ export class CardListItem extends Component{
 			return(
 				<TouchableOpacity onPress={this.props.showCard} style={{flex:1,marginBottom:8}}>
 					<View style={{flex:1}}>
-						<CardListView {...this.props} />
+						<CardListView {...this.props} onUpdateNotes={this.props.onUpdateNotes}/>
 					</View>
 				</TouchableOpacity>
 			)
