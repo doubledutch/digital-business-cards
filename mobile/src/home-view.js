@@ -72,7 +72,7 @@ class HomeView extends Component {
           </View>
         </TouchableOpacity>
        
-        <KeyboardAwareScrollView style={s.scroll} viewIsInsideTabBar={true} enableAutomaticScroll={true} extraScrollHeight={200}>
+        <KeyboardAwareScrollView style={s.scroll} viewIsInsideTabBar={true} enableAutomaticScroll={true} extraScrollHeight={200} keyboardShouldPersistTaps={'always'}>
         <View style={{backgroundColor: 'white', height: 41, borderBottomColor: '#E8E8EE', borderBottomWidth: 1, flex: 1, flexDirection: 'row'}}>
           <Text style={{fontSize: 18, marginLeft: 10, marginTop: 10, height: 21}}>My Connections</Text>
           {this.state.cards.length > 0 &&

@@ -28,7 +28,7 @@ export class EditCardView extends Component{
 		this.setState({[key]: value})
 	}
 	// Hand form state over to function passed in through props
-	onSave(){
+	onSave= () => {
 		this.props.updateCard(this.state)
 	}
 
@@ -54,7 +54,7 @@ export class EditCardView extends Component{
 					</View>
 					<View style={{flexDirection:'row',marginTop:20}}>
 						<TouchableOpacity onPress={this.props.hideModal} style={{ flex: 1, marginLeft: 10, marginRight: 5, borderColor: client.primaryColor, backgroundColor: "white", borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: client.primaryColor, textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 12, marginLeft: 10, marginBottom: 12, marginRight: 10, fontSize: 18, height: 21}}>Cancel</Text></TouchableOpacity>
-          	<TouchableOpacity onPress={this.onSave.bind(this)} style={{flex: 1, marginLeft: 5, marginRight: 10, borderColor: client.primaryColor, backgroundColor: client.primaryColor, borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: "white", textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 12, marginLeft: 10, marginBottom: 12, marginRight: 10, fontSize: 18, height: 21}}>Save</Text></TouchableOpacity>
+          	<TouchableOpacity onPress={this.onSave} style={{flex: 1, marginLeft: 5, marginRight: 10, borderColor: client.primaryColor, backgroundColor: client.primaryColor, borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: "white", textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 12, marginLeft: 10, marginBottom: 12, marginRight: 10, fontSize: 18, height: 21}}>Save</Text></TouchableOpacity>
 					</View>
 				</ScrollView>
 			</View>
