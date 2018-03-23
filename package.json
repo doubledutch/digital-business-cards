@@ -7,6 +7,7 @@
     "start": "react-native start",
     "run": "node_modules/react-native/local-cli/cli.js run-ios"
   },
+  "license": "apache-2.0",
   "dependencies": {
     "react": "15.6.1",
     "react-native": "0.46.4",
