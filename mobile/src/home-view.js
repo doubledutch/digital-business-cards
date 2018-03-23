@@ -6,7 +6,6 @@ import { CardView, CardListItem, EditCardView } from './card-view'
 import { ScanView, CodeView } from './scan-view'
 import FirebaseConnector from '@doubledutch/firebase-connector'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
-// Text.defaultProps.allowFontScaling=false
 const fbc = FirebaseConnector(client, 'personalleads')
 fbc.initializeAppWithSimpleBackend()
 
