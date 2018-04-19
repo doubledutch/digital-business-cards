@@ -101,6 +101,7 @@ class HomeView extends Component {
               showCard={() => this.showCard(index)}
               showAlert = {() => this.showAlert()}
               onUpdateNotes={(notes) => this.updateScannedCard(index, {...card, notes})}
+              user={card}
               {...card} />
           )}
         </KeyboardAwareScrollView>
