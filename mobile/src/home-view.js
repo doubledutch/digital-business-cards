@@ -15,12 +15,13 @@
  */
 
 import React, { Component } from 'react'
-import ReactNative, { AsyncStorage, Modal, Platform, ScrollView, Share, Text, TouchableOpacity, View, Alert } from 'react-native'
+import ReactNative, { AsyncStorage, Modal, Platform, ScrollView, Share, Text, TouchableOpacity, View, Alert, KeyboardAvoidingView, TextInput } from 'react-native'
 import client, { Avatar, TitleBar } from '@doubledutch/rn-client'
 import { LabeledTextInput, FlatButton } from './dd-ui'
 import { CardView, CardListItem, EditCardView } from './card-view'
 import { ScanView, CodeView } from './scan-view'
 import FirebaseConnector from '@doubledutch/firebase-connector'
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 const fbc = FirebaseConnector(client, 'personalleads')
 fbc.initializeAppWithSimpleBackend()
 
@@ -35,7 +36,7 @@ class HomeView extends Component {
 
     // Initially, create a blank state filled out only with the current user's id
     this.state = {
-      myCard: Object.assign({mobile: null, linkedin: null, twitter: null}, currentUser),
+      myCard: Object.assign({mobile: null, linkedin: null, twitter: null, leadNotes: null}, currentUser),
       cards: [],
       selectedCard: null,
       showCode: false,
@@ -73,9 +74,11 @@ class HomeView extends Component {
     })
   }
 
+ 
+
   render() {
     return (
-      <View style={s.main}>
+      <View style={s.main} >
         <TitleBar title="Personal Leads" client={client} />
         <TouchableOpacity onPress={this.editCard.bind(this)}>
           <CardView user={client.currentUser} {...this.state.myCard} />
@@ -84,7 +87,7 @@ class HomeView extends Component {
           </View>
         </TouchableOpacity>
        
-        <ScrollView style={s.scroll}>
+        <KeyboardAwareScrollView style={s.scroll} viewIsInsideTabBar={true} enableAutomaticScroll={true} extraScrollHeight={200} keyboardShouldPersistTaps={'always'}>
         <View style={{backgroundColor: 'white', height: 41, borderBottomColor: '#E8E8EE', borderBottomWidth: 1, flex: 1, flexDirection: 'row'}}>
           <Text style={{fontSize: 18, marginLeft: 10, marginTop: 10, height: 21}}>My Connections</Text>
           {this.state.cards.length > 0 &&
@@ -92,15 +95,16 @@ class HomeView extends Component {
           }
         </View>
           { this.state.cards.length === 0 && <Text style={s.noConnections}>No connections scanned yet.</Text> }
-          {this.state.cards.map((card, index) => 
+          {this.state.cards.map((card, index) =>
             <CardListItem
               showExpanded={index == this.state.selectedCard}
               showCard={() => this.showCard(index)}
               showAlert = {() => this.showAlert()}
+              onUpdateNotes={(notes) => this.updateScannedCard(index, {...card, notes})}
               user={card}
               {...card} />
           )}
-        </ScrollView>
+        </KeyboardAwareScrollView>
         <View style={{ flexDirection: 'row', padding: 2, marginBottom: 20, marginTop: 20}}>
           <TouchableOpacity onPress={this.showCode} style={{flex: 1, marginLeft: 10, marginRight: 5, borderColor: client.primaryColor, backgroundColor: "white", borderWidth: 1, borderRadius: 20, height: 45}}><Text style={{color: client.primaryColor, textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 10, marginLeft: 10, marginBottom: 10, marginRight: 10, fontSize: 18, height: 21}}>Share My Info</Text></TouchableOpacity>
           <TouchableOpacity onPress={this.scanCode} style={{ flex: 1, marginLeft: 5, marginRight: 10, borderColor: client.primaryColor, backgroundColor: client.primaryColor, borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: "white", textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 10, marginLeft: 10, marginBottom: 10, marginRight: 10, fontSize: 18, height: 21}}>Scan Info</Text></TouchableOpacity>
@@ -208,6 +212,19 @@ class HomeView extends Component {
     cardsRef.set(cards)
     this.saveLocalCards({myCard: this.state.myCard, cards})
     this.setState({cards, showScanner: false})
+  }
+
+  updateScannedCard = (index, updatedCard) => {
+    var cards = [...this.state.cards.slice(0, index), updatedCard, ...this.state.cards.slice(index + 1)]
+    cardsRef.set(cards)
+    this.saveLocalCards({myCard: this.state.myCard, cards})
+    this.setState({cards, showScanner: false})    
+  }
+
+
+  onUpdateLead = (card) => {
+    cardsRef.set(cards)
+    this.saveLocalCards({myCard: this.state.myCard, cards})
   }
 
   
