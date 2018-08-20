@@ -180,6 +180,7 @@ class HomeView extends Component {
       if (card.email) data += "email : " + card.email + "\n"
       if (card.linkedin) data += "linkedin : " + card.linkedin + "\n"
       if (card.twitter) data += "twitter : " + card.twitter + "\n"
+      if (card.notes) data += "notes : " + card.notes + "\n"
       return data
     }).join('\n\n')
     Share.share({ message: data, title: 'Exported Cards' }, {})
