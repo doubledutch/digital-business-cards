@@ -99,11 +99,11 @@ export class CardView extends Component{
 	render() {
 		return(
 			<View style={{marginTop: 10}}>
-				<View style={{height: 80, backgroundColor:"#FFFFFF",borderRadius:4,flexDirection:'row'}}>
-          	<Avatar user={this.props.user} client={client} size={64} style={{marginRight: 8, marginTop: 8, marginLeft: 8}} />
+				<View style={{backgroundColor:"#FFFFFF",borderRadius:4,flexDirection:'row', alignItems: "center", padding: 8}}>
+          <Avatar user={this.props.user} client={client} size={64} style={{marginRight: 8}} />
 					<View style={{flexDirection:'column',flex:1}}>
-						<Text style={{fontSize:24, fontWeight: "500", marginTop: 12}}>{this.props.firstName} {this.props.lastName}</Text>
-						<Text style={{fontSize: 18 ,marginBottom:0}}>{this.props.title}, {this.props.company}</Text>
+						<Text style={{fontSize:24, fontWeight: "500"}}>{this.props.firstName} {this.props.lastName}</Text>
+						<Text style={{fontSize: 18}}>{this.props.title} {this.props.company ? ", " + this.props.company : null}</Text>
 					</View>
 				</View>
 			</View>
