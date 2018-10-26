@@ -16,14 +16,15 @@
 
 import React, { Component } from 'react'
 import ReactNative, { AsyncStorage, Modal, Platform, ScrollView, Share, Text, TouchableOpacity, View, Alert, KeyboardAvoidingView, TextInput } from 'react-native'
-import client, { Avatar, TitleBar } from '@doubledutch/rn-client'
-import { LabeledTextInput, FlatButton } from './dd-ui'
+import client, { Avatar, TitleBar, useStrings, translate as t } from '@doubledutch/rn-client'
+import i18n from './i18n'
 import { CardView, CardListItem, EditCardView } from './card-view'
 import { ScanView, CodeView } from './scan-view'
 import FirebaseConnector from '@doubledutch/firebase-connector'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
 const fbc = FirebaseConnector(client, 'personalleads')
 fbc.initializeAppWithSimpleBackend()
+useStrings(i18n)
 
 const { currentEvent, currentUser } = client
 
@@ -79,22 +80,22 @@ class HomeView extends Component {
   render() {
     return (
       <View style={s.main} >
-        <TitleBar title="Personal Leads" client={client} />
+        <TitleBar title={t('personal_leads')} client={client} />
         <TouchableOpacity onPress={this.editCard.bind(this)}>
           <CardView user={client.currentUser} {...this.state.myCard} />
           <View style={{ position: 'absolute', marginTop: 22, right: 10, backgroundColor: 'white'}}>
-            <Text style={{ color: '#888888', backgroundColor: 'white', fontSize: 14, marginTop: 8}}>Edit Info</Text>
+            <Text style={{ color: '#888888', backgroundColor: 'white', fontSize: 14, marginTop: 8}}>{t("edit")}</Text>
           </View>
         </TouchableOpacity>
        
         <KeyboardAwareScrollView style={s.scroll} viewIsInsideTabBar={true} enableAutomaticScroll={true} extraScrollHeight={200} keyboardShouldPersistTaps={'always'}>
         <View style={{backgroundColor: 'white', height: 41, borderBottomColor: '#E8E8EE', borderBottomWidth: 1, flex: 1, flexDirection: 'row'}}>
-          <Text style={{fontSize: 18, marginLeft: 10, marginTop: 10, height: 21}}>My Connections</Text>
+          <Text style={{fontSize: 18, marginLeft: 10, marginTop: 10, height: 21}}>{t("my_connections")}</Text>
           {this.state.cards.length > 0 &&
-            <TouchableOpacity style={{height: 16, flex: 1, marginRight: 18, marginLeft: 50, marginTop: 13}}  onPress={this.exportCards}><Text style={{fontSize: 14, textAlign: "right", color: client.primaryColor}}>Export All</Text></TouchableOpacity>
+            <TouchableOpacity style={{height: 16, flex: 1, marginRight: 18, marginLeft: 50, marginTop: 13}}  onPress={this.exportCards}><Text style={{fontSize: 14, textAlign: "right", color: client.primaryColor}}>{t("export")}</Text></TouchableOpacity>
           }
         </View>
-          { this.state.cards.length === 0 && <Text style={s.noConnections}>No connections scanned yet.</Text> }
+          { this.state.cards.length === 0 && <Text style={s.noConnections}>{t("no_connections")}</Text> }
           {this.state.cards.map((card, index) =>
             <CardListItem
               showExpanded={index == this.state.selectedCard}
@@ -106,8 +107,8 @@ class HomeView extends Component {
           )}
         </KeyboardAwareScrollView>
         <View style={{ flexDirection: 'row', padding: 2, marginBottom: 20, marginTop: 20}}>
-          <TouchableOpacity onPress={this.showCode} style={{flex: 1, marginLeft: 10, marginRight: 5, borderColor: client.primaryColor, backgroundColor: "white", borderWidth: 1, borderRadius: 20, height: 45}}><Text style={{color: client.primaryColor, textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 10, marginLeft: 10, marginBottom: 10, marginRight: 10, fontSize: 18, height: 21}}>Share My Info</Text></TouchableOpacity>
-          <TouchableOpacity onPress={this.scanCode} style={{ flex: 1, marginLeft: 5, marginRight: 10, borderColor: client.primaryColor, backgroundColor: client.primaryColor, borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: "white", textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 10, marginLeft: 10, marginBottom: 10, marginRight: 10, fontSize: 18, height: 21}}>Scan Info</Text></TouchableOpacity>
+          <TouchableOpacity onPress={this.showCode} style={{flex: 1, marginLeft: 10, marginRight: 5, borderColor: client.primaryColor, backgroundColor: "white", borderWidth: 1, borderRadius: 20, height: 45}}><Text style={{color: client.primaryColor, textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 10, marginLeft: 10, marginBottom: 10, marginRight: 10, fontSize: 18, height: 21}}>{t("share")}</Text></TouchableOpacity>
+          <TouchableOpacity onPress={this.scanCode} style={{ flex: 1, marginLeft: 5, marginRight: 10, borderColor: client.primaryColor, backgroundColor: client.primaryColor, borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: "white", textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 10, marginLeft: 10, marginBottom: 10, marginRight: 10, fontSize: 18, height: 21}}>{t("scan")}</Text></TouchableOpacity>
         </View>
         <Modal
             animationType={"slide"}
@@ -128,7 +129,7 @@ class HomeView extends Component {
             transparent={true}
             visible={this.state.showEditor}
             onRequestClose={() => { }}>
-          <TitleBar title="Personal Leads" client={client} />
+          <TitleBar title={t('personal_leads')} client={client} />
           <EditCardView {...this.state.myCard} updateCard={this.updateCard} hideModal={this.hideModal} />
         </Modal>
       </View>
@@ -138,13 +139,14 @@ class HomeView extends Component {
  
     showAlert = () => {
       const currentCard = this.state.cards[this.state.selectedCard]
-      const alertText = 'Are you sure you want to remove ' + currentCard.firstName + " " + currentCard.lastName + " from your connections?"
+      const name = currentCard.firstName + " " + currentCard.lastName
+      const alertText = t('alert', {name})
        Alert.alert(
-        'Confirm',
+        t("confirm"),
         alertText,
         [
-          {text: 'Cancel', style: 'cancel'},
-          {text: 'OK', onPress: () => this.deleteCard ('OK Pressed')},
+          {text: t("cancel"), style: 'cancel'},
+          {text: t("OK"), onPress: () => this.deleteCard ('OK Pressed')},
         ],
         { cancelable: false }
        )

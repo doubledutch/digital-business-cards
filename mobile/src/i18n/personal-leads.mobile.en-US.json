@@ -1,0 +1,22 @@
+{
+  "personal_leads": "Personal Leads",
+  "alert": "Are you sure you want to remove \"${name}\" from your connections?",
+  "confirm": "Confirm",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "OK": "OK",
+  "delete_prompt": "Are you sure you want to delete this contact?",
+  "edit": "Edit",
+  "save": "Save",
+  "remove_lead": "Remove Lead",
+  "no_connections": "No connections scanned yet.",
+  "export": "Export All",
+  "edit": "Edit Info",
+  "my_connections": "My Connections",
+  "share": "Share My Info",
+  "scan": "Scan Info",
+  "exit": "Exit",
+  "close": "Close",
+  "notes": "Notes"
+
+}
