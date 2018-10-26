@@ -23,7 +23,7 @@ import { CardView, CardListView } from './card-view'
 import QRCode from 'react-native-qrcode'
 import QRCodeScanner from 'react-native-qrcode-scanner'
 import { LabeledTextInput, FlatButton, assetRoot } from './dd-ui'
-import client, { Avatar } from '@doubledutch/rn-client'
+import client, { Avatar, translate as t } from '@doubledutch/rn-client'
 
 export class CodeView extends Component{
   constructor() {
@@ -84,7 +84,7 @@ export class CodeView extends Component{
                 fgColor='white' />
             </View>
             <View style={{height: 40, marginBottom: 10}}>
-              <TouchableOpacity style={{flex: 1, marginLeft: 64, marginRight: 64, marginBottom: 8}}  onPress={this.props.hideModal}><Text style={{fontSize: 24, textAlign: "center", color: client.primaryColor}}>Exit</Text></TouchableOpacity>
+              <TouchableOpacity style={{flex: 1, marginLeft: 64, marginRight: 64, marginBottom: 8}}  onPress={this.props.hideModal}><Text style={{fontSize: 24, textAlign: "center", color: client.primaryColor}}>{t("exit")}</Text></TouchableOpacity>
             </View>
           </View>
         </View>
@@ -103,7 +103,7 @@ export class ScanView extends Component{
         <View style={{backgroundColor:'#dedede',position:'absolute',top:0,bottom:0,left:0,right:0,paddingTop:32}}>
           <QRCodeScanner onRead={this.onRead.bind(this)} />
           <View style={{height: 40, marginBottom: 10}}>
-            <TouchableOpacity style={{flex: 1, marginLeft: 64, marginRight: 64, marginBottom: 8}}  onPress={this.props.hideModal}><Text style={{fontSize: 24, textAlign: "center", color: client.primaryColor}}>Close</Text></TouchableOpacity>
+            <TouchableOpacity style={{flex: 1, marginLeft: 64, marginRight: 64, marginBottom: 8}}  onPress={this.props.hideModal}><Text style={{fontSize: 24, textAlign: "center", color: client.primaryColor}}>{t("close")}</Text></TouchableOpacity>
           </View>
         </View>
       )

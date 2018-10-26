@@ -19,7 +19,7 @@ import React, { Component } from 'react'
 import { LabeledTextInput, FlatButton, assetRoot } from './dd-ui'
 
 import { Alert, KeyboardAvoidingView, Platform, TouchableOpacity, TouchableHighlight, Text, View, ScrollView, Image, Modal, TextInput, Button, StyleSheet} from 'react-native'
-import client, { Avatar } from '@doubledutch/rn-client'
+import client, { Avatar, translate as t } from '@doubledutch/rn-client'
 
 export class EditCardView extends Component{
 	constructor(props){
@@ -69,8 +69,8 @@ export class EditCardView extends Component{
 						<LabeledTextInput style={{flex: 1, borderBottomColor: "#E8E8EE", borderBottomWidth: 1, height: 43, marginLeft: 10, marginRight: 5, marginTop: 10}} id="twitter" label="Twitter" value={this.props.twitter} onChangeText={this.onChange} />
 					</View>
 					<View style={{flexDirection:'row',marginTop:20}}>
-						<TouchableOpacity onPress={this.props.hideModal} style={{ flex: 1, marginLeft: 10, marginRight: 5, borderColor: client.primaryColor, backgroundColor: "white", borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: client.primaryColor, textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 12, marginLeft: 10, marginBottom: 12, marginRight: 10, fontSize: 18, height: 21}}>Cancel</Text></TouchableOpacity>
-          	<TouchableOpacity onPress={this.onSave} style={{flex: 1, marginLeft: 5, marginRight: 10, borderColor: client.primaryColor, backgroundColor: client.primaryColor, borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: "white", textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 12, marginLeft: 10, marginBottom: 12, marginRight: 10, fontSize: 18, height: 21}}>Save</Text></TouchableOpacity>
+						<TouchableOpacity onPress={this.props.hideModal} style={{ flex: 1, marginLeft: 10, marginRight: 5, borderColor: client.primaryColor, backgroundColor: "white", borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: client.primaryColor, textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 12, marginLeft: 10, marginBottom: 12, marginRight: 10, fontSize: 18, height: 21}}>{t("cancel")}</Text></TouchableOpacity>
+          	<TouchableOpacity onPress={this.onSave} style={{flex: 1, marginLeft: 5, marginRight: 10, borderColor: client.primaryColor, backgroundColor: client.primaryColor, borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: "white", textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 12, marginLeft: 10, marginBottom: 12, marginRight: 10, fontSize: 18, height: 21}}>{t("save")}</Text></TouchableOpacity>
 					</View>
 				</ScrollView>
 			</View>
@@ -83,11 +83,11 @@ export class ConfirmView extends Component{
 			return(
 				<View style={{backgroundColor:'#dedede',position:'absolute',top:0,bottom:0,left:0,right:0,paddingTop:32}}>
 				  <View style={{flexDirection:'column',flex:1,marginTop:"40%"}}>
-				  	<Text style={{textAlign: "center", fontSize: 18}}>Are you sure you want to delete this contact?</Text>
-					<View style={{flexDirection:"row", flex: 1, marginTop: 20}}>
-						<TouchableOpacity onPress={this.props.onDelete} style={{ flex: 1, marginLeft: 10, marginRight: 5, borderColor: client.primaryColor, backgroundColor: "white", borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: client.primaryColor, textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 12, marginLeft: 10, marginBottom: 12, marginRight: 10, fontSize: 18, height: 21}}>Delete</Text></TouchableOpacity>
-          				<TouchableOpacity onPress={this.props.hideModal} style={{flex: 1, marginLeft: 5, marginRight: 10, borderColor: client.primaryColor, backgroundColor: client.primaryColor, borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: "white", textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 12, marginLeft: 10, marginBottom: 12, marginRight: 10, fontSize: 18, height: 21}}>Cancel</Text></TouchableOpacity>
-		  			</View>
+				  	<Text style={{textAlign: "center", fontSize: 18}}>{t("delete_prompt")}</Text>
+            <View style={{flexDirection:"row", flex: 1, marginTop: 20}}>
+              <TouchableOpacity onPress={this.props.onDelete} style={{ flex: 1, marginLeft: 10, marginRight: 5, borderColor: client.primaryColor, backgroundColor: "white", borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: client.primaryColor, textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 12, marginLeft: 10, marginBottom: 12, marginRight: 10, fontSize: 18, height: 21}}>{t("delete")}</Text></TouchableOpacity>
+              <TouchableOpacity onPress={this.props.hideModal} style={{flex: 1, marginLeft: 5, marginRight: 10, borderColor: client.primaryColor, backgroundColor: client.primaryColor, borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: "white", textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 12, marginLeft: 10, marginBottom: 12, marginRight: 10, fontSize: 18, height: 21}}>{t("cancel")}</Text></TouchableOpacity>
+            </View>
 				  </View>
 				</View>
 			  )
@@ -150,14 +150,14 @@ export class CardListView extends Component{
       return (
         <View style={{flexDirection:"row"}}>
           <View style={{flex:1}}/>
-          <TouchableOpacity style={{height: 16, paddingRight: 15, paddingLeft:15}}  onPress={this.onCancel}><Text style={{fontSize: 14, textAlign: "right", color: client.primaryColor}}>Cancel</Text></TouchableOpacity>
-          <TouchableOpacity onPress={this.updateLead} style={{height: 16, paddingLeft: 15}}><Text style={{fontSize: 14, textAlign: "right", color: client.primaryColor}}>Save</Text></TouchableOpacity>
+          <TouchableOpacity style={{height: 16, paddingRight: 15, paddingLeft:15}}  onPress={this.onCancel}><Text style={{fontSize: 14, textAlign: "right", color: client.primaryColor}}>{t("cancel")}</Text></TouchableOpacity>
+          <TouchableOpacity onPress={this.updateLead} style={{height: 16, paddingLeft: 15}}><Text style={{fontSize: 14, textAlign: "right", color: client.primaryColor}}>{t("save")}</Text></TouchableOpacity>
         </View>
       )
     }
     else {
       return (
-        <TouchableOpacity style={{height: 16, flex: 1}}  onPress={this.onFocus}><Text style={{fontSize: 14, textAlign: "right", color: client.primaryColor}}>Edit</Text></TouchableOpacity>
+        <TouchableOpacity style={{height: 16, flex: 1}}  onPress={this.onFocus}><Text style={{fontSize: 14, textAlign: "right", color: client.primaryColor}}>{t("edit")}</Text></TouchableOpacity>
       )
     }
   }
@@ -194,14 +194,14 @@ export class CardListView extends Component{
 				</View>
         <View style={{minHeight: 60, borderBottomColor: "#E8E8EE", borderBottomWidth: 2, borderTopColor: "#E8E8EE", borderTopWidth: 1}}>
           <View style={{flexDirection:"row"}}>
-            <Text style={{fontSize: 14, marginTop: 11, marginLeft: 11, marginBottom: 0}}>Notes</Text>
+            <Text style={{fontSize: 14, marginTop: 11, marginLeft: 11, marginBottom: 0}}>{t("notes")}</Text>
             <View style={{marginTop: 11, marginRight: 11, flex: 1}}>
               {this.renderButtons()}
             </View>
           </View>
           <TextInput ref='NotesInput' placeholderTextColor="#E1E1E1" placeholder="Tap to add text" onContentSizeChange={(event) => this._handleSizeChange(event)} multiline={true} onFocus={this.handleInputFocus} style={{height: Math.max(25, this.state.inputHeight), textAlignVertical: 'top', flex: 1, marginRight: 10, marginLeft: 10, marginBottom: 5, fontSize: 14 }} id="notes" key="notes" value={this.state.notes} onChangeText={(notes) => this.setState({notes})} />
         </View>
-				<TouchableOpacity style={{height: 16, flex: 1, marginLeft: 18, marginRight: 18, marginTop: 13, marginBottom: 10}}  onPress={this.props.showAlert}><Text style={{fontSize: 14, fontWeight: "bold", textAlign: "center", color: client.primaryColor}}>Remove Lead</Text></TouchableOpacity>
+				<TouchableOpacity style={{height: 16, flex: 1, marginLeft: 18, marginRight: 18, marginTop: 13, marginBottom: 10}}  onPress={this.props.showAlert}><Text style={{fontSize: 14, fontWeight: "bold", textAlign: "center", color: client.primaryColor}}>{t("remove_lead")}</Text></TouchableOpacity>
 			</View>
 		)
   }
