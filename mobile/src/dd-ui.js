@@ -15,9 +15,8 @@
  */
 
 import React, { Component } from 'react'
-import { Alert, Button, Image, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableHighlight, TouchableOpacity, View} from 'react-native'
+import { Text, TextInput, TouchableOpacity, View} from 'react-native'
 
-export const assetRoot = 'https://dml2n2dpleynv.cloudfront.net/extensions/personal-leads'
 export class LabeledTextInput extends Component{
 	constructor(props) {
 		super(props)

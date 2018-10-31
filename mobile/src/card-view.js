@@ -16,28 +16,30 @@
 
 import React, { Component } from 'react'
 
-import { LabeledTextInput, FlatButton, assetRoot } from './dd-ui'
+import { LabeledTextInput } from './dd-ui'
+import { envelopeIcon, linkedinIcon, telephoneIcon, twitterIcon } from './icon'
 
-import { Alert, KeyboardAvoidingView, Platform, TouchableOpacity, TouchableHighlight, Text, View, ScrollView, Image, Modal, TextInput, Button, StyleSheet} from 'react-native'
+import { TouchableOpacity, Text, View, ScrollView, Image, TextInput } from 'react-native'
 import client, { Avatar, translate as t } from '@doubledutch/rn-client'
 
 export class EditCardView extends Component{
-	constructor(props){
-    super(props)
-    // Use state to hold form data.
-    // Initialize all values from props
-    this.state={
-      id:props.id,
-      firstName:props.firstName,
-      lastName:props.lastName,
-      title:props.title,
-      company:props.company,
-      mobile:props.mobile,
-      email:props.email,
-      linkedin:props.linkedin,
-      twitter:props.twitter
-    }
-  }
+	constructor(props) {
+		super(props)
+
+		// Use state to hold form data.
+		// Initialize all values from props
+		this.state={
+			id:props.id,
+			firstName:props.firstName,
+			lastName:props.lastName,
+			title:props.title,
+			company:props.company,
+			mobile:props.mobile,
+			email:props.email,
+			linkedin:props.linkedin,
+			twitter:props.twitter
+		}
+	}
 
   // Use the supplied key to assign the value
 	onChange = (value,key) => {
@@ -48,7 +50,8 @@ export class EditCardView extends Component{
 		this.props.updateCard(this.state)
 	}
 
-	render(){
+	render() {
+		const {primaryColor} = this.props
 		return(
 			<View style={{backgroundColor:"white" ,paddingTop:32,paddingLeft:8,paddingRight:8,position:'absolute',top:0,bottom:0,left:0,right:0}}>
 				<ScrollView style={{marginTop: 40}}>
@@ -69,30 +72,13 @@ export class EditCardView extends Component{
 						<LabeledTextInput style={{flex: 1, borderBottomColor: "#E8E8EE", borderBottomWidth: 1, height: 43, marginLeft: 10, marginRight: 5, marginTop: 10}} id="twitter" label="Twitter" value={this.props.twitter} onChangeText={this.onChange} />
 					</View>
 					<View style={{flexDirection:'row',marginTop:20}}>
-						<TouchableOpacity onPress={this.props.hideModal} style={{ flex: 1, marginLeft: 10, marginRight: 5, borderColor: client.primaryColor, backgroundColor: "white", borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: client.primaryColor, textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 12, marginLeft: 10, marginBottom: 12, marginRight: 10, fontSize: 18, height: 21}}>{t("cancel")}</Text></TouchableOpacity>
-          	<TouchableOpacity onPress={this.onSave} style={{flex: 1, marginLeft: 5, marginRight: 10, borderColor: client.primaryColor, backgroundColor: client.primaryColor, borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: "white", textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 12, marginLeft: 10, marginBottom: 12, marginRight: 10, fontSize: 18, height: 21}}>{t("save")}</Text></TouchableOpacity>
+						<TouchableOpacity onPress={this.props.hideModal} style={{ flex: 1, marginLeft: 10, marginRight: 5, borderColor: primaryColor, backgroundColor: "white", borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: primaryColor, textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 12, marginLeft: 10, marginBottom: 12, marginRight: 10, fontSize: 18, height: 21}}>{t("cancel")}</Text></TouchableOpacity>
+          	<TouchableOpacity onPress={this.onSave} style={{flex: 1, marginLeft: 5, marginRight: 10, borderColor: primaryColor, backgroundColor: primaryColor, borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: "white", textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 12, marginLeft: 10, marginBottom: 12, marginRight: 10, fontSize: 18, height: 21}}>{t("save")}</Text></TouchableOpacity>
 					</View>
 				</ScrollView>
 			</View>
 		)
 	}
-}
-
-export class ConfirmView extends Component{
-	render(){
-			return(
-				<View style={{backgroundColor:'#dedede',position:'absolute',top:0,bottom:0,left:0,right:0,paddingTop:32}}>
-				  <View style={{flexDirection:'column',flex:1,marginTop:"40%"}}>
-				  	<Text style={{textAlign: "center", fontSize: 18}}>{t("delete_prompt")}</Text>
-            <View style={{flexDirection:"row", flex: 1, marginTop: 20}}>
-              <TouchableOpacity onPress={this.props.onDelete} style={{ flex: 1, marginLeft: 10, marginRight: 5, borderColor: client.primaryColor, backgroundColor: "white", borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: client.primaryColor, textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 12, marginLeft: 10, marginBottom: 12, marginRight: 10, fontSize: 18, height: 21}}>{t("delete")}</Text></TouchableOpacity>
-              <TouchableOpacity onPress={this.props.hideModal} style={{flex: 1, marginLeft: 5, marginRight: 10, borderColor: client.primaryColor, backgroundColor: client.primaryColor, borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: "white", textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 12, marginLeft: 10, marginBottom: 12, marginRight: 10, fontSize: 18, height: 21}}>{t("cancel")}</Text></TouchableOpacity>
-            </View>
-				  </View>
-				</View>
-			  )
-	}
-
 }
 
 export class CardView extends Component{
@@ -112,10 +98,7 @@ export class CardView extends Component{
 }
 
 export class CardListView extends Component{
-  constructor(props) {
-    super(props);
-    this.state = { notes: this.props.notes, isFocused: false, inputHeight: 0 }
-  }
+  state = { notes: this.props.notes, isFocused: false, inputHeight: 0 }
 
   updateLead = () => {
     this.props.onUpdateNotes(this.state.notes)
@@ -146,25 +129,25 @@ export class CardListView extends Component{
   };
 
   renderButtons = () => {
+		const {primaryColor} = this.props
     if (this.state.isFocused) {
       return (
         <View style={{flexDirection:"row"}}>
           <View style={{flex:1}}/>
-          <TouchableOpacity style={{height: 16, paddingRight: 15, paddingLeft:15}}  onPress={this.onCancel}><Text style={{fontSize: 14, textAlign: "right", color: client.primaryColor}}>{t("cancel")}</Text></TouchableOpacity>
-          <TouchableOpacity onPress={this.updateLead} style={{height: 16, paddingLeft: 15}}><Text style={{fontSize: 14, textAlign: "right", color: client.primaryColor}}>{t("save")}</Text></TouchableOpacity>
+          <TouchableOpacity style={{height: 16, paddingRight: 15, paddingLeft:15}}  onPress={this.onCancel}><Text style={{fontSize: 14, textAlign: "right", color: primaryColor}}>{t("cancel")}</Text></TouchableOpacity>
+          <TouchableOpacity onPress={this.updateLead} style={{height: 16, paddingLeft: 15}}><Text style={{fontSize: 14, textAlign: "right", color: primaryColor}}>{t("save")}</Text></TouchableOpacity>
         </View>
       )
     }
     else {
       return (
-        <TouchableOpacity style={{height: 16, flex: 1}}  onPress={this.onFocus}><Text style={{fontSize: 14, textAlign: "right", color: client.primaryColor}}>{t("edit")}</Text></TouchableOpacity>
+        <TouchableOpacity style={{height: 16, flex: 1}}  onPress={this.onFocus}><Text style={{fontSize: 14, textAlign: "right", color: primaryColor}}>{t("edit")}</Text></TouchableOpacity>
       )
     }
   }
 
-
-
 	render() {
+		const {primaryColor} = this.props
 		return(
 			<View style={{ backgroundColor:"#FFFFFF", borderBottomColor: "#E8E8EE", borderBottomWidth: 1}}>
 				<View style={{borderRadius:4,flexDirection:'row', padding: 8}}>
@@ -174,19 +157,19 @@ export class CardListView extends Component{
 						<Text style={{flexWrap:'wrap', fontSize: 14, color: "#A8A8A8", marginLeft: 2}}>{this.props.title}, {this.props.company}</Text>
 						<View style={{marginTop: 5, margin: 2}}>
 							{ this.props.email ? <View style={{flexDirection: "row", marginTop: 5}}>
-								<Image style={{width: 15, height: 10, marginTop: 5, marginRight: 5}} source={{uri: `${assetRoot}/envelope.png`}}/>
+								<Image style={{width: 15, height: 10, marginTop: 5, marginRight: 5}} source={envelopeIcon}/>
 								<Text style={{fontSize: 14, flex: 1, marginTop: 1}}>{this.props.email}</Text>
 							</View> : null }
 							{ this.props.mobile ? <View style={{flexDirection: "row", marginTop: 5}}>
-								<Image style={{width: 12, height: 12, marginTop: 5, marginRight: 5}} source={{uri: `${assetRoot}/telephone.png`}}/>
+								<Image style={{width: 12, height: 12, marginTop: 5, marginRight: 5}} source={telephoneIcon}/>
 								<Text style={{fontSize: 14, flex: 1, marginTop: 2}}>{this.props.mobile}</Text>
 							</View> : null }
 							{ this.props.twitter ? <View style={{flexDirection: "row", marginTop: 5}}>
-								<Image style={{width: 14, height: 12, marginTop: 5, marginRight: 5}} source={{uri: `${assetRoot}/Twitter.png`}}/>
+								<Image style={{width: 14, height: 12, marginTop: 5, marginRight: 5}} source={twitterIcon}/>
 								<Text style={{fontSize: 14, flex: 1, marginTop: 2}}>{this.props.twitter}</Text>
 							</View> : null }
 							{ this.props.linkedin ? <View style={{flexDirection: "row", marginTop: 5}}>
-								<Image style={{width: 13, height: 12, marginTop: 5, marginRight: 5}} source={{uri: `${assetRoot}/Linkedin.png`}}/>
+								<Image style={{width: 13, height: 12, marginTop: 5, marginRight: 5}} source={linkedinIcon}/>
 								<Text style={{fontSize: 14, flex: 1, marginTop: 3}}>{this.props.linkedin}</Text>
 							</View> : null }
 						</View>
@@ -201,12 +184,10 @@ export class CardListView extends Component{
           </View>
           <TextInput ref='NotesInput' placeholderTextColor="#E1E1E1" placeholder="Tap to add text" onContentSizeChange={(event) => this._handleSizeChange(event)} multiline={true} onFocus={this.handleInputFocus} style={{height: Math.max(25, this.state.inputHeight), textAlignVertical: 'top', flex: 1, marginRight: 10, marginLeft: 10, marginBottom: 5, fontSize: 14 }} id="notes" key="notes" value={this.state.notes} onChangeText={(notes) => this.setState({notes})} />
         </View>
-				<TouchableOpacity style={{height: 16, flex: 1, marginLeft: 18, marginRight: 18, marginTop: 13, marginBottom: 10}}  onPress={this.props.showAlert}><Text style={{fontSize: 14, fontWeight: "bold", textAlign: "center", color: client.primaryColor}}>{t("remove_lead")}</Text></TouchableOpacity>
+				<TouchableOpacity style={{height: 16, flex: 1, marginLeft: 18, marginRight: 18, marginTop: 13, marginBottom: 10}}  onPress={this.props.showAlert}><Text style={{fontSize: 14, fontWeight: "bold", textAlign: "center", color: primaryColor}}>{t("remove_lead")}</Text></TouchableOpacity>
 			</View>
 		)
   }
-  
-
 }
 
 export class CardListItem extends Component{
@@ -215,7 +196,7 @@ export class CardListItem extends Component{
 			return(
 				<TouchableOpacity onPress={this.props.showCard} style={{flex:1,marginBottom:8}}>
 					<View style={{flex:1}}>
-						<CardListView {...this.props} onUpdateNotes={this.props.onUpdateNotes}/>
+						<CardListView {...this.props} onUpdateNotes={this.props.onUpdateNotes} primaryColor={this.props.primaryColor}/>
 					</View>
 				</TouchableOpacity>
 			)
