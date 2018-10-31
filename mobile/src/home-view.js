@@ -14,77 +14,82 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react'
-import ReactNative, { AsyncStorage, Modal, Platform, ScrollView, Share, Text, TouchableOpacity, View, Alert, KeyboardAvoidingView, TextInput } from 'react-native'
-import client, { Avatar, TitleBar, useStrings, translate as t } from '@doubledutch/rn-client'
+import React, { PureComponent } from 'react'
+import { Alert, AsyncStorage, Modal, Share, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import client, { TitleBar, useStrings, translate as t } from '@doubledutch/rn-client'
 import i18n from './i18n'
 import { CardView, CardListItem, EditCardView } from './card-view'
 import { ScanView, CodeView } from './scan-view'
-import FirebaseConnector from '@doubledutch/firebase-connector'
+import {provideFirebaseConnectorToReactComponent} from '@doubledutch/firebase-connector'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view'
-const fbc = FirebaseConnector(client, 'personalleads')
-fbc.initializeAppWithSimpleBackend()
+
 useStrings(i18n)
 
-const { currentEvent, currentUser } = client
-
-const cardsRef = fbc.database.private.userRef('cards')
-const myCardRef = fbc.database.private.userRef('myCard')
-
-class HomeView extends Component {
-  constructor() {
-    super()
-
-    // Initially, create a blank state filled out only with the current user's id
-    this.state = {
-      myCard: Object.assign({mobile: null, linkedin: null, twitter: null, leadNotes: null}, currentUser),
-      cards: [],
-      selectedCard: null,
-      showCode: false,
-      showScanner: false,
-      showEditor: false
-    }
+class HomeView extends PureComponent {
+  // Initially, create a blank state filled out only with the current user's id
+  state = {
+    cards: [],
+    selectedCard: null,
+    showCode: false,
+    showScanner: false,
+    showEditor: false
   }
 
+  cardsRef = () => this.props.fbc.database.private.userRef('cards')
+  myCardRef = () => this.props.fbc.database.private.userRef('myCard')
+
+  leadStorageKey = () =>`@DD:personal_leads_${this.state.currentEvent.id}_${this.state.currentUser.id}`
+
   componentDidMount() {
+    const {fbc} = this.props
     fbc.signin().catch(err => console.log(err))
     
-    this.loadLocalCards()
-    .then(localCards => {
-      // Load current user data from api, but don't overwrite any local values.
-      client.getUser(currentUser.id).then(data => {
-        var card = this.state.myCard;
-        ['firstName', 'lastName', 'title', 'company', 'email', 'twitter', 'linkedin'].forEach(field => {
-          if (card[field] == null && data[field]) card = {...card, [field]: data[field]}
-        })
-        this.setState({ myCard: card })
+    client.getCurrentEvent().then(currentEvent => this.setState({currentEvent}))
+    client.getPrimaryColor().then(primaryColor => this.setState({primaryColor}))
+    client.getCurrentUser().then(currentUser => {
+      this.setState({
+        currentUser,
+        myCard: Object.assign({mobile: null, linkedin: null, twitter: null, leadNotes: null}, currentUser),
       })
-      .catch(err => console.log('error fetching user from api', err))
 
-      // Load from DB only if local copy not found
-      if (!localCards) {
-        myCardRef.on('value', data => {
-          const myCard = data.val()
-          myCard && this.setState({ myCard: data.val() })
+      this.loadLocalCards()
+      .then(localCards => {
+        // Load current user data from api, but don't overwrite any local values.
+        client.getAttendee(currentUser.id).then(data => {
+          var card = this.state.myCard;
+          ['firstName', 'lastName', 'title', 'company', 'email', 'twitter', 'linkedin'].forEach(field => {
+            if (card[field] == null && data[field]) card = {...card, [field]: data[field]}
+          })
+          this.setState({ myCard: card })
         })
-        cardsRef.on('value', data => {
-          const cards = data.val()
-          cards && this.setState({ cards: data.val() })
-        })
-      }
+        .catch(err => console.log('error fetching user from api', err))
+  
+        // Load from DB only if local copy not found
+        if (!localCards) {
+          this.myCardRef().on('value', data => {
+            const myCard = data.val()
+            myCard && this.setState({ myCard: data.val() })
+          })
+          this.cardsRef().on('value', data => {
+            const cards = data.val()
+            cards && this.setState({ cards: data.val() })
+          })
+        }
+      })
     })
   }
 
- 
-
   render() {
+    const {currentUser, currentEvent, primaryColor} = this.state
+    if (!currentUser || !currentEvent || !primaryColor) return null
+
     return (
       <View style={s.main} >
         <TitleBar title={t('personal_leads')} client={client} />
         <TouchableOpacity onPress={this.editCard.bind(this)}>
-          <CardView user={client.currentUser} {...this.state.myCard} />
+          <CardView user={currentUser} {...this.state.myCard} />
           <View style={{ position: 'absolute', marginTop: 22, right: 10, backgroundColor: 'white'}}>
-            <Text style={{ color: '#888888', backgroundColor: 'white', fontSize: 14, marginTop: 8}}>{t("edit")}</Text>
+            <Text style={{ color: '#888888', backgroundColor: 'white', fontSize: 14, marginTop: 8}}>{t("edit_info")}</Text>
           </View>
         </TouchableOpacity>
        
@@ -92,37 +97,39 @@ class HomeView extends Component {
         <View style={{backgroundColor: 'white', height: 41, borderBottomColor: '#E8E8EE', borderBottomWidth: 1, flex: 1, flexDirection: 'row'}}>
           <Text style={{fontSize: 18, marginLeft: 10, marginTop: 10, height: 21}}>{t("my_connections")}</Text>
           {this.state.cards.length > 0 &&
-            <TouchableOpacity style={{height: 16, flex: 1, marginRight: 18, marginLeft: 50, marginTop: 13}}  onPress={this.exportCards}><Text style={{fontSize: 14, textAlign: "right", color: client.primaryColor}}>{t("export")}</Text></TouchableOpacity>
+            <TouchableOpacity style={{height: 16, flex: 1, marginRight: 18, marginLeft: 50, marginTop: 13}}  onPress={this.exportCards}><Text style={{fontSize: 14, textAlign: "right", color: primaryColor}}>{t("export")}</Text></TouchableOpacity>
           }
         </View>
           { this.state.cards.length === 0 && <Text style={s.noConnections}>{t("no_connections")}</Text> }
           {this.state.cards.map((card, index) =>
             <CardListItem
+              key={index}
               showExpanded={index == this.state.selectedCard}
               showCard={() => this.showCard(index)}
               showAlert = {() => this.showAlert()}
               onUpdateNotes={(notes) => this.updateScannedCard(index, {...card, notes})}
               user={card}
+              primaryColor={primaryColor}
               {...card} />
           )}
         </KeyboardAwareScrollView>
         <View style={{ flexDirection: 'row', padding: 2, marginBottom: 20, marginTop: 20}}>
-          <TouchableOpacity onPress={this.showCode} style={{flex: 1, marginLeft: 10, marginRight: 5, borderColor: client.primaryColor, backgroundColor: "white", borderWidth: 1, borderRadius: 20, height: 45}}><Text style={{color: client.primaryColor, textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 10, marginLeft: 10, marginBottom: 10, marginRight: 10, fontSize: 18, height: 21}}>{t("share")}</Text></TouchableOpacity>
-          <TouchableOpacity onPress={this.scanCode} style={{ flex: 1, marginLeft: 5, marginRight: 10, borderColor: client.primaryColor, backgroundColor: client.primaryColor, borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: "white", textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 10, marginLeft: 10, marginBottom: 10, marginRight: 10, fontSize: 18, height: 21}}>{t("scan")}</Text></TouchableOpacity>
+          <TouchableOpacity onPress={this.showCode} style={{flex: 1, marginLeft: 10, marginRight: 5, borderColor: primaryColor, backgroundColor: "white", borderWidth: 1, borderRadius: 20, height: 45}}><Text style={{color: primaryColor, textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 10, marginLeft: 10, marginBottom: 10, marginRight: 10, fontSize: 18, height: 21}}>{t("share")}</Text></TouchableOpacity>
+          <TouchableOpacity onPress={this.scanCode} style={{ flex: 1, marginLeft: 5, marginRight: 10, borderColor: primaryColor, backgroundColor: primaryColor, borderWidth: 1, height: 45, borderRadius: 20}}><Text style={{color: "white", textAlign: 'center', flex: 1, flexDirection: 'column', fontSize: 18, marginTop: 10, marginLeft: 10, marginBottom: 10, marginRight: 10, fontSize: 18, height: 21}}>{t("scan")}</Text></TouchableOpacity>
         </View>
         <Modal
             animationType={"slide"}
             transparent={true}
             visible={this.state.showCode}
             onRequestClose={() => { }}>
-          <CodeView {...this.state} hideModal={this.hideModal} />
+          <CodeView {...this.state} hideModal={this.hideModal} currentUser={currentUser} primaryColor={primaryColor} />
         </Modal>
         <Modal
             animationType={"slide"}
             transparent={true}
             visible={this.state.showScanner}
             onRequestClose={() => { }}>
-          <ScanView {...this.state} addCard={this.addCard} hideModal={this.hideModal} color={client.primaryColor}/>
+          <ScanView {...this.state} addCard={this.addCard} hideModal={this.hideModal} color={primaryColor}/>
         </Modal>
         <Modal
             animationType={"slide"}
@@ -130,13 +137,12 @@ class HomeView extends Component {
             visible={this.state.showEditor}
             onRequestClose={() => { }}>
           <TitleBar title={t('personal_leads')} client={client} />
-          <EditCardView {...this.state.myCard} updateCard={this.updateCard} hideModal={this.hideModal} />
+          <EditCardView {...this.state.myCard} updateCard={this.updateCard} hideModal={this.hideModal} primaryColor={primaryColor} />
         </Modal>
       </View>
     )
   }
- 
- 
+
     showAlert = () => {
       const currentCard = this.state.cards[this.state.selectedCard]
       const name = currentCard.firstName + " " + currentCard.lastName
@@ -146,15 +152,14 @@ class HomeView extends Component {
         alertText,
         [
           {text: t("cancel"), style: 'cancel'},
-          {text: t("OK"), onPress: () => this.deleteCard ('OK Pressed')},
+          {text: t("OK"), onPress: () => this.deleteCard()},
         ],
         { cancelable: false }
        )
     }
   
-
   loadLocalCards() {
-    return AsyncStorage.getItem(leadStorageKey())
+    return AsyncStorage.getItem(this.leadStorageKey())
     .then(value => {
       if (value) {
         const parsed = JSON.parse(value)
@@ -166,7 +171,7 @@ class HomeView extends Component {
   }
 
   saveLocalCards({myCard, cards}) {
-    return AsyncStorage.setItem(leadStorageKey(), JSON.stringify({myCard, cards}))
+    return AsyncStorage.setItem(this.leadStorageKey(), JSON.stringify({myCard, cards}))
   }
 
   showCode = () => this.setState({ showCode: true })
@@ -205,45 +210,43 @@ class HomeView extends Component {
   }
 
   updateCard = (myCard) => {
-    myCardRef.set(myCard)
+    this.myCardRef().set(myCard)
     this.setState({ myCard, showEditor: false })
     this.saveLocalCards({myCard, cards: this.state.cards})
   }
 
   addCard = (newCard) => {
     var cards = [...this.state.cards, newCard]
-    cardsRef.set(cards)
+    this.cardsRef().set(cards)
     this.saveLocalCards({myCard: this.state.myCard, cards})
     this.setState({cards, showScanner: false})
   }
 
   updateScannedCard = (index, updatedCard) => {
     var cards = [...this.state.cards.slice(0, index), updatedCard, ...this.state.cards.slice(index + 1)]
-    cardsRef.set(cards)
+    this.cardsRef().set(cards)
     this.saveLocalCards({myCard: this.state.myCard, cards})
     this.setState({cards, showScanner: false})    
   }
 
 
   onUpdateLead = (card) => {
-    cardsRef.set(cards)
+    this.cardsRef().set(cards)
     this.saveLocalCards({myCard: this.state.myCard, cards})
   }
 
-  
-
   deleteCard = () => {
     const cards = this.state.cards.filter((_, i) => i !== this.state.selectedCard)
-    cardsRef.set(cards)
+    this.cardsRef().set(cards)
     this.setState({cards})
     this.saveLocalCards({myCard: this.state.myCard, cards})
     this.hideModal()
   }
 }
 
-function leadStorageKey() { return `@DD:personal_leads_${currentEvent.id}_${currentUser.id}` }
+export default provideFirebaseConnectorToReactComponent(client, 'personalleads', (props, fbc) => <HomeView {...props} fbc={fbc} />, PureComponent)
 
-const s = ReactNative.StyleSheet.create({
+const s = StyleSheet.create({
   main: {
     flex: 1,
     backgroundColor: '#dedede'
@@ -259,5 +262,3 @@ const s = ReactNative.StyleSheet.create({
     margin: 10
   }
 })
-
-export default HomeView

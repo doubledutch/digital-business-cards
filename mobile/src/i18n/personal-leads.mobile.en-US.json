@@ -11,12 +11,11 @@
   "remove_lead": "Remove Lead",
   "no_connections": "No connections scanned yet.",
   "export": "Export All",
-  "edit": "Edit Info",
+  "edit_info": "Edit Info",
   "my_connections": "My Connections",
   "share": "Share My Info",
   "scan": "Scan Info",
   "exit": "Exit",
   "close": "Close",
   "notes": "Notes"
-
 }
