@@ -284,7 +284,8 @@ export class CardView extends Component {
               {this.props.firstName} {this.props.lastName}
             </Text>
             <Text style={{ fontSize: 18 }}>
-              {this.props.title} {this.props.company ? `, ${this.props.company}` : null}
+              {this.props.title}
+              {this.props.company ? `, ${this.props.company}` : ''}
             </Text>
           </View>
         </View>
