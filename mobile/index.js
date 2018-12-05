@@ -18,3 +18,4 @@ import { AppRegistry } from 'react-native'
 import HomeView from './src/home-view'
 
 AppRegistry.registerComponent('personalleads', () => HomeView)
+AppRegistry.registerComponent('section', () => HomeView)
