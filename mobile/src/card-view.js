@@ -15,8 +15,7 @@
  */
 
 import React, { Component } from 'react'
-
-import { TouchableOpacity, Text, View, ScrollView, Image, TextInput } from 'react-native'
+import { TouchableOpacity, Text, View, ScrollView, Image, Linking } from 'react-native'
 import client, { Avatar, translate as t } from '@doubledutch/rn-client'
 import { LabeledTextInput } from './dd-ui'
 import { envelopeIcon, linkedinIcon, telephoneIcon, twitterIcon } from './icon'
@@ -362,7 +361,10 @@ export class CardListView extends Component {
       <View
         style={{ backgroundColor: '#FFFFFF', borderBottomColor: '#E8E8EE', borderBottomWidth: 1 }}
       >
-        <View style={{ borderRadius: 4, flexDirection: 'row', padding: 8 }}>
+        <TouchableOpacity
+          style={{ borderRadius: 4, flexDirection: 'row', padding: 8 }}
+          onPress={this.props.showCard}
+        >
           <Avatar user={this.props.user} client={client} size={38} style={{ marginRight: 8 }} />
           <View style={{ flexDirection: 'column', flex: 1 }}>
             <Text style={{ fontWeight: '500', flexWrap: 'wrap', fontSize: 18, marginLeft: 2 }}>
@@ -373,13 +375,18 @@ export class CardListView extends Component {
             </Text>
             <View style={{ marginTop: 5, margin: 2 }}>
               {this.props.email ? (
-                <View style={{ flexDirection: 'row', marginTop: 5 }}>
+                <TouchableOpacity
+                  style={{ flexDirection: 'row', marginTop: 5 }}
+                  onPress={() => Linking.openURL(`mailto:${this.props.email}`)}
+                >
                   <Image
                     style={{ width: 15, height: 10, marginTop: 5, marginRight: 5 }}
                     source={envelopeIcon}
                   />
-                  <Text style={{ fontSize: 14, flex: 1, marginTop: 1 }}>{this.props.email}</Text>
-                </View>
+                  <Text style={{ fontSize: 14, flex: 1, marginTop: 1, color: 'blue' }}>
+                    {this.props.email}
+                  </Text>
+                </TouchableOpacity>
               ) : null}
               {this.props.mobile ? (
                 <View style={{ flexDirection: 'row', marginTop: 5 }}>
@@ -410,7 +417,7 @@ export class CardListView extends Component {
               ) : null}
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
         <View
           style={{
             minHeight: 60,
@@ -426,27 +433,24 @@ export class CardListView extends Component {
             </Text>
             <View style={{ marginTop: 11, marginRight: 11, flex: 1 }}>{this.renderButtons()}</View>
           </View>
-          <TextInput
-            ref="NotesInput"
-            placeholderTextColor="#E1E1E1"
-            placeholder="Tap to add text"
-            onContentSizeChange={event => this._handleSizeChange(event)}
-            multiline
-            onFocus={this.handleInputFocus}
+        </View>
+        <View style={{ borderBottomColor: '#E8E8EE', borderBottomWidth: 1 }}>
+          <TouchableOpacity
             style={{
-              height: Math.max(25, this.state.inputHeight),
-              textAlignVertical: 'top',
               flex: 1,
-              marginRight: 10,
-              marginLeft: 10,
-              marginBottom: 5,
-              fontSize: 14,
+              margin: 10,
+              backgroundColor: this.props.primaryColor,
+              padding: 10,
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: 10,
             }}
-            id="notes"
-            key="notes"
-            value={this.state.notes}
-            onChangeText={notes => this.setState({ notes })}
-          />
+            onPress={() => client.openURL(`dd://profile/${this.props.user.id}`)}
+          >
+            <Text style={{ fontSize: 14, fontWeight: 'bold', textAlign: 'center', color: 'white' }}>
+              {t('startConvo')}
+            </Text>
+          </TouchableOpacity>
         </View>
         <TouchableOpacity
           style={{
