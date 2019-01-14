@@ -132,7 +132,6 @@ class HomeView extends Component {
           <TitleBar title={t('personal_leads')} client={client} />
           <EditCardView {...this.state.myCard} updateCard={this.updateCard} hideModal={this.hideModal} />
         </Modal>
-        {/* <TouchableOpacity onPress={()=>this.addCard(this.state.myCard)}><Text>Test</Text></TouchableOpacity> */}
       </View>
     )
   }
