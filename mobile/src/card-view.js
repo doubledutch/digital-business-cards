@@ -175,7 +175,7 @@ export class CardListView extends Component{
 						<View style={{marginTop: 5, margin: 2}}>
 							{ this.props.email ? <TouchableOpacity style={{flexDirection: "row", marginTop: 5}} onPress={()=>Linking.openURL(`mailto:${this.props.email}`)}>
 								<Image style={{width: 15, height: 10, marginTop: 5, marginRight: 5}} source={{uri: `${assetRoot}/envelope.png`}}/>
-								<Text style={{fontSize: 14, flex: 1, marginTop: 1, color: client.primaryColor}}>{this.props.email}</Text>
+								<Text style={{fontSize: 14, flex: 1, marginTop: 1, color: "blue"}}>{this.props.email}</Text>
 							</TouchableOpacity> : null }
 							{ this.props.mobile ? <View style={{flexDirection: "row", marginTop: 5}}>
 								<Image style={{width: 12, height: 12, marginTop: 5, marginRight: 5}} source={{uri: `${assetRoot}/telephone.png`}}/>
@@ -201,7 +201,7 @@ export class CardListView extends Component{
           </View>
           <TextInput ref='NotesInput' placeholderTextColor="#E1E1E1" placeholder="Tap to add text" onContentSizeChange={(event) => this._handleSizeChange(event)} multiline={true} onFocus={this.handleInputFocus} style={{height: Math.max(25, this.state.inputHeight), textAlignVertical: 'top', flex: 1, marginRight: 10, marginLeft: 10, marginBottom: 5, fontSize: 14 }} id="notes" key="notes" value={this.state.notes} onChangeText={(notes) => this.setState({notes})} />
         </View>
-        <View style={{borderBottomColor: "#E8E8EE", borderBottomWidth: 1}}><TouchableOpacity style={{flex: 1, margin: 10, backgroundColor: client.primaryColor, padding: 10, alignItems: "center", justifyContent: "center", borderRadius: 10}}  onPress={() => client.openURL(`dd://profile/${this.props.user.id}`)}><Text style={{fontSize: 14, fontWeight: "bold", textAlign: "center", color: "white"}}>{t("startConvo")}</Text></TouchableOpacity></View>
+        <View style={{borderBottomColor: "#E8E8EE", borderBottomWidth: 1}}><TouchableOpacity style={{flex: 1, margin: 10, backgroundColor: this.props.primaryColor, padding: 10, alignItems: "center", justifyContent: "center", borderRadius: 10}}  onPress={() => client.openURL(`dd://profile/${this.props.user.id}`)}><Text style={{fontSize: 14, fontWeight: "bold", textAlign: "center", color: "white"}}>{t("startConvo")}</Text></TouchableOpacity></View>
 				<TouchableOpacity style={{height: 16, flex: 1, marginLeft: 18, marginRight: 18, marginTop: 13, marginBottom: 10}}  onPress={this.props.showAlert}><Text style={{fontSize: 14, fontWeight: "bold", textAlign: "center", color: client.primaryColor}}>{t("remove_lead")}</Text></TouchableOpacity>
 			</View>
 		)
