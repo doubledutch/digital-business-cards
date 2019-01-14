@@ -18,7 +18,7 @@ import React, { Component } from 'react'
 
 import { LabeledTextInput, FlatButton, assetRoot } from './dd-ui'
 
-import { Alert, KeyboardAvoidingView, Platform, TouchableOpacity, TouchableHighlight, Text, View, ScrollView, Image, Modal, TextInput, Button, StyleSheet} from 'react-native'
+import { Alert, KeyboardAvoidingView, Platform, TouchableOpacity, TouchableHighlight, Text, View, ScrollView, Image, Modal, TextInput, Button, StyleSheet, Linking} from 'react-native'
 import client, { Avatar, translate as t } from '@doubledutch/rn-client'
 
 export class EditCardView extends Component{
@@ -167,16 +167,16 @@ export class CardListView extends Component{
 	render() {
 		return(
 			<View style={{ backgroundColor:"#FFFFFF", borderBottomColor: "#E8E8EE", borderBottomWidth: 1}}>
-				<View style={{borderRadius:4,flexDirection:'row', padding: 8}}>
+				<TouchableOpacity style={{borderRadius:4,flexDirection:'row', padding: 8}} onPress={this.props.showCard}>
           <Avatar user={this.props.user} client={client} size={38} style={{marginRight: 8}} />
 					<View style={{flexDirection:'column',flex:1}}>
 						<Text style={{fontWeight:'500',flexWrap:'wrap', fontSize: 18, marginLeft: 2}}>{this.props.firstName} {this.props.lastName}</Text>
 						<Text style={{flexWrap:'wrap', fontSize: 14, color: "#A8A8A8", marginLeft: 2}}>{this.props.title}, {this.props.company}</Text>
 						<View style={{marginTop: 5, margin: 2}}>
-							{ this.props.email ? <View style={{flexDirection: "row", marginTop: 5}}>
+							{ this.props.email ? <TouchableOpacity style={{flexDirection: "row", marginTop: 5}} onPress={()=>Linking.openURL(`mailto:${this.props.email}`)}>
 								<Image style={{width: 15, height: 10, marginTop: 5, marginRight: 5}} source={{uri: `${assetRoot}/envelope.png`}}/>
-								<Text style={{fontSize: 14, flex: 1, marginTop: 1}}>{this.props.email}</Text>
-							</View> : null }
+								<Text style={{fontSize: 14, flex: 1, marginTop: 1, color: client.primaryColor}}>{this.props.email}</Text>
+							</TouchableOpacity> : null }
 							{ this.props.mobile ? <View style={{flexDirection: "row", marginTop: 5}}>
 								<Image style={{width: 12, height: 12, marginTop: 5, marginRight: 5}} source={{uri: `${assetRoot}/telephone.png`}}/>
 								<Text style={{fontSize: 14, flex: 1, marginTop: 2}}>{this.props.mobile}</Text>
@@ -191,7 +191,7 @@ export class CardListView extends Component{
 							</View> : null }
 						</View>
 					</View>
-				</View>
+				</TouchableOpacity>
         <View style={{minHeight: 60, borderBottomColor: "#E8E8EE", borderBottomWidth: 2, borderTopColor: "#E8E8EE", borderTopWidth: 1}}>
           <View style={{flexDirection:"row"}}>
             <Text style={{fontSize: 14, marginTop: 11, marginLeft: 11, marginBottom: 0}}>{t("notes")}</Text>
@@ -201,6 +201,7 @@ export class CardListView extends Component{
           </View>
           <TextInput ref='NotesInput' placeholderTextColor="#E1E1E1" placeholder="Tap to add text" onContentSizeChange={(event) => this._handleSizeChange(event)} multiline={true} onFocus={this.handleInputFocus} style={{height: Math.max(25, this.state.inputHeight), textAlignVertical: 'top', flex: 1, marginRight: 10, marginLeft: 10, marginBottom: 5, fontSize: 14 }} id="notes" key="notes" value={this.state.notes} onChangeText={(notes) => this.setState({notes})} />
         </View>
+        <View style={{borderBottomColor: "#E8E8EE", borderBottomWidth: 1}}><TouchableOpacity style={{flex: 1, margin: 10, backgroundColor: client.primaryColor, padding: 10, alignItems: "center", justifyContent: "center", borderRadius: 10}}  onPress={() => client.openURL(`dd://profile/${this.props.user.id}`)}><Text style={{fontSize: 14, fontWeight: "bold", textAlign: "center", color: "white"}}>{t("startConvo")}</Text></TouchableOpacity></View>
 				<TouchableOpacity style={{height: 16, flex: 1, marginLeft: 18, marginRight: 18, marginTop: 13, marginBottom: 10}}  onPress={this.props.showAlert}><Text style={{fontSize: 14, fontWeight: "bold", textAlign: "center", color: client.primaryColor}}>{t("remove_lead")}</Text></TouchableOpacity>
 			</View>
 		)
@@ -213,11 +214,11 @@ export class CardListItem extends Component{
 	render() {
 		if(this.props.showExpanded){
 			return(
-				<TouchableOpacity onPress={this.props.showCard} style={{flex:1,marginBottom:8}}>
+				<View style={{flex:1,marginBottom:8}}>
 					<View style={{flex:1}}>
-						<CardListView {...this.props} onUpdateNotes={this.props.onUpdateNotes}/>
+						<CardListView {...this.props} onUpdateNotes={this.props.onUpdateNotes} showCard={this.props.showCard}/>
 					</View>
-				</TouchableOpacity>
+				</View>
 			)
 		}
 		return(
