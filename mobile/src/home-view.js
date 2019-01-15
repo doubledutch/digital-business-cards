@@ -354,10 +354,16 @@ class HomeView extends PureComponent {
   }
 
   addCard = newCard => {
-    const cards = [...this.state.cards, newCard]
-    this.cardsRef().set(cards)
-    this.saveLocalCards({ myCard: this.state.myCard, cards })
-    this.setState({ cards, showScanner: false })
+    if (newCard.firstName && newCard.lastName) {
+      const cards = [...this.state.cards, newCard]
+      this.cardsRef().set(cards)
+      this.saveLocalCards({ myCard: this.state.myCard, cards })
+      this.setState({ cards, showScanner: false })
+    } else {
+      Alert.alert(t('error'), t('newScan'), [{ text: 'OK' }], {
+        cancelable: false,
+      })
+    }
   }
 
   updateScannedCard = (index, updatedCard) => {

@@ -17,5 +17,8 @@
   "scan": "Scan Info",
   "exit": "Exit",
   "close": "Close",
-  "notes": "Notes"
+  "notes": "Notes",
+  "startConvo": "Start a Conversation",
+  "error": "Unable to Read",
+  "newScan": "Please scan a different code"
 }
