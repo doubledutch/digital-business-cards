@@ -53,7 +53,8 @@ class HomeView extends PureComponent {
 
   componentDidMount() {
     const { fbc } = this.props
-    fbc.signin().catch(err => console.log(err))
+    const signin = fbc.signin()
+    signin.catch(err => console.log(err))
 
     client.getCurrentEvent().then(currentEvent => this.setState({ currentEvent }))
     client.getPrimaryColor().then(primaryColor => this.setState({ primaryColor }))
@@ -71,25 +72,35 @@ class HomeView extends PureComponent {
         client
           .getAttendee(currentUser.id)
           .then(data => {
-            let card = this.state.myCard
-            ;['firstName', 'lastName', 'title', 'company', 'email', 'twitter', 'linkedin'].forEach(
-              field => {
+            this.setState(({ myCard }) => {
+              let card = myCard
+              ;[
+                'firstName',
+                'lastName',
+                'title',
+                'company',
+                'email',
+                'twitter',
+                'linkedin',
+              ].forEach(field => {
                 if (card[field] == null && data[field]) card = { ...card, [field]: data[field] }
-              },
-            )
-            this.setState({ myCard: card })
+              })
+              return { myCard: card }
+            })
           })
           .catch(err => console.log('error fetching user from api', err))
 
         // Load from DB only if local copy not found
         if (!localCards) {
-          this.myCardRef().on('value', data => {
-            const myCard = data.val()
-            myCard && this.setState({ myCard: data.val() })
-          })
-          this.cardsRef().on('value', data => {
-            const cards = data.val()
-            cards && this.setState({ cards: data.val() })
+          signin.then(() => {
+            this.myCardRef().on('value', data => {
+              const myCard = data.val()
+              if (myCard) this.setState({ myCard })
+            })
+            this.cardsRef().on('value', data => {
+              const cards = data.val()
+              if (cards) this.setState({ cards })
+            })
           })
         }
       })
