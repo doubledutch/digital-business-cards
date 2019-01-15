@@ -97,12 +97,13 @@ class HomeView extends PureComponent {
   }
 
   render() {
+    const { suggestedTitle } = this.props
     const { currentUser, currentEvent, primaryColor } = this.state
     if (!currentUser || !currentEvent || !primaryColor) return null
 
     return (
       <View style={s.main}>
-        <TitleBar title={t('personal_leads')} client={client} />
+        <TitleBar title={suggestedTitle || t('personal_leads')} client={client} />
         <TouchableOpacity onPress={this.editCard.bind(this)}>
           <CardView user={currentUser} {...this.state.myCard} />
           <View
