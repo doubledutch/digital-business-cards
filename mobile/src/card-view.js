@@ -15,7 +15,7 @@
  */
 
 import React, { Component } from 'react'
-import { TouchableOpacity, Text, View, ScrollView, Image, Linking } from 'react-native'
+import { TouchableOpacity, Text, View, ScrollView, Image, Linking, TextInput } from 'react-native'
 import client, { Avatar, translate as t } from '@doubledutch/rn-client'
 import { LabeledTextInput } from './dd-ui'
 import { envelopeIcon, linkedinIcon, telephoneIcon, twitterIcon } from './icon'
@@ -434,6 +434,27 @@ export class CardListView extends Component {
             </Text>
             <View style={{ marginTop: 11, marginRight: 11, flex: 1 }}>{this.renderButtons()}</View>
           </View>
+          <TextInput
+            ref="NotesInput"
+            placeholderTextColor="#E1E1E1"
+            placeholder="Tap to add text"
+            onContentSizeChange={event => this._handleSizeChange(event)}
+            multiline
+            onFocus={this.handleInputFocus}
+            style={{
+              height: Math.max(25, this.state.inputHeight),
+              textAlignVertical: 'top',
+              flex: 1,
+              marginRight: 10,
+              marginLeft: 10,
+              marginBottom: 5,
+              fontSize: 14,
+            }}
+            id="notes"
+            key="notes"
+            value={this.state.notes}
+            onChangeText={notes => this.setState({ notes })}
+          />
         </View>
         <View style={{ borderBottomColor: '#E8E8EE', borderBottomWidth: 1 }}>
           <TouchableOpacity
@@ -479,7 +500,7 @@ export class CardListItem extends Component {
   render() {
     if (this.props.showExpanded) {
       return (
-        <TouchableOpacity onPress={this.props.showCard} style={{ flex: 1, marginBottom: 8 }}>
+        <View style={{ flex: 1, marginBottom: 8 }}>
           <View style={{ flex: 1 }}>
             <CardListView
               {...this.props}
@@ -487,7 +508,7 @@ export class CardListItem extends Component {
               primaryColor={this.props.primaryColor}
             />
           </View>
-        </TouchableOpacity>
+        </View>
       )
     }
     return (
