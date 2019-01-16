@@ -15,7 +15,7 @@
  */
 
 import React, { Component } from 'react'
-import { Image, Text, TouchableOpacity, View } from 'react-native'
+import { Image, Text, TouchableOpacity, View, Alert } from 'react-native'
 import QRCode from 'react-native-qrcode'
 import QRCodeScanner from 'react-native-qrcode-scanner'
 import client, { Avatar, translate as t } from '@doubledutch/rn-client'
@@ -149,7 +149,11 @@ export class CodeView extends Component {
 
 export class ScanView extends Component {
   onRead(code) {
-    this.props.addCard(JSON.parse(code.data))
+    try {
+      this.props.addCard(JSON.parse(code.data))
+    } catch(e) {
+      Alert.alert(t('error'), t('newScan'))
+    }
   }
 
   render() {
