@@ -32,10 +32,10 @@ export class EditCardView extends Component {
       lastName: props.lastName || '',
       title: props.title || '',
       company: props.company || '',
-      mobile: props.mobile | '',
-      email: props.email | '',
-      linkedin: props.linkedin | '',
-      twitter: props.twitter | '',
+      mobile: props.mobile || '',
+      email: props.email || '',
+      linkedin: props.linkedin || '',
+      twitter: props.twitter || '',
     }
   }
 
