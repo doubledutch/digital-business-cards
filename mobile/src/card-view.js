@@ -28,14 +28,14 @@ export class EditCardView extends Component {
     // Initialize all values from props
     this.state = {
       id: props.id,
-      firstName: props.firstName,
-      lastName: props.lastName,
-      title: props.title,
-      company: props.company,
-      mobile: props.mobile,
-      email: props.email,
-      linkedin: props.linkedin,
-      twitter: props.twitter,
+      firstName: props.firstName || '',
+      lastName: props.lastName || '',
+      title: props.title || '',
+      company: props.company || '',
+      mobile: props.mobile || '',
+      email: props.email || '',
+      linkedin: props.linkedin || '',
+      twitter: props.twitter || '',
     }
   }
 
