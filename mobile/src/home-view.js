@@ -31,6 +31,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import i18n from './i18n'
 import { CardView, CardListItem, EditCardView } from './card-view'
 import { ScanView, CodeView } from './scan-view'
+import LoadingView from "./LoadingView"
 
 useStrings(i18n)
 
@@ -42,6 +43,8 @@ class HomeView extends PureComponent {
     showCode: false,
     showScanner: false,
     showEditor: false,
+    isLoggedIn: false,
+    logInFailed: false,
   }
 
   cardsRef = () => this.props.fbc.database.private.userRef('cards')
@@ -103,8 +106,13 @@ class HomeView extends PureComponent {
             })
           })
         }
+
+        this.hideLogInScreen = setTimeout(() => {
+          this.setState( {isLoggedIn: true})
+        }, 200)
+
       })
-    })
+    }).catch(()=> this.setState({logInFailed: true}))
   }
 
   render() {
@@ -115,19 +123,20 @@ class HomeView extends PureComponent {
     return (
       <View style={s.main}>
         <TitleBar title={suggestedTitle || t('personal_leads')} client={client} />
-        <TouchableOpacity onPress={this.editCard.bind(this)}>
+        {this.state.isLoggedIn 
+          ? <View style={{flex: 1}}>
+          <TouchableOpacity onPress={this.editCard.bind(this)}>
           <CardView user={currentUser} {...this.state.myCard} />
           <View
             style={{ position: 'absolute', marginTop: 22, right: 10, backgroundColor: 'white' }}
           >
             <Text
-              style={{ color: '#888888', backgroundColor: 'white', fontSize: 14, marginTop: 8 }}
+              style={{ color: '#888888', backgroundColor: 'white', fontSize: 14, marginTop: 2 }}
             >
               {t('edit_info')}
             </Text>
           </View>
         </TouchableOpacity>
-
         <KeyboardAwareScrollView
           style={s.scroll}
           viewIsInsideTabBar
@@ -279,7 +288,9 @@ class HomeView extends PureComponent {
             primaryColor={primaryColor}
           />
         </Modal>
-      </View>
+        </View>
+        : <LoadingView logInFailed={this.state.logInFailed}/> }
+        </View>
     )
   }
 
@@ -328,7 +339,7 @@ class HomeView extends PureComponent {
         return data
       })
       .join('\n\n')
-    Share.share({ message: data, title: 'Exported Cards' }, {})
+    Share.share({ message: data, title: 'Exported Cards', subject: 'Exported Cards' }, {})
   }
 
   showCard(index) {
@@ -354,7 +365,8 @@ class HomeView extends PureComponent {
   }
 
   addCard = newCard => {
-    if (newCard.firstName && newCard.lastName) {
+    const isNew = !this.state.cards.find(card => card.id === newCard.id)
+    if (newCard.firstName && newCard.lastName && isNew) {
       const cards = [...this.state.cards, newCard]
       this.cardsRef().set(cards)
       this.saveLocalCards({ myCard: this.state.myCard, cards })

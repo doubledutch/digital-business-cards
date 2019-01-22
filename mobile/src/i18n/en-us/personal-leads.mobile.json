@@ -20,5 +20,6 @@
   "notes": "Notes",
   "startConvo": "Start a Conversation",
   "error": "Unable to Read",
-  "newScan": "Please scan a different code"
+  "newScan": "Please scan a different code",
+  "error_connecting": "Error connecting to database",
 }

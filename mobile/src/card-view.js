@@ -51,6 +51,7 @@ export class EditCardView extends Component {
 
   render() {
     const { primaryColor } = this.props
+    const color = this.state.firstName.trim().length === 0 || this.state.lastName.trim().length === 0 ? "gray" : primaryColor
     return (
       <View
         style={{
@@ -232,12 +233,13 @@ export class EditCardView extends Component {
                 flex: 1,
                 marginLeft: 5,
                 marginRight: 10,
-                borderColor: primaryColor,
-                backgroundColor: primaryColor,
+                borderColor: color,
+                backgroundColor: color,
                 borderWidth: 1,
                 height: 45,
                 borderRadius: 20,
               }}
+              disabled={this.state.firstName.length === 0 || this.state.lastName.length === 0 ? true: false}
             >
               <Text
                 style={{
@@ -294,7 +296,7 @@ export class CardView extends Component {
 }
 
 export class CardListView extends Component {
-  state = { notes: this.props.notes, isFocused: false, inputHeight: 0 }
+  state = { notes: this.props.notes || '', isFocused: false, inputHeight: 0 }
 
   updateLead = () => {
     this.props.onUpdateNotes(this.state.notes)
