@@ -157,9 +157,10 @@ class HomeView extends PureComponent {
             <Text style={{ fontSize: 18, marginLeft: 10, marginTop: 10, height: 21 }}>
               {t('my_connections')}
             </Text>
+            <View style={{flex: 1}}/>
             {this.state.cards.length > 0 && (
               <TouchableOpacity
-                style={{ height: 16, flex: 1, marginRight: 18, marginLeft: 50, marginTop: 13 }}
+                style={{ marginRight: 18, marginLeft: 50, marginTop: 13 }}
                 onPress={this.exportCards}
               >
                 <Text style={{ fontSize: 14, textAlign: 'right', color: primaryColor }}>
