@@ -1,4 +1,4 @@
-# personal-leads
+# digital-business-cards
 
 A React Native extension for DoubleDutch apps, allowing event attendees to scan virtual business cards.
 
