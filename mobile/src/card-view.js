@@ -36,22 +36,34 @@ export class EditCardView extends Component {
       email: props.email || '',
       linkedin: props.linkedin || '',
       twitter: props.twitter || '',
+      isChange: false
     }
   }
 
   // Use the supplied key to assign the value
   onChange = (value, key) => {
-    this.setState({ [key]: value })
+    this.setState({ [key]: value, isChange: true })
   }
 
   // Hand form state over to function passed in through props
   onSave = () => {
-    this.props.updateCard(this.state)
+    const trimmedState = {
+      id: this.props.id,
+      firstName: this.state.firstName.trim(),
+      lastName: this.state.lastName.trim(),
+      title: this.state.title.trim(),
+      company: this.state.company.trim(),
+      mobile: this.state.mobile.trim(),
+      email: this.state.email.trim(),
+      linkedin: this.state.linkedin.trim(),
+      twitter: this.state.twitter.trim()
+    }
+    this.props.updateCard(trimmedState)
   }
 
   render() {
     const { primaryColor } = this.props
-    const color = this.state.firstName.trim().length === 0 || this.state.lastName.trim().length === 0 ? "gray" : primaryColor
+    const color = this.state.firstName.trim().length === 0 || this.state.lastName.trim().length === 0 || !this.state.isChanged ? "gray" : primaryColor
     return (
       <View
         style={{
@@ -205,23 +217,21 @@ export class EditCardView extends Component {
                 borderColor: primaryColor,
                 backgroundColor: 'white',
                 borderWidth: 1,
-                height: 45,
                 borderRadius: 20,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: 45
               }}
             >
               <Text
                 style={{
                   color: primaryColor,
                   textAlign: 'center',
-                  flex: 1,
                   flexDirection: 'column',
                   fontSize: 18,
-                  marginTop: 12,
                   marginLeft: 10,
-                  marginBottom: 12,
                   marginRight: 10,
-                  fontSize: 18,
-                  height: 21,
                 }}
               >
                 {t('cancel')}
@@ -236,24 +246,23 @@ export class EditCardView extends Component {
                 borderColor: color,
                 backgroundColor: color,
                 borderWidth: 1,
-                height: 45,
                 borderRadius: 20,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: 45
               }}
-              disabled={this.state.firstName.length === 0 || this.state.lastName.length === 0 ? true: false}
+              disabled={this.state.firstName.length === 0 || this.state.lastName.length === 0 || !this.state.isChanged ? true: false}
             >
               <Text
                 style={{
                   color: 'white',
                   textAlign: 'center',
-                  flex: 1,
                   flexDirection: 'column',
                   fontSize: 18,
-                  marginTop: 12,
                   marginLeft: 10,
-                  marginBottom: 12,
                   marginRight: 10,
                   fontSize: 18,
-                  height: 21,
                 }}
               >
                 {t('save')}
@@ -296,7 +305,7 @@ export class CardView extends Component {
 }
 
 export class CardListView extends Component {
-  state = { notes: this.props.notes || '', isFocused: false, inputHeight: 0 }
+  state = { notes: this.props.notes || '', isFocused: false, inputHeight: 0, isEdit: false }
 
   updateLead = () => {
     this.props.onUpdateNotes(this.state.notes)
@@ -342,8 +351,8 @@ export class CardListView extends Component {
               {t('cancel')}
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={this.updateLead} style={{ height: 16, paddingLeft: 15 }}>
-            <Text style={{ fontSize: 14, textAlign: 'right', color: primaryColor }}>
+          <TouchableOpacity onPress={this.updateLead} style={{ height: 16, paddingLeft: 15 }} disabled={!this.state.isEdit}>
+            <Text style={{ fontSize: 14, textAlign: 'right', color: this.state.isEdit ? primaryColor : "gray"}}>
               {t('save')}
             </Text>
           </TouchableOpacity>
@@ -378,18 +387,21 @@ export class CardListView extends Component {
             </Text>
             <View style={{ marginTop: 5, margin: 2 }}>
               {this.props.email ? (
-                <TouchableOpacity
-                  style={{ flexDirection: 'row', marginTop: 5 }}
-                  onPress={() => Linking.openURL(`mailto:${this.props.email}`)}
-                >
-                  <Image
-                    style={{ width: 15, height: 10, marginTop: 5, marginRight: 5 }}
-                    source={envelopeIcon}
-                  />
-                  <Text style={{ fontSize: 14, flex: 1, marginTop: 1, color: 'blue' }}>
-                    {this.props.email}
-                  </Text>
-                </TouchableOpacity>
+                <View style={{flexDirection: 'row'}}>
+                  <TouchableOpacity
+                    style={{ flexDirection: 'row', marginTop: 5}}
+                    onPress={() => Linking.openURL(`mailto:${this.props.email}`)}
+                  >
+                    <Image
+                      style={{ width: 15, height: 10, marginTop: 5, marginRight: 5 }}
+                      source={envelopeIcon}
+                    />
+                    <Text style={{ fontSize: 14, marginTop: 1, color: 'blue' }}>
+                      {this.props.email}
+                    </Text>
+                  </TouchableOpacity>
+                  <View style={{flex: 1}}/>
+                </View>
               ) : null}
               {this.props.mobile ? (
                 <View style={{ flexDirection: 'row', marginTop: 5 }}>
@@ -455,7 +467,7 @@ export class CardListView extends Component {
             id="notes"
             key="notes"
             value={this.state.notes}
-            onChangeText={notes => this.setState({ notes })}
+            onChangeText={notes => this.setState({ notes, isEdit: true })}
           />
         </View>
         <View style={{ borderBottomColor: '#E8E8EE', borderBottomWidth: 1 }}>
