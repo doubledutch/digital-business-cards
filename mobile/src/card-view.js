@@ -303,8 +303,7 @@ export class CardView extends Component {
               {this.props.firstName} {this.props.lastName}
             </Text>
             <Text style={{ fontSize: 18 }}>
-              {this.props.title}
-              {this.props.company ? `, ${this.props.company}` : ''}
+              { [this.props.title, this.props.company].filter(x => x).join(', ') }
             </Text>
           </View>
         </View>
@@ -392,8 +391,7 @@ export class CardListView extends Component {
               {this.props.firstName} {this.props.lastName}
             </Text>
             <Text style={{ flexWrap: 'wrap', fontSize: 14, color: '#A8A8A8', marginLeft: 2 }}>
-              {this.props.title}
-              {this.props.company ? `, ${this.props.company}` : ''}
+              { [this.props.title, this.props.company].filter(x => x).join(', ') }
             </Text>
             <View style={{ marginTop: 5, margin: 2 }}>
               {this.props.email ? (
@@ -560,7 +558,7 @@ export class CardListItem extends Component {
               {this.props.firstName} {this.props.lastName}
             </Text>
             <Text style={{ flexWrap: 'wrap', fontSize: 14, color: '#A8A8A8' }}>
-              {this.props.title}, {this.props.company}
+            { [this.props.title, this.props.company].filter(x => x).join(', ') }
             </Text>
           </View>
         </View>
