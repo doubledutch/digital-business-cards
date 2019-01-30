@@ -273,7 +273,7 @@ export class EditCardView extends Component {
       </View>
     )
   }
-  
+
   isButtonDisabled = () => {
     if (this.state.firstName.length === 0 || this.state.lastName.length === 0 || !this.state.isChanged || this.state.mobile.match(/[a-z]/i)){
       return true
@@ -314,12 +314,7 @@ export class CardView extends Component {
 }
 
 export class CardListView extends Component {
-  state = { notes: this.props.notes || '', isFocused: false, inputHeight: 0, isEdit: false, isDisabled: null}
-
-  componentDidMount(){
-    client.getAttendee(this.props.user.id).then(user => this.setState({isDisabled: false}))
-    .catch(e => this.setState({isDisabled: true}))
-  }
+  state = { notes: this.props.notes || '', isFocused: false, inputHeight: 0, isEdit: false}
 
   updateLead = () => {
     this.props.onUpdateNotes(this.state.notes)
@@ -498,14 +493,13 @@ export class CardListView extends Component {
             style={{
               flex: 1,
               margin: 10,
-              backgroundColor: this.state.isDisabled ? "gray" : this.props.primaryColor,
+              backgroundColor: this.props.primaryColor,
               padding: 10,
               alignItems: 'center',
               justifyContent: 'center',
               borderRadius: 10,
             }}
             onPress={() => client.openURL(`dd://profile/${this.props.user.id}`)}
-            disabled={this.state.isDisabled}
           >
             <Text style={{ fontSize: 14, fontWeight: 'bold', textAlign: 'center', color: 'white' }}>
               {t('startConvo')}
