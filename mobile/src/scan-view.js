@@ -69,6 +69,7 @@ export class CodeView extends Component {
                 {firstName} {lastName}
               </Text>
               <Text style={{ flexWrap: 'wrap', fontSize: 18, marginLeft: 2 }}>
+                {title}
                 {company ? `, ${company}` : ''}
               </Text>
               <View style={{ marginTop: 5, margin: 2 }}>

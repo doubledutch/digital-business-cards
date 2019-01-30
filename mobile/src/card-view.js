@@ -63,7 +63,7 @@ export class EditCardView extends Component {
 
   render() {
     const { primaryColor } = this.props
-    const color = this.disableButton() ? "gray" : primaryColor
+    const color = this.isButtonDisabled() ? "gray" : primaryColor
     return (
       <View
         style={{
@@ -252,7 +252,7 @@ export class EditCardView extends Component {
                 alignItems: 'center',
                 height: 45
               }}
-              disabled={this.disableButton()}
+              disabled={this.isButtonDisabled()}
             >
               <Text
                 style={{
@@ -273,7 +273,8 @@ export class EditCardView extends Component {
       </View>
     )
   }
-  disableButton = () => {
+  
+  isButtonDisabled = () => {
     if (this.state.firstName.length === 0 || this.state.lastName.length === 0 || !this.state.isChanged || this.state.mobile.match(/[a-z]/i)){
       return true
     }
@@ -396,7 +397,8 @@ export class CardListView extends Component {
               {this.props.firstName} {this.props.lastName}
             </Text>
             <Text style={{ flexWrap: 'wrap', fontSize: 14, color: '#A8A8A8', marginLeft: 2 }}>
-              {this.props.title}, {this.props.company}
+              {this.props.title}
+              {this.props.company ? `, ${this.props.company}` : ''}
             </Text>
             <View style={{ marginTop: 5, margin: 2 }}>
               {this.props.email ? (
