@@ -313,7 +313,12 @@ export class CardView extends Component {
 }
 
 export class CardListView extends Component {
-  state = { notes: this.props.notes || '', isFocused: false, inputHeight: 0, isEdit: false }
+  state = { notes: this.props.notes || '', isFocused: false, inputHeight: 0, isEdit: false, isDisabled: null}
+
+  componentDidMount(){
+    client.getAttendee(this.props.user.id).then(user => this.setState({isDisabled: false}))
+    .catch(e => this.setState({isDisabled: true}))
+  }
 
   updateLead = () => {
     this.props.onUpdateNotes(this.state.notes)
@@ -483,13 +488,14 @@ export class CardListView extends Component {
             style={{
               flex: 1,
               margin: 10,
-              backgroundColor: this.props.primaryColor,
+              backgroundColor: this.state.isDisabled ? "gray" : this.props.primaryColor,
               padding: 10,
               alignItems: 'center',
               justifyContent: 'center',
               borderRadius: 10,
             }}
             onPress={() => client.openURL(`dd://profile/${this.props.user.id}`)}
+            disabled={this.state.isDisabled}
           >
             <Text style={{ fontSize: 14, fontWeight: 'bold', textAlign: 'center', color: 'white' }}>
               {t('startConvo')}
