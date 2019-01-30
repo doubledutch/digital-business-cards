@@ -36,13 +36,13 @@ export class EditCardView extends Component {
       email: props.email || '',
       linkedin: props.linkedin || '',
       twitter: props.twitter || '',
-      isChange: false
+      isChanged: false
     }
   }
 
   // Use the supplied key to assign the value
   onChange = (value, key) => {
-    this.setState({ [key]: value, isChange: true })
+    this.setState({ [key]: value, isChanged: true })
   }
 
   // Hand form state over to function passed in through props
@@ -63,7 +63,7 @@ export class EditCardView extends Component {
 
   render() {
     const { primaryColor } = this.props
-    const color = this.state.firstName.trim().length === 0 || this.state.lastName.trim().length === 0 || !this.state.isChanged ? "gray" : primaryColor
+    const color = this.disableButton() ? "gray" : primaryColor
     return (
       <View
         style={{
@@ -252,7 +252,7 @@ export class EditCardView extends Component {
                 alignItems: 'center',
                 height: 45
               }}
-              disabled={this.state.firstName.length === 0 || this.state.lastName.length === 0 || !this.state.isChanged ? true: false}
+              disabled={this.disableButton()}
             >
               <Text
                 style={{
@@ -273,7 +273,15 @@ export class EditCardView extends Component {
       </View>
     )
   }
+  disableButton = () => {
+    if (this.state.firstName.length === 0 || this.state.lastName.length === 0 || !this.state.isChanged || this.state.mobile.match(/[a-z]/i)){
+      return true
+    }
+    return false
+  }
+
 }
+
 
 export class CardView extends Component {
   render() {
