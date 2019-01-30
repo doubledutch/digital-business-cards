@@ -36,13 +36,13 @@ export class EditCardView extends Component {
       email: props.email || '',
       linkedin: props.linkedin || '',
       twitter: props.twitter || '',
-      isChange: false
+      isChanged: false
     }
   }
 
   // Use the supplied key to assign the value
   onChange = (value, key) => {
-    this.setState({ [key]: value, isChange: true })
+    this.setState({ [key]: value, isChanged: true })
   }
 
   // Hand form state over to function passed in through props
@@ -63,7 +63,7 @@ export class EditCardView extends Component {
 
   render() {
     const { primaryColor } = this.props
-    const color = this.state.firstName.trim().length === 0 || this.state.lastName.trim().length === 0 || !this.state.isChanged ? "gray" : primaryColor
+    const color = this.isButtonDisabled() ? "gray" : primaryColor
     return (
       <View
         style={{
@@ -252,7 +252,7 @@ export class EditCardView extends Component {
                 alignItems: 'center',
                 height: 45
               }}
-              disabled={this.state.firstName.length === 0 || this.state.lastName.length === 0 || !this.state.isChanged ? true: false}
+              disabled={this.isButtonDisabled()}
             >
               <Text
                 style={{
@@ -273,7 +273,16 @@ export class EditCardView extends Component {
       </View>
     )
   }
+
+  isButtonDisabled = () => {
+    if (this.state.firstName.length === 0 || this.state.lastName.length === 0 || !this.state.isChanged || this.state.mobile.match(/[a-z]/i)){
+      return true
+    }
+    return false
+  }
+
 }
+
 
 export class CardView extends Component {
   render() {
@@ -294,8 +303,7 @@ export class CardView extends Component {
               {this.props.firstName} {this.props.lastName}
             </Text>
             <Text style={{ fontSize: 18 }}>
-              {this.props.title}
-              {this.props.company ? `, ${this.props.company}` : ''}
+              {titleAndCompany(this.props.title, this.props.company)}
             </Text>
           </View>
         </View>
@@ -305,7 +313,7 @@ export class CardView extends Component {
 }
 
 export class CardListView extends Component {
-  state = { notes: this.props.notes || '', isFocused: false, inputHeight: 0, isEdit: false }
+  state = { notes: this.props.notes || '', isFocused: false, inputHeight: 0, isEdit: false}
 
   updateLead = () => {
     this.props.onUpdateNotes(this.state.notes)
@@ -383,7 +391,7 @@ export class CardListView extends Component {
               {this.props.firstName} {this.props.lastName}
             </Text>
             <Text style={{ flexWrap: 'wrap', fontSize: 14, color: '#A8A8A8', marginLeft: 2 }}>
-              {this.props.title}, {this.props.company}
+              {titleAndCompany(this.props.title, this.props.company)}
             </Text>
             <View style={{ marginTop: 5, margin: 2 }}>
               {this.props.email ? (
@@ -404,13 +412,21 @@ export class CardListView extends Component {
                 </View>
               ) : null}
               {this.props.mobile ? (
-                <View style={{ flexDirection: 'row', marginTop: 5 }}>
-                  <Image
-                    style={{ width: 12, height: 12, marginTop: 5, marginRight: 5 }}
-                    source={telephoneIcon}
-                  />
-                  <Text style={{ fontSize: 14, flex: 1, marginTop: 2 }}>{this.props.mobile}</Text>
-                </View>
+                <View style={{flexDirection: 'row'}}>
+                  <TouchableOpacity
+                    style={{ flexDirection: 'row', marginTop: 5}}
+                    onPress={() => Linking.openURL(`tel:${this.props.mobile}`)}
+                  >
+                    <Image
+                      style={{ width: 12, height: 12, marginTop: 5, marginRight: 5 }}
+                      source={telephoneIcon}
+                    />
+                    <Text style={{ fontSize: 14, marginTop: 1, color: 'blue' }}>
+                      {this.props.mobile}
+                    </Text>
+                  </TouchableOpacity>
+                <View style={{flex: 1}}/>
+              </View>
               ) : null}
               {this.props.twitter ? (
                 <View style={{ flexDirection: 'row', marginTop: 5 }}>
@@ -542,7 +558,7 @@ export class CardListItem extends Component {
               {this.props.firstName} {this.props.lastName}
             </Text>
             <Text style={{ flexWrap: 'wrap', fontSize: 14, color: '#A8A8A8' }}>
-              {this.props.title}, {this.props.company}
+              {titleAndCompany(this.props.title, this.props.company)}
             </Text>
           </View>
         </View>
@@ -550,3 +566,5 @@ export class CardListItem extends Component {
     )
   }
 }
+
+const titleAndCompany = (title, company) => [this.props.title, this.props.company].filter(x => x).join(', ')
