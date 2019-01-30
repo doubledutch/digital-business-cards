@@ -417,13 +417,21 @@ export class CardListView extends Component {
                 </View>
               ) : null}
               {this.props.mobile ? (
-                <View style={{ flexDirection: 'row', marginTop: 5 }}>
-                  <Image
-                    style={{ width: 12, height: 12, marginTop: 5, marginRight: 5 }}
-                    source={telephoneIcon}
-                  />
-                  <Text style={{ fontSize: 14, flex: 1, marginTop: 2 }}>{this.props.mobile}</Text>
-                </View>
+                <View style={{flexDirection: 'row'}}>
+                  <TouchableOpacity
+                    style={{ flexDirection: 'row', marginTop: 5}}
+                    onPress={() => Linking.openURL(`tel:${this.props.mobile}`)}
+                  >
+                    <Image
+                      style={{ width: 12, height: 12, marginTop: 5, marginRight: 5 }}
+                      source={telephoneIcon}
+                    />
+                    <Text style={{ fontSize: 14, marginTop: 1, color: 'blue' }}>
+                      {this.props.mobile}
+                    </Text>
+                  </TouchableOpacity>
+                <View style={{flex: 1}}/>
+              </View>
               ) : null}
               {this.props.twitter ? (
                 <View style={{ flexDirection: 'row', marginTop: 5 }}>
