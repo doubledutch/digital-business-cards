@@ -78,7 +78,7 @@ export class EditCardView extends Component {
           right: 0,
         }}
       >
-        <ScrollView style={{ marginTop: 40 }}>
+        <View style={{ marginTop: 40 }}>
           <View style={{ flexDirection: 'row' }}>
             <LabeledTextInput
               style={{
@@ -269,7 +269,7 @@ export class EditCardView extends Component {
               </Text>
             </TouchableOpacity>
           </View>
-        </ScrollView>
+        </View>
       </View>
     )
   }
@@ -567,4 +567,4 @@ export class CardListItem extends Component {
   }
 }
 
-const titleAndCompany = (title, company) => [this.props.title, this.props.company].filter(x => x).join(', ')
+const titleAndCompany = (title, company) => [title, company].filter(x => x).join(', ')
