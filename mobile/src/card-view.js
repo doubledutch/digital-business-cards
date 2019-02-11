@@ -275,7 +275,7 @@ export class EditCardView extends Component {
   }
 
   isButtonDisabled = () => {
-    if (this.state.firstName.length === 0 || this.state.lastName.length === 0 || !this.state.isChanged || this.state.mobile.match(/[a-z]/i)){
+    if (this.state.firstName.trim().length === 0 || this.state.lastName.trim().length === 0 || !this.state.isChanged || this.state.mobile.match(/[a-z~`!#()$%\^&@*+=\-\[\]\\';,/{}|\\":<>\?]/i)){
       return true
     }
     return false
@@ -318,6 +318,7 @@ export class CardListView extends Component {
   updateLead = () => {
     this.props.onUpdateNotes(this.state.notes)
     this.onBlur()
+    this.setState({isEdit: false})
   }
 
   onFocus = () => {
@@ -332,7 +333,7 @@ export class CardListView extends Component {
 
   onCancel = () => {
     this.onBlur()
-    this.setState({ notes: this.props.notes })
+    this.setState({ notes: this.props.notes, isEdit: false })
   }
 
   handleInputFocus = () => this.setState({ isFocused: true })
