@@ -69,8 +69,7 @@ export class CodeView extends Component {
                 {firstName} {lastName}
               </Text>
               <Text style={{ flexWrap: 'wrap', fontSize: 18, marginLeft: 2 }}>
-                {title}
-                {company ? `, ${company}` : ''}
+                {titleAndCompany(title, company)}
               </Text>
               <View style={{ marginTop: 5, margin: 2 }}>
                 {email ? (
@@ -188,3 +187,5 @@ export class ScanView extends Component {
     }
   }
 }
+
+const titleAndCompany = (title, company) => [title, company].filter(x => x).join(', ')
