@@ -47,8 +47,9 @@ class HomeView extends PureComponent {
     showEditor: false,
     isLoggedIn: false,
     logInFailed: false,
+    search: false,
     lead: '',
-    search: false
+    newList: []
   }
 
   cardsRef = () => this.props.fbc.database.private.userRef('cards')
@@ -105,8 +106,9 @@ class HomeView extends PureComponent {
               if (myCard) this.setState({ myCard })
             })
             this.cardsRef().on('value', data => {
-              const cards = data.val().sort(a, b => a.lastName - b.lastName)
-              if (cards) this.setState({ cards })
+              let cards = data.val() || []
+              cards = cards.sort((a, b) => a.lastName - b.lastName)
+              this.setState({ cards })
             })
           })
         }
@@ -343,8 +345,8 @@ class HomeView extends PureComponent {
           android: [newStyle, androidStyle],
         })}
         placeholder={t('search')}
-        value={this.state.session}
-        onChangeText={session => this.updateList(session)}
+        value={this.state.lead}
+        onChangeText={lead => this.updateList(lead)}
         maxLength={25}
         placeholderTextColor="#9B9B9B"
       />
@@ -358,7 +360,7 @@ class HomeView extends PureComponent {
   }
 
     updateList = value => {
-      const queryText = value.toLowerCase()
+      const queryText = value ? value.toLowerCase() : ""
       if (queryText.length > 0) {
         const queryResult = []
         this.state.cards.forEach(lead => {
@@ -376,7 +378,7 @@ class HomeView extends PureComponent {
   }
 
   resetSearch = () => {
-    this.setState({ session: '', search: false })
+    this.setState({ lead: '', search: false })
   }
 
   showAlert = () => {
