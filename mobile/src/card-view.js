@@ -91,7 +91,7 @@ export class EditCardView extends Component {
                 marginTop: 10,
               }}
               id="firstName"
-              label="First"
+              label="First Name"
               value={this.props.firstName}
               onChangeText={this.onChange}
             />
@@ -106,7 +106,7 @@ export class EditCardView extends Component {
                 marginTop: 10,
               }}
               id="lastName"
-              label="Last"
+              label="Last Name"
               value={this.props.lastName}
               onChangeText={this.onChange}
             />

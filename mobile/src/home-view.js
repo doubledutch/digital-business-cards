@@ -47,7 +47,6 @@ class HomeView extends PureComponent {
     showEditor: false,
     isLoggedIn: false,
     logInFailed: false,
-    search: false,
     lead: '',
     newList: []
   }
@@ -123,8 +122,9 @@ class HomeView extends PureComponent {
 
   render() {
     const { suggestedTitle } = this.props
-    const { currentUser, currentEvent, primaryColor, cards, newList } = this.state
-    const leads = this.state.search ? newList : cards
+    const { currentUser, currentEvent, primaryColor, cards, lead } = this.state
+    // const leads = this.state.search ? newList : cards
+    const leads = lead ? this.returnUpdatedList(lead) : cards
     if (!currentUser || !currentEvent || !primaryColor) return null
 
     return (
@@ -304,6 +304,7 @@ class HomeView extends PureComponent {
   }
 
   renderSearch = () => {
+    const filteredListExists = this.state.lead ? true : false
     const newStyle = {
       flex: 1,
       fontSize: 18,
@@ -313,44 +314,35 @@ class HomeView extends PureComponent {
       height: Math.max(35, this.state.inputHeight),
       paddingTop: 0
     }
-    const androidStyle = {
-      paddingLeft: 0,
-      marginTop: 5,
-      marginBottom: 5,
-    }
-    const iosStyle = {
-      marginTop: 3,
-    }
+
+    const platformStyle = Platform.select({
+      ios:{
+        marginTop: 3,
+      },
+      android:{
+        paddingLeft: 0,
+        marginTop: 5,
+        marginBottom: 5,
+      }
+    })
     return (
-      <View
-      style={{
-        flexDirection: 'row',
-        backgroundColor: '#FFFFFF',
-        borderBottomColor: '#b7b7b7',
-        borderBottomWidth: 1,
-        borderRadius: 5,
-        height: 40,
-      }}
-    >
-      {this.state.search ? (
-        <View style={{ width: 40 }} />
+      <View style={s.searchBox}>
+      {filteredListExists ? (
+        <View style={s.fixedMargin} />
       ) : (
         <TouchableOpacity style={s.circleBoxMargin}>
           <Text style={s.whiteText}>?</Text>
         </TouchableOpacity>
       )}
       <TextInput
-        style={Platform.select({
-          ios: [newStyle, iosStyle],
-          android: [newStyle, androidStyle],
-        })}
+        style={[newStyle, platformStyle]}
         placeholder={t('search')}
         value={this.state.lead}
-        onChangeText={lead => this.updateList(lead)}
+        onChangeText={lead => this.setState({lead})}
         maxLength={25}
         placeholderTextColor="#9B9B9B"
       />
-      {this.state.search ? (
+      {filteredListExists ? (
         <TouchableOpacity style={s.circleBoxMargin} onPress={this.resetSearch}>
           <Text style={s.whiteText}>X</Text>
         </TouchableOpacity>
@@ -359,26 +351,21 @@ class HomeView extends PureComponent {
     )
   }
 
-    updateList = value => {
-      const queryText = value ? value.toLowerCase() : ""
-      if (queryText.length > 0) {
-        const queryResult = []
-        this.state.cards.forEach(lead => {
-          const name = `${lead.firstName} ${lead.lastName}`
-          if (name) {
-            if (name.toLowerCase().indexOf(queryText) !== -1) {
-              queryResult.push(lead)
-            }
-          }
-        })
-        this.setState({ search: true, newList: queryResult, lead: value })
-      } else {
-        this.setState({ search: false, lead: value })
+  returnUpdatedList = search => {
+    const queryResult = []
+    this.state.cards.forEach(lead => {
+      const name = `${lead.firstName} ${lead.lastName}`
+      if (name) {
+        if (name.toLowerCase().indexOf(search.toLowerCase()) !== -1) {
+          queryResult.push(lead)
+        }
       }
+    })
+    return queryResult
   }
 
   resetSearch = () => {
-    this.setState({ lead: '', search: false })
+    this.setState({ lead: ''})
   }
 
   showAlert = () => {
@@ -501,6 +488,17 @@ const s = StyleSheet.create({
   main: {
     flex: 1,
     backgroundColor: '#dedede',
+  },
+  fixedMargin: {
+    width: 40
+  },
+  searchBox: {
+    flexDirection: 'row',
+    backgroundColor: '#FFFFFF',
+    borderBottomColor: '#b7b7b7',
+    borderBottomWidth: 1,
+    borderRadius: 5,
+    height: 40,
   },
   scroll: {
     flex: 1,
