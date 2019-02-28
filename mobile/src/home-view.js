@@ -122,7 +122,7 @@ class HomeView extends PureComponent {
   render() {
     const { suggestedTitle } = this.props
     const { currentUser, currentEvent, primaryColor, cards, searchText} = this.state
-    const leads = lead ? this.returnUpdatedList(searchText) : cards
+    const leads = searchText ? this.returnUpdatedList(searchText) : cards
     if (!currentUser || !currentEvent || !primaryColor) return null
 
     return (
