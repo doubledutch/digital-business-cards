@@ -47,8 +47,7 @@ class HomeView extends PureComponent {
     showEditor: false,
     isLoggedIn: false,
     logInFailed: false,
-    lead: '',
-    newList: []
+    searchText: '',
   }
 
   cardsRef = () => this.props.fbc.database.private.userRef('cards')
@@ -122,9 +121,8 @@ class HomeView extends PureComponent {
 
   render() {
     const { suggestedTitle } = this.props
-    const { currentUser, currentEvent, primaryColor, cards, lead } = this.state
-    // const leads = this.state.search ? newList : cards
-    const leads = lead ? this.returnUpdatedList(lead) : cards
+    const { currentUser, currentEvent, primaryColor, cards, searchText} = this.state
+    const leads = lead ? this.returnUpdatedList(searchText) : cards
     if (!currentUser || !currentEvent || !primaryColor) return null
 
     return (
@@ -304,7 +302,7 @@ class HomeView extends PureComponent {
   }
 
   renderSearch = () => {
-    const filteredListExists = this.state.lead ? true : false
+    const filteredListExists = this.state.searchText ? true : false
     const newStyle = {
       flex: 1,
       fontSize: 18,
@@ -337,8 +335,8 @@ class HomeView extends PureComponent {
       <TextInput
         style={[newStyle, platformStyle]}
         placeholder={t('search')}
-        value={this.state.lead}
-        onChangeText={lead => this.setState({lead})}
+        value={this.state.searchText}
+        onChangeText={searchText => this.setState({searchText})}
         maxLength={25}
         placeholderTextColor="#9B9B9B"
       />
