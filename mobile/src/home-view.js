@@ -24,6 +24,8 @@ import {
   Text,
   TouchableOpacity,
   View,
+  TextInput,
+  Platform
 } from 'react-native'
 import client, { TitleBar, useStrings, translate as t } from '@doubledutch/rn-client'
 import { provideFirebaseConnectorToReactComponent } from '@doubledutch/firebase-connector'
@@ -45,6 +47,7 @@ class HomeView extends PureComponent {
     showEditor: false,
     isLoggedIn: false,
     logInFailed: false,
+    searchText: '',
   }
 
   cardsRef = () => this.props.fbc.database.private.userRef('cards')
@@ -101,8 +104,9 @@ class HomeView extends PureComponent {
               if (myCard) this.setState({ myCard })
             })
             this.cardsRef().on('value', data => {
-              const cards = data.val()
-              if (cards) this.setState({ cards })
+              let cards = data.val() || []
+              cards = cards.sort((a, b) => a.lastName - b.lastName)
+              this.setState({ cards })
             })
           })
         }
@@ -117,7 +121,8 @@ class HomeView extends PureComponent {
 
   render() {
     const { suggestedTitle } = this.props
-    const { currentUser, currentEvent, primaryColor } = this.state
+    const { currentUser, currentEvent, primaryColor, cards, searchText} = this.state
+    const leads = searchText ? this.returnUpdatedList(searchText) : cards
     if (!currentUser || !currentEvent || !primaryColor) return null
 
     return (
@@ -169,10 +174,11 @@ class HomeView extends PureComponent {
               </TouchableOpacity>
             )}
           </View>
-          {this.state.cards.length === 0 && (
+          {this.renderSearch()}
+          {leads.length === 0 && (
             <Text style={s.noConnections}>{t('no_connections')}</Text>
           )}
-          {this.state.cards.map((card, index) => (
+          {leads.map((card, index) => (
             <CardListItem
               key={index}
               showExpanded={index == this.state.selectedCard}
@@ -293,6 +299,71 @@ class HomeView extends PureComponent {
         : <LoadingView logInFailed={this.state.logInFailed}/> }
         </View>
     )
+  }
+
+  renderSearch = () => {
+    const filteredListExists = this.state.searchText ? true : false
+    const newStyle = {
+      flex: 1,
+      fontSize: 18,
+      color: '#364247',
+      textAlignVertical: 'top',
+      maxHeight: 100,
+      height: Math.max(35, this.state.inputHeight),
+      paddingTop: 0
+    }
+
+    const platformStyle = Platform.select({
+      ios:{
+        marginTop: 3,
+      },
+      android:{
+        paddingLeft: 0,
+        marginTop: 5,
+        marginBottom: 5,
+      }
+    })
+    return (
+      <View style={s.searchBox}>
+      {filteredListExists ? (
+        <View style={s.fixedMargin} />
+      ) : (
+        <TouchableOpacity style={s.circleBoxMargin}>
+          <Text style={s.whiteText}>?</Text>
+        </TouchableOpacity>
+      )}
+      <TextInput
+        style={[newStyle, platformStyle]}
+        placeholder={t('search')}
+        value={this.state.searchText}
+        onChangeText={searchText => this.setState({searchText})}
+        maxLength={25}
+        placeholderTextColor="#9B9B9B"
+      />
+      {filteredListExists ? (
+        <TouchableOpacity style={s.circleBoxMargin} onPress={this.resetSearch}>
+          <Text style={s.whiteText}>X</Text>
+        </TouchableOpacity>
+      ) : null}
+    </View>
+    )
+  }
+
+  returnUpdatedList = search => {
+    const queryResult = []
+    this.state.cards.forEach(lead => {
+      const name = `${lead.firstName} ${lead.lastName}`
+      if (name) {
+        if (name.toLowerCase().indexOf(search.toLowerCase()) !== -1) {
+          queryResult.push(lead)
+        }
+      }
+    })
+    return queryResult
+  }
+
+  resetSearch = () => {
+    this.setState({ lead: ''})
   }
 
   showAlert = () => {
@@ -416,6 +487,17 @@ const s = StyleSheet.create({
     flex: 1,
     backgroundColor: '#dedede',
   },
+  fixedMargin: {
+    width: 40
+  },
+  searchBox: {
+    flexDirection: 'row',
+    backgroundColor: '#FFFFFF',
+    borderBottomColor: '#b7b7b7',
+    borderBottomWidth: 1,
+    borderRadius: 5,
+    height: 40,
+  },
   scroll: {
     flex: 1,
     backgroundColor: '#dedede',
@@ -425,5 +507,34 @@ const s = StyleSheet.create({
   noConnections: {
     color: '#aaa',
     margin: 10,
+  },
+  circleBoxMargin: {
+    marginTop: 10,
+    marginRight: 10,
+    marginLeft: 10,
+    marginBottom: 20,
+    justifyContent: 'center',
+    backgroundColor: '#9B9B9B',
+    paddingLeft: 8,
+    paddingRight: 8,
+    height: 22,
+    borderRadius: 50,
+  },
+
+  whiteText: {
+    fontSize: 18,
+    color: 'white',
+  },
+  circleBox: {
+    marginTop: 10,
+    marginRight: 10,
+    marginLeft: 10,
+    marginBottom: 20,
+    justifyContent: 'center',
+    backgroundColor: '#9B9B9B',
+    paddingLeft: 8,
+    paddingRight: 8,
+    height: 22,
+    borderRadius: 50,
   },
 })
