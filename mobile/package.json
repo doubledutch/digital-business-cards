@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@doubledutch/firebase-connector": "^4.1.2",
-    "@doubledutch/rn-client": "5.0.1-alpha",
+    "@doubledutch/rn-client": "5.0.2-alpha",
     "react": "16.6.1",
     "react-native": "0.57.5",
     "react-native-cached-image": "^1.3.3",

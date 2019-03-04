@@ -52,6 +52,8 @@ class HomeView extends PureComponent {
 
   cardsRef = () => this.props.fbc.database.private.userRef('cards')
 
+  totalCardsRef = () => this.props.fbc.database.private.adminableUserRef('connections')
+
   myCardRef = () => this.props.fbc.database.private.userRef('myCard')
 
   leadStorageKey = () =>
@@ -393,7 +395,10 @@ class HomeView extends PureComponent {
     return AsyncStorage.setItem(this.leadStorageKey(), JSON.stringify({ myCard, cards }))
   }
 
-  showCode = () => this.setState({ showCode: true })
+  showCode = () => {
+    // this.fakeScan()
+    this.setState({ showCode: true })
+  }
 
   scanCode = () => this.setState({ showScanner: true })
 
@@ -448,6 +453,11 @@ class HomeView extends PureComponent {
         cancelable: false,
       })
     }
+  }
+
+  fakeScan = () => {
+    const totalCards = this.state.cards.length
+    this.totalCardsRef().child(new Date().getTime()).set(totalCards)
   }
 
   updateScannedCard = (index, updatedCard) => {
