@@ -124,7 +124,7 @@ class HomeView extends PureComponent {
   render() {
     const { suggestedTitle } = this.props
     const { currentUser, currentEvent, primaryColor, cards, searchText} = this.state
-    const leads = searchText ? this.returnUpdatedList(searchText) : cards
+    const leads = searchText ? this.returnUpdatedList(searchText.trim()) : cards
     if (!currentUser || !currentEvent || !primaryColor) return null
 
     return (
@@ -311,8 +311,8 @@ class HomeView extends PureComponent {
       color: '#364247',
       textAlignVertical: 'top',
       maxHeight: 100,
-      height: Math.max(35, this.state.inputHeight),
-      paddingTop: 0
+      height: 35,
+      paddingTop: 0,
     }
 
     const platformStyle = Platform.select({
@@ -327,27 +327,27 @@ class HomeView extends PureComponent {
     })
     return (
       <View style={s.searchBox}>
-      {filteredListExists ? (
-        <View style={s.fixedMargin} />
-      ) : (
-        <TouchableOpacity style={s.circleBoxMargin}>
-          <Text style={s.whiteText}>?</Text>
-        </TouchableOpacity>
-      )}
-      <TextInput
-        style={[newStyle, platformStyle]}
-        placeholder={t('search')}
-        value={this.state.searchText}
-        onChangeText={searchText => this.setState({searchText})}
-        maxLength={25}
-        placeholderTextColor="#9B9B9B"
-      />
-      {filteredListExists ? (
-        <TouchableOpacity style={s.circleBoxMargin} onPress={this.resetSearch}>
-          <Text style={s.whiteText}>X</Text>
-        </TouchableOpacity>
-      ) : null}
-    </View>
+        {filteredListExists ? (
+          <View style={s.fixedMargin} />
+        ) : (
+          <TouchableOpacity style={s.circleBoxMargin}>
+            <Text style={s.whiteText}>?</Text>
+          </TouchableOpacity>
+        )}
+        <TextInput
+          style={[newStyle, platformStyle]}
+          placeholder={t('search')}
+          value={this.state.searchText}
+          onChangeText={searchText => this.setState({searchText})}
+          maxLength={25}
+          placeholderTextColor="#9B9B9B"
+        />
+        {filteredListExists ? (
+          <TouchableOpacity style={s.circleBoxMargin} onPress={this.resetSearch}>
+            <Text style={s.whiteText}>X</Text>
+          </TouchableOpacity>
+        ) : null}
+      </View>
     )
   }
 
@@ -365,7 +365,7 @@ class HomeView extends PureComponent {
   }
 
   resetSearch = () => {
-    this.setState({ lead: ''})
+    this.setState({ searchText: ''})
   }
 
   showAlert = () => {
@@ -445,6 +445,7 @@ class HomeView extends PureComponent {
     const isNew = !this.state.cards.find(card => card.id === newCard.id)
     if (newCard.firstName && newCard.lastName && isNew) {
       const cards = [...this.state.cards, newCard]
+      this.totalCardsRef().child(new Date().getTime()).set(1)
       this.cardsRef().set(cards)
       this.saveLocalCards({ myCard: this.state.myCard, cards })
       this.setState({ cards, showScanner: false })
@@ -453,11 +454,6 @@ class HomeView extends PureComponent {
         cancelable: false,
       })
     }
-  }
-
-  fakeScan = () => {
-    const totalCards = this.state.cards.length
-    this.totalCardsRef().child(new Date().getTime()).set(totalCards)
   }
 
   updateScannedCard = (index, updatedCard) => {
@@ -506,7 +502,6 @@ const s = StyleSheet.create({
     borderBottomColor: '#b7b7b7',
     borderBottomWidth: 1,
     borderRadius: 5,
-    height: 40,
   },
   scroll: {
     flex: 1,
@@ -522,7 +517,6 @@ const s = StyleSheet.create({
     marginTop: 10,
     marginRight: 10,
     marginLeft: 10,
-    marginBottom: 20,
     justifyContent: 'center',
     backgroundColor: '#9B9B9B',
     paddingLeft: 8,
@@ -539,7 +533,6 @@ const s = StyleSheet.create({
     marginTop: 10,
     marginRight: 10,
     marginLeft: 10,
-    marginBottom: 20,
     justifyContent: 'center',
     backgroundColor: '#9B9B9B',
     paddingLeft: 8,
