@@ -15,19 +15,18 @@
  */
 
 import React, { Component } from 'react'
-import { Alert, Image, Text, TouchableOpacity, View } from 'react-native'
+import { Image, Text, TouchableOpacity, View } from 'react-native'
 import QRCode from 'react-native-qrcode'
-import QRCodeScanner from 'react-native-qrcode-scanner'
 import client, { Avatar, translate as t } from '@doubledutch/rn-client'
 import { envelopeIcon, linkedinIcon, telephoneIcon, twitterIcon } from './icon'
 
-export class CodeView extends Component {
+export default class CodeView extends Component {
   state = { message: '' }
 
   render() {
-    const { myCard } = this.props
+    const { currentUser, hideModal, myCard, primaryColor } = this.props
+    const { message } = this.state
     const { firstName, lastName, title, company, email, twitter, mobile, linkedin } = myCard
-    const { currentUser, primaryColor } = this.props
     return (
       <View
         style={{
@@ -105,7 +104,7 @@ export class CodeView extends Component {
               }}
             >
               <QRCode
-                value={JSON.stringify({ ...this.props.myCard, message: this.state.message })}
+                value={JSON.stringify({ ...myCard, message })}
                 size={256}
                 bgColor="black"
                 fgColor="white"
@@ -114,7 +113,7 @@ export class CodeView extends Component {
             <View style={{ height: 40, marginBottom: 10 }}>
               <TouchableOpacity
                 style={{ flex: 1, marginLeft: 64, marginRight: 64, marginBottom: 8 }}
-                onPress={this.props.hideModal}
+                onPress={hideModal}
               >
                 <Text style={{ fontSize: 24, textAlign: 'center', color: primaryColor }}>
                   {t('exit')}
@@ -125,47 +124,6 @@ export class CodeView extends Component {
         </View>
       </View>
     )
-  }
-}
-
-export class ScanView extends Component {
-  onRead(code) {
-    try {
-      this.props.addCard(JSON.parse(code.data))
-    } catch (e) {
-      Alert.alert(t('error'), t('newScan'))
-    }
-  }
-
-  render() {
-    const { color } = this.props
-    try {
-      return (
-        <View
-          style={{
-            backgroundColor: '#dedede',
-            position: 'absolute',
-            top: 0,
-            bottom: 0,
-            left: 0,
-            right: 0,
-            paddingTop: 32,
-          }}
-        >
-          <QRCodeScanner onRead={this.onRead.bind(this)} />
-          <View style={{ height: 40, marginBottom: 10 }}>
-            <TouchableOpacity
-              style={{ flex: 1, marginLeft: 64, marginRight: 64, marginBottom: 8 }}
-              onPress={this.props.hideModal}
-            >
-              <Text style={{ fontSize: 24, textAlign: 'center', color }}>{t('close')}</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      )
-    } catch (e) {
-      console.log(e)
-    }
   }
 }
 

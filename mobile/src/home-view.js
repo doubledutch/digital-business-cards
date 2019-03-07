@@ -32,7 +32,8 @@ import { provideFirebaseConnectorToReactComponent } from '@doubledutch/firebase-
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import i18n from './i18n'
 import { CardView, CardListItem, EditCardView } from './card-view'
-import { ScanView, CodeView } from './scan-view'
+import CodeView from './CodeView'
+import ScanView from './ScanView'
 import LoadingView from './LoadingView'
 
 useStrings(i18n)
