@@ -15,37 +15,18 @@
  */
 
 import React, { Component } from 'react'
-import { Image, Text, TouchableOpacity, View, Alert } from 'react-native'
+import { Alert, Image, Text, TouchableOpacity, View } from 'react-native'
 import QRCode from 'react-native-qrcode'
 import QRCodeScanner from 'react-native-qrcode-scanner'
 import client, { Avatar, translate as t } from '@doubledutch/rn-client'
 import { envelopeIcon, linkedinIcon, telephoneIcon, twitterIcon } from './icon'
 
 export class CodeView extends Component {
-  state = {
-    message: '',
-    showCode: true,
-  }
-
-  setText(message) {
-    this.setState({ message })
-  }
-
-  generateCode() {
-    this.setState({ showCode: true })
-  }
+  state = { message: '' }
 
   render() {
-    const {
-      firstName,
-      lastName,
-      title,
-      company,
-      email,
-      twitter,
-      mobile,
-      linkedin,
-    } = this.props.myCard
+    const { myCard } = this.props
+    const { firstName, lastName, title, company, email, twitter, mobile, linkedin } = myCard
     const { currentUser, primaryColor } = this.props
     return (
       <View
@@ -151,7 +132,7 @@ export class ScanView extends Component {
   onRead(code) {
     try {
       this.props.addCard(JSON.parse(code.data))
-    } catch(e) {
+    } catch (e) {
       Alert.alert(t('error'), t('newScan'))
     }
   }

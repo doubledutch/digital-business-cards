@@ -25,7 +25,7 @@ import {
   TouchableOpacity,
   View,
   TextInput,
-  Platform
+  Platform,
 } from 'react-native'
 import client, { TitleBar, useStrings, translate as t } from '@doubledutch/rn-client'
 import { provideFirebaseConnectorToReactComponent } from '@doubledutch/firebase-connector'
@@ -33,7 +33,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import i18n from './i18n'
 import { CardView, CardListItem, EditCardView } from './card-view'
 import { ScanView, CodeView } from './scan-view'
-import LoadingView from "./LoadingView"
+import LoadingView from './LoadingView'
 
 useStrings(i18n)
 
@@ -64,294 +64,300 @@ class HomeView extends PureComponent {
 
     client.getCurrentEvent().then(currentEvent => this.setState({ currentEvent }))
     client.getPrimaryColor().then(primaryColor => this.setState({ primaryColor }))
-    client.getCurrentUser().then(currentUser => {
-      this.setState({
-        currentUser,
-        myCard: Object.assign(
-          { mobile: null, linkedin: null, twitter: null, leadNotes: null },
+    client
+      .getCurrentUser()
+      .then(currentUser => {
+        this.setState({
           currentUser,
-        ),
-      })
+          myCard: Object.assign(
+            { mobile: null, linkedin: null, twitter: null, leadNotes: null },
+            currentUser,
+          ),
+        })
 
-      this.loadLocalCards().then(localCards => {
-        // Load current user data from api, but don't overwrite any local values.
-        client
-          .getAttendee(currentUser.id)
-          .then(data => {
-            this.setState(({ myCard }) => {
-              let card = myCard
-              ;[
-                'firstName',
-                'lastName',
-                'title',
-                'company',
-                'email',
-                'twitter',
-                'linkedin',
-              ].forEach(field => {
-                if (card[field] == null && data[field]) card = { ...card, [field]: data[field] }
+        this.loadLocalCards().then(localCards => {
+          // Load current user data from api, but don't overwrite any local values.
+          client
+            .getAttendee(currentUser.id)
+            .then(data => {
+              this.setState(({ myCard }) => {
+                let card = myCard
+                ;[
+                  'firstName',
+                  'lastName',
+                  'title',
+                  'company',
+                  'email',
+                  'twitter',
+                  'linkedin',
+                ].forEach(field => {
+                  if (card[field] == null && data[field]) card = { ...card, [field]: data[field] }
+                })
+                return { myCard: card }
               })
-              return { myCard: card }
             })
-          })
-          .catch(err => console.log('error fetching user from api', err))
+            .catch(err => console.log('error fetching user from api', err))
 
-        // Load from DB only if local copy not found
-        if (!localCards) {
-          signin.then(() => {
-            this.myCardRef().on('value', data => {
-              const myCard = data.val()
-              if (myCard) this.setState({ myCard })
+          // Load from DB only if local copy not found
+          if (!localCards) {
+            signin.then(() => {
+              this.myCardRef().on('value', data => {
+                const myCard = data.val()
+                if (myCard) this.setState({ myCard })
+              })
+              this.cardsRef().on('value', data => {
+                let cards = data.val() || []
+                cards = cards.sort((a, b) => a.lastName - b.lastName)
+                this.setState({ cards })
+              })
             })
-            this.cardsRef().on('value', data => {
-              let cards = data.val() || []
-              cards = cards.sort((a, b) => a.lastName - b.lastName)
-              this.setState({ cards })
-            })
-          })
-        }
+          }
 
-        this.hideLogInScreen = setTimeout(() => {
-          this.setState( {isLoggedIn: true})
-        }, 200)
-
+          this.hideLogInScreen = setTimeout(() => {
+            this.setState({ isLoggedIn: true })
+          }, 200)
+        })
       })
-    }).catch(()=> this.setState({logInFailed: true}))
+      .catch(() => this.setState({ logInFailed: true }))
   }
 
   render() {
     const { suggestedTitle } = this.props
-    const { currentUser, currentEvent, primaryColor, cards, searchText} = this.state
+    const {
+      currentUser,
+      currentEvent,
+      isLoggedIn,
+      logInFailed,
+      myCard,
+      primaryColor,
+      cards,
+      searchText,
+      selectedCard,
+      showCode,
+      showEditor,
+      showScanner,
+    } = this.state
     const leads = searchText ? this.returnUpdatedList(searchText) : cards
     if (!currentUser || !currentEvent || !primaryColor) return null
 
     return (
       <View style={s.main}>
         <TitleBar title={suggestedTitle || t('personal_leads')} client={client} />
-        {this.state.isLoggedIn 
-          ? <View style={{flex: 1}}>
-          <TouchableOpacity onPress={this.editCard.bind(this)}>
-          <CardView user={currentUser} {...this.state.myCard} />
-          <View
-            style={{ position: 'absolute', marginTop: 22, right: 10, backgroundColor: 'white' }}
-          >
-            <Text
-              style={{ color: '#888888', backgroundColor: 'white', fontSize: 14, marginTop: 2 }}
-            >
-              {t('edit_info')}
-            </Text>
-          </View>
-        </TouchableOpacity>
-        <KeyboardAwareScrollView
-          style={s.scroll}
-          viewIsInsideTabBar
-          enableAutomaticScroll
-          extraScrollHeight={200}
-          keyboardShouldPersistTaps="always"
-        >
-          <View
-            style={{
-              backgroundColor: 'white',
-              height: 41,
-              borderBottomColor: '#E8E8EE',
-              borderBottomWidth: 1,
-              flex: 1,
-              flexDirection: 'row',
-            }}
-          >
-            <Text style={{ fontSize: 18, marginLeft: 10, marginTop: 10, height: 21 }}>
-              {t('my_connections')}
-            </Text>
-            <View style={{flex: 1}}/>
-            {this.state.cards.length > 0 && (
-              <TouchableOpacity
-                style={{ marginRight: 18, marginLeft: 50, marginTop: 13 }}
-                onPress={this.exportCards}
+        {isLoggedIn ? (
+          <View style={{ flex: 1 }}>
+            <TouchableOpacity onPress={this.editCard}>
+              <CardView user={currentUser} {...myCard} />
+              <View
+                style={{ position: 'absolute', marginTop: 22, right: 10, backgroundColor: 'white' }}
               >
-                <Text style={{ fontSize: 14, textAlign: 'right', color: primaryColor }}>
-                  {t('export')}
+                <Text
+                  style={{ color: '#888888', backgroundColor: 'white', fontSize: 14, marginTop: 2 }}
+                >
+                  {t('edit_info')}
+                </Text>
+              </View>
+            </TouchableOpacity>
+            <KeyboardAwareScrollView
+              style={s.scroll}
+              viewIsInsideTabBar
+              enableAutomaticScroll
+              extraScrollHeight={200}
+              keyboardShouldPersistTaps="always"
+            >
+              <View
+                style={{
+                  backgroundColor: 'white',
+                  height: 41,
+                  borderBottomColor: '#E8E8EE',
+                  borderBottomWidth: 1,
+                  flex: 1,
+                  flexDirection: 'row',
+                }}
+              >
+                <Text style={{ fontSize: 18, marginLeft: 10, marginTop: 10, height: 21 }}>
+                  {t('my_connections')}
+                </Text>
+                <View style={{ flex: 1 }} />
+                {this.state.cards.length > 0 && (
+                  <TouchableOpacity
+                    style={{ marginRight: 18, marginLeft: 50, marginTop: 13 }}
+                    onPress={this.exportCards}
+                  >
+                    <Text style={{ fontSize: 14, textAlign: 'right', color: primaryColor }}>
+                      {t('export')}
+                    </Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+              {this.renderSearch()}
+              {leads.length === 0 && <Text style={s.noConnections}>{t('no_connections')}</Text>}
+              {leads.map((card, index) => (
+                <CardListItem
+                  key={index}
+                  showExpanded={index === selectedCard}
+                  showCard={() => this.showCard(index)}
+                  showAlert={() => this.showAlert()}
+                  onUpdateNotes={notes => this.updateScannedCard(index, { ...card, notes })}
+                  user={card}
+                  primaryColor={primaryColor}
+                  {...card}
+                />
+              ))}
+            </KeyboardAwareScrollView>
+            <View style={{ flexDirection: 'row', padding: 2, marginBottom: 20, marginTop: 20 }}>
+              <TouchableOpacity
+                onPress={this.showCode}
+                style={{
+                  flex: 1,
+                  marginLeft: 10,
+                  marginRight: 5,
+                  borderColor: primaryColor,
+                  backgroundColor: 'white',
+                  borderWidth: 1,
+                  borderRadius: 20,
+                  height: 45,
+                }}
+              >
+                <Text
+                  style={{
+                    color: primaryColor,
+                    textAlign: 'center',
+                    flex: 1,
+                    flexDirection: 'column',
+                    fontSize: 18,
+                    marginTop: 10,
+                    marginLeft: 10,
+                    marginBottom: 10,
+                    marginRight: 10,
+                    fontSize: 18,
+                    height: 21,
+                  }}
+                >
+                  {t('share')}
                 </Text>
               </TouchableOpacity>
-            )}
+              <TouchableOpacity
+                onPress={this.scanCode}
+                style={{
+                  flex: 1,
+                  marginLeft: 5,
+                  marginRight: 10,
+                  borderColor: primaryColor,
+                  backgroundColor: primaryColor,
+                  borderWidth: 1,
+                  height: 45,
+                  borderRadius: 20,
+                }}
+              >
+                <Text
+                  style={{
+                    color: 'white',
+                    textAlign: 'center',
+                    flex: 1,
+                    flexDirection: 'column',
+                    fontSize: 18,
+                    marginTop: 10,
+                    marginLeft: 10,
+                    marginBottom: 10,
+                    marginRight: 10,
+                    fontSize: 18,
+                    height: 21,
+                  }}
+                >
+                  {t('scan')}
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <Modal animationType="slide" transparent visible={showCode} onRequestClose={() => {}}>
+              <CodeView
+                {...this.state}
+                hideModal={this.hideModal}
+                currentUser={currentUser}
+                primaryColor={primaryColor}
+              />
+            </Modal>
+            <Modal
+              animationType="slide"
+              transparent
+              visible={showScanner}
+              onRequestClose={() => {}}
+            >
+              <ScanView
+                {...this.state}
+                addCard={this.addCard}
+                hideModal={this.hideModal}
+                color={primaryColor}
+              />
+            </Modal>
+            <Modal animationType="slide" transparent visible={showEditor} onRequestClose={() => {}}>
+              <TitleBar title={t('personal_leads')} client={client} />
+              <EditCardView
+                {...myCard}
+                updateCard={this.updateCard}
+                hideModal={this.hideModal}
+                primaryColor={primaryColor}
+              />
+            </Modal>
           </View>
-          {this.renderSearch()}
-          {leads.length === 0 && (
-            <Text style={s.noConnections}>{t('no_connections')}</Text>
-          )}
-          {leads.map((card, index) => (
-            <CardListItem
-              key={index}
-              showExpanded={index == this.state.selectedCard}
-              showCard={() => this.showCard(index)}
-              showAlert={() => this.showAlert()}
-              onUpdateNotes={notes => this.updateScannedCard(index, { ...card, notes })}
-              user={card}
-              primaryColor={primaryColor}
-              {...card}
-            />
-          ))}
-        </KeyboardAwareScrollView>
-        <View style={{ flexDirection: 'row', padding: 2, marginBottom: 20, marginTop: 20 }}>
-          <TouchableOpacity
-            onPress={this.showCode}
-            style={{
-              flex: 1,
-              marginLeft: 10,
-              marginRight: 5,
-              borderColor: primaryColor,
-              backgroundColor: 'white',
-              borderWidth: 1,
-              borderRadius: 20,
-              height: 45,
-            }}
-          >
-            <Text
-              style={{
-                color: primaryColor,
-                textAlign: 'center',
-                flex: 1,
-                flexDirection: 'column',
-                fontSize: 18,
-                marginTop: 10,
-                marginLeft: 10,
-                marginBottom: 10,
-                marginRight: 10,
-                fontSize: 18,
-                height: 21,
-              }}
-            >
-              {t('share')}
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={this.scanCode}
-            style={{
-              flex: 1,
-              marginLeft: 5,
-              marginRight: 10,
-              borderColor: primaryColor,
-              backgroundColor: primaryColor,
-              borderWidth: 1,
-              height: 45,
-              borderRadius: 20,
-            }}
-          >
-            <Text
-              style={{
-                color: 'white',
-                textAlign: 'center',
-                flex: 1,
-                flexDirection: 'column',
-                fontSize: 18,
-                marginTop: 10,
-                marginLeft: 10,
-                marginBottom: 10,
-                marginRight: 10,
-                fontSize: 18,
-                height: 21,
-              }}
-            >
-              {t('scan')}
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <Modal
-          animationType="slide"
-          transparent
-          visible={this.state.showCode}
-          onRequestClose={() => {}}
-        >
-          <CodeView
-            {...this.state}
-            hideModal={this.hideModal}
-            currentUser={currentUser}
-            primaryColor={primaryColor}
-          />
-        </Modal>
-        <Modal
-          animationType="slide"
-          transparent
-          visible={this.state.showScanner}
-          onRequestClose={() => {}}
-        >
-          <ScanView
-            {...this.state}
-            addCard={this.addCard}
-            hideModal={this.hideModal}
-            color={primaryColor}
-          />
-        </Modal>
-        <Modal
-          animationType="slide"
-          transparent
-          visible={this.state.showEditor}
-          onRequestClose={() => {}}
-        >
-          <TitleBar title={t('personal_leads')} client={client} />
-          <EditCardView
-            {...this.state.myCard}
-            updateCard={this.updateCard}
-            hideModal={this.hideModal}
-            primaryColor={primaryColor}
-          />
-        </Modal>
-        </View>
-        : <LoadingView logInFailed={this.state.logInFailed}/> }
-        </View>
+        ) : (
+          <LoadingView logInFailed={logInFailed} />
+        )}
+      </View>
     )
   }
 
   renderSearch = () => {
-    const filteredListExists = this.state.searchText ? true : false
+    const { inputHeight, searchText } = this.state
     const newStyle = {
       flex: 1,
       fontSize: 18,
       color: '#364247',
       textAlignVertical: 'top',
       maxHeight: 100,
-      height: Math.max(35, this.state.inputHeight),
-      paddingTop: 0
+      height: Math.max(35, inputHeight),
+      paddingTop: 0,
     }
 
     const platformStyle = Platform.select({
-      ios:{
+      ios: {
         marginTop: 3,
       },
-      android:{
+      android: {
         paddingLeft: 0,
         marginTop: 5,
         marginBottom: 5,
-      }
+      },
     })
     return (
       <View style={s.searchBox}>
-      {filteredListExists ? (
-        <View style={s.fixedMargin} />
-      ) : (
-        <TouchableOpacity style={s.circleBoxMargin}>
-          <Text style={s.whiteText}>?</Text>
-        </TouchableOpacity>
-      )}
-      <TextInput
-        style={[newStyle, platformStyle]}
-        placeholder={t('search')}
-        value={this.state.searchText}
-        onChangeText={searchText => this.setState({searchText})}
-        maxLength={25}
-        placeholderTextColor="#9B9B9B"
-      />
-      {filteredListExists ? (
-        <TouchableOpacity style={s.circleBoxMargin} onPress={this.resetSearch}>
-          <Text style={s.whiteText}>X</Text>
-        </TouchableOpacity>
-      ) : null}
-    </View>
+        {searchText ? (
+          <View style={s.fixedMargin} />
+        ) : (
+          <TouchableOpacity style={s.circleBoxMargin}>
+            <Text style={s.whiteText}>?</Text>
+          </TouchableOpacity>
+        )}
+        <TextInput
+          style={[newStyle, platformStyle]}
+          placeholder={t('search')}
+          value={searchText}
+          onChangeText={searchText => this.setState({ searchText })}
+          maxLength={25}
+          placeholderTextColor="#9B9B9B"
+        />
+        {searchText ? (
+          <TouchableOpacity style={s.circleBoxMargin} onPress={this.resetSearch}>
+            <Text style={s.whiteText}>X</Text>
+          </TouchableOpacity>
+        ) : null}
+      </View>
     )
   }
 
   returnUpdatedList = search => {
+    const { cards } = this.state
     const queryResult = []
-    this.state.cards.forEach(lead => {
+    cards.forEach(lead => {
       const name = `${lead.firstName} ${lead.lastName}`
       if (name) {
         if (name.toLowerCase().indexOf(search.toLowerCase()) !== -1) {
@@ -363,17 +369,18 @@ class HomeView extends PureComponent {
   }
 
   resetSearch = () => {
-    this.setState({ lead: ''})
+    this.setState({ lead: '' })
   }
 
   showAlert = () => {
-    const currentCard = this.state.cards[this.state.selectedCard]
+    const { cards, selectedCard } = this.state
+    const currentCard = cards[selectedCard]
     const name = `${currentCard.firstName} ${currentCard.lastName}`
     const alertText = t('alert', { name })
     Alert.alert(
       t('confirm'),
       alertText,
-      [{ text: t('cancel'), style: 'cancel' }, { text: t('OK'), onPress: () => this.deleteCard() }],
+      [{ text: t('cancel'), style: 'cancel' }, { text: t('OK'), onPress: this.deleteCard }],
       { cancelable: false },
     )
   }
@@ -398,7 +405,8 @@ class HomeView extends PureComponent {
   scanCode = () => this.setState({ showScanner: true })
 
   exportCards = () => {
-    const data = this.state.cards
+    const { cards } = this.state
+    const message = cards
       .map(card => {
         let data = `${card.firstName} ${card.lastName}\n`
         if (card.title) data += `${card.title}\n`
@@ -411,11 +419,12 @@ class HomeView extends PureComponent {
         return data
       })
       .join('\n\n')
-    Share.share({ message: data, title: 'Exported Cards', subject: 'Exported Cards' }, {})
+    Share.share({ message, title: 'Exported Cards', subject: 'Exported Cards' }, {})
   }
 
   showCard(index) {
-    if (this.state.selectedCard == index) {
+    const { selectedCard } = this.state
+    if (selectedCard === index) {
       this.setState({ selectedCard: null })
     } else {
       this.setState({ selectedCard: index })
@@ -431,18 +440,20 @@ class HomeView extends PureComponent {
   }
 
   updateCard = myCard => {
+    const { cards } = this.state
     this.myCardRef().set(myCard)
     this.setState({ myCard, showEditor: false })
-    this.saveLocalCards({ myCard, cards: this.state.cards })
+    this.saveLocalCards({ myCard, cards })
   }
 
   addCard = newCard => {
-    const isNew = !this.state.cards.find(card => card.id === newCard.id)
+    const { cards, myCard } = this.state
+    const isNew = !cards.find(card => card.id === newCard.id)
     if (newCard.firstName && newCard.lastName && isNew) {
-      const cards = [...this.state.cards, newCard]
-      this.cardsRef().set(cards)
-      this.saveLocalCards({ myCard: this.state.myCard, cards })
-      this.setState({ cards, showScanner: false })
+      const newCards = [...cards, newCard]
+      this.cardsRef().set(newCards)
+      this.saveLocalCards({ myCard, newCards })
+      this.setState({ cards: newCards, showScanner: false })
     } else {
       Alert.alert(t('error'), t('newScan'), [{ text: 'OK' }], {
         cancelable: false,
@@ -451,26 +462,19 @@ class HomeView extends PureComponent {
   }
 
   updateScannedCard = (index, updatedCard) => {
-    const cards = [
-      ...this.state.cards.slice(0, index),
-      updatedCard,
-      ...this.state.cards.slice(index + 1),
-    ]
-    this.cardsRef().set(cards)
-    this.saveLocalCards({ myCard: this.state.myCard, cards })
-    this.setState({ cards, showScanner: false })
-  }
-
-  onUpdateLead = card => {
-    this.cardsRef().set(cards)
-    this.saveLocalCards({ myCard: this.state.myCard, cards })
+    const { cards, myCard } = this.state
+    const newCards = [...cards.slice(0, index), updatedCard, ...cards.slice(index + 1)]
+    this.cardsRef().set(newCards)
+    this.saveLocalCards({ myCard, cards: newCards })
+    this.setState({ cards: newCards, showScanner: false })
   }
 
   deleteCard = () => {
-    const cards = this.state.cards.filter((_, i) => i !== this.state.selectedCard)
-    this.cardsRef().set(cards)
-    this.setState({ cards })
-    this.saveLocalCards({ myCard: this.state.myCard, cards })
+    const { cards, myCard, selectedCard } = this.state
+    const newCards = cards.filter((_, i) => i !== selectedCard)
+    this.cardsRef().set(newCards)
+    this.setState({ cards: newCards })
+    this.saveLocalCards({ myCard, cards: newCards })
     this.hideModal()
   }
 }
@@ -488,7 +492,7 @@ const s = StyleSheet.create({
     backgroundColor: '#dedede',
   },
   fixedMargin: {
-    width: 40
+    width: 40,
   },
   searchBox: {
     flexDirection: 'row',
@@ -520,21 +524,8 @@ const s = StyleSheet.create({
     height: 22,
     borderRadius: 50,
   },
-
   whiteText: {
     fontSize: 18,
     color: 'white',
-  },
-  circleBox: {
-    marginTop: 10,
-    marginRight: 10,
-    marginLeft: 10,
-    marginBottom: 20,
-    justifyContent: 'center',
-    backgroundColor: '#9B9B9B',
-    paddingLeft: 8,
-    paddingRight: 8,
-    height: 22,
-    borderRadius: 50,
   },
 })
