@@ -60,6 +60,8 @@ class HomeView extends PureComponent {
 
   cardsRef = () => this.props.fbc.database.private.userRef('cards')
 
+  totalCardsRef = () => this.props.fbc.database.private.adminableUserRef('connections')
+
   myCardRef = () => this.props.fbc.database.private.userRef('myCard')
 
   componentDidMount() {
@@ -161,7 +163,7 @@ class HomeView extends PureComponent {
       showEditor,
       showScanner,
     } = this.state
-    const leads = searchText ? this.returnUpdatedList(searchText) : cards
+    const leads = searchText ? this.returnUpdatedList(searchText.trim()) : cards
     if (!currentUser || !currentEvent || !primaryColor) return null
 
     return (
@@ -331,16 +333,7 @@ class HomeView extends PureComponent {
   }
 
   renderSearch = () => {
-    const { inputHeight, searchText } = this.state
-    const newStyle = {
-      flex: 1,
-      fontSize: 18,
-      color: '#364247',
-      textAlignVertical: 'top',
-      maxHeight: 100,
-      height: Math.max(35, inputHeight),
-      paddingTop: 0,
-    }
+    const { searchText } = this.state
 
     const platformStyle = Platform.select({
       ios: {
@@ -362,7 +355,7 @@ class HomeView extends PureComponent {
           </TouchableOpacity>
         )}
         <TextInput
-          style={[newStyle, platformStyle]}
+          style={[s.searchInput, platformStyle]}
           placeholder={t('search')}
           value={searchText}
           onChangeText={searchText => this.setState({ searchText })}
@@ -387,7 +380,7 @@ class HomeView extends PureComponent {
   }
 
   resetSearch = () => {
-    this.setState({ lead: '' })
+    this.setState({ searchText: '' })
   }
 
   showAlert = () => {
@@ -487,6 +480,9 @@ class HomeView extends PureComponent {
     if (isNew) {
       if (newCard.firstName && newCard.lastName) {
         const newCards = [...cards, newCard]
+        this.totalCardsRef()
+          .child(new Date().getTime())
+          .set(1)
         this.cardsRef().set(newCards)
         this.saveLocalCards({ myCard, cards: newCards })
         this.setState({ cards: newCards, showScanner: false })
@@ -545,7 +541,15 @@ const s = StyleSheet.create({
     borderBottomColor: '#b7b7b7',
     borderBottomWidth: 1,
     borderRadius: 5,
-    height: 40,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 18,
+    color: '#364247',
+    textAlignVertical: 'top',
+    maxHeight: 100,
+    height: 35,
+    paddingTop: 0,
   },
   scroll: {
     flex: 1,
@@ -561,7 +565,6 @@ const s = StyleSheet.create({
     marginTop: 10,
     marginRight: 10,
     marginLeft: 10,
-    marginBottom: 20,
     justifyContent: 'center',
     backgroundColor: '#9B9B9B',
     paddingLeft: 8,
