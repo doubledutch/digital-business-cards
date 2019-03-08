@@ -132,13 +132,13 @@ class HomeView extends PureComponent {
           this.hideLogInScreen = setTimeout(() => {
             this.setState({ isLoggedIn: true })
           }, 200)
+
+          AsyncStorage.getItem(this.sendOnScanKey()).then(val =>
+            this.setState({ sendOnScan: val !== 'false' }),
+          )
         })
       })
       .catch(() => this.setState({ logInFailed: true }))
-
-    AsyncStorage.getItem(this.sendOnScanKey()).then(val =>
-      this.setState({ sendOnScan: val !== 'false' }),
-    )
   }
 
   render() {
