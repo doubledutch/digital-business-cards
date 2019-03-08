@@ -61,7 +61,7 @@ class HomeView extends PureComponent {
     return `@DD:personal_leads_${currentEvent.id}_${currentUser.id}`
   }
 
-  sendOnScanKey = () => `${this.leadStorageKey}_sendOnScan`
+  sendOnScanKey = () => `${this.leadStorageKey()}_sendOnScan`
 
   componentDidMount() {
     const { fbc } = this.props
@@ -133,9 +133,9 @@ class HomeView extends PureComponent {
             this.setState({ isLoggedIn: true })
           }, 200)
 
-          AsyncStorage.getItem(this.sendOnScanKey()).then(val =>
-            this.setState({ sendOnScan: val !== 'false' }),
-          )
+          AsyncStorage.getItem(this.sendOnScanKey()).then(val => {
+            this.setState({ sendOnScan: val !== 'false' })
+          })
         })
       })
       .catch(() => this.setState({ logInFailed: true }))
