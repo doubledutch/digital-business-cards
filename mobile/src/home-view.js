@@ -305,15 +305,6 @@ class HomeView extends PureComponent {
 
   renderSearch = () => {
     const filteredListExists = this.state.searchText ? true : false
-    const newStyle = {
-      flex: 1,
-      fontSize: 18,
-      color: '#364247',
-      textAlignVertical: 'top',
-      maxHeight: 100,
-      height: 35,
-      paddingTop: 0,
-    }
 
     const platformStyle = Platform.select({
       ios:{
@@ -335,7 +326,7 @@ class HomeView extends PureComponent {
           </TouchableOpacity>
         )}
         <TextInput
-          style={[newStyle, platformStyle]}
+          style={[s.searchInput, platformStyle]}
           placeholder={t('search')}
           value={this.state.searchText}
           onChangeText={searchText => this.setState({searchText})}
@@ -395,10 +386,7 @@ class HomeView extends PureComponent {
     return AsyncStorage.setItem(this.leadStorageKey(), JSON.stringify({ myCard, cards }))
   }
 
-  showCode = () => {
-    // this.fakeScan()
-    this.setState({ showCode: true })
-  }
+  showCode = () => this.setState({ showCode: true })
 
   scanCode = () => this.setState({ showScanner: true })
 
@@ -502,6 +490,15 @@ const s = StyleSheet.create({
     borderBottomColor: '#b7b7b7',
     borderBottomWidth: 1,
     borderRadius: 5,
+  },
+  searchInput : {
+    flex: 1,
+    fontSize: 18,
+    color: '#364247',
+    textAlignVertical: 'top',
+    maxHeight: 100,
+    height: 35,
+    paddingTop: 0,
   },
   scroll: {
     flex: 1,
