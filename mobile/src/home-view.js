@@ -122,11 +122,11 @@ class HomeView extends PureComponent {
           // Accept 2-way reciprocal scans when someone scans me.
           fbc.database.private.userMessagesRef(currentUser.id).on('child_added', data => {
             const senderId = data.key
-            const messages = data.val() || {}
-            Object.values(messages).forEach(card => {
+            const messages = data.val()
+            Object.values(messages || {}).forEach(card => {
               this.addCard({ ...card, id: senderId })
             })
-            data.ref.remove() // Done processing the reciprocal sharing of info. Delete message.
+            if (messages) data.ref.remove() // Done processing the reciprocal sharing of info. Delete message.
           })
 
           this.hideLogInScreen = setTimeout(() => {
@@ -144,13 +144,13 @@ class HomeView extends PureComponent {
   render() {
     const { suggestedTitle } = this.props
     const {
+      cards,
       currentUser,
       currentEvent,
       isLoggedIn,
       logInFailed,
       myCard,
       primaryColor,
-      cards,
       searchText,
       selectedCard,
       sendOnScan,
@@ -199,7 +199,7 @@ class HomeView extends PureComponent {
                   {t('my_connections')}
                 </Text>
                 <View style={{ flex: 1 }} />
-                {this.state.cards.length > 0 && (
+                {cards.length > 0 && (
                   <TouchableOpacity
                     style={{ marginRight: 18, marginLeft: 50, marginTop: 13 }}
                     onPress={this.exportCards}
@@ -250,7 +250,6 @@ class HomeView extends PureComponent {
                     marginLeft: 10,
                     marginBottom: 10,
                     marginRight: 10,
-                    fontSize: 18,
                     height: 21,
                   }}
                 >
@@ -276,7 +275,6 @@ class HomeView extends PureComponent {
                     textAlign: 'center',
                     flex: 1,
                     flexDirection: 'column',
-                    fontSize: 18,
                     marginTop: 10,
                     marginLeft: 10,
                     marginBottom: 10,
@@ -411,9 +409,11 @@ class HomeView extends PureComponent {
   loadLocalCards() {
     return AsyncStorage.getItem(this.leadStorageKey()).then(value => {
       if (value) {
-        const { myCard, cards } = JSON.parse(value)
-        this.setState({ myCard, cards })
-        return { myCard, cards }
+        try {
+          const { myCard, cards } = JSON.parse(value)
+          this.setState({ myCard, cards })
+          return { myCard, cards }
+        } catch (e) { /* Bad JSON data stored */ }
       }
       return null
     })
