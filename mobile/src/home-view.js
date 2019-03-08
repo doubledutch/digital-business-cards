@@ -126,10 +126,10 @@ class HomeView extends PureComponent {
               fbc.database.private.userMessagesRef(currentUser.id).on('child_added', data => {
                 const senderId = data.key
                 const messages = data.val()
-                Object.values(messages || {}).forEach(card => {
-                  this.addCard({ ...card, id: senderId }, /* ignoreErrors: */ true)
+                Object.entries(messages || {}).forEach(([key, card]) => {
+                  this.addCard({ ...card, id: senderId }, /* isReciprocal: */ true)
+                  data.ref.child(key).remove() // Done processing the reciprocal sharing of info. Delete message.
                 })
-                if (messages) data.ref.remove() // Done processing the reciprocal sharing of info. Delete message.
               })
             })
 
@@ -473,7 +473,7 @@ class HomeView extends PureComponent {
     this.saveLocalCards({ myCard, cards })
   }
 
-  addCard = (newCard, ignoreErrors) => {
+  addCard = (newCard, isReciprocal) => {
     const { fbc } = this.props
     const { cards, currentUser, myCard, sendOnScan } = this.state
     const isNew = !cards.find(card => card.id === newCard.id)
@@ -487,15 +487,15 @@ class HomeView extends PureComponent {
         this.saveLocalCards({ myCard, cards: newCards })
         this.setState({ cards: newCards, showScanner: false })
 
-        if (sendOnScan) {
+        if (sendOnScan && !isReciprocal) {
           fbc.database.private.userMessagesRef(newCard.id, currentUser.id).push(myCard)
         }
-      } else if (!ignoreErrors) {
+      } else if (!isReciprocal) {
         Alert.alert(t('error'), t('newScan'), [{ text: 'OK' }], {
           cancelable: false,
         })
       }
-    } else if (!ignoreErrors) {
+    } else if (!isReciprocal) {
       Alert.alert(t('alreadyScanned'), t('newScan'), [{ text: 'OK' }], {
         cancelable: false,
       })
