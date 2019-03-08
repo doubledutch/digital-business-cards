@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-import React, { Component } from 'react'
-import { Alert, Text, TouchableOpacity, View } from 'react-native'
+import React from 'react'
+import { Alert, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native'
 import QRCodeScanner from 'react-native-qrcode-scanner'
 import { translate as t } from '@doubledutch/rn-client'
 
-export default class ScanView extends Component {
-  onRead = code => {
-    const { addCard } = this.props
+const ScanView = ({ addCard, color, hideModal, sendOnScan, setSendOnScan }) => {
+  const closeStyle = { fontSize: 24, textAlign: 'center', color }
+
+  const onRead = code => {
     try {
       addCard(JSON.parse(code.data))
     } catch (e) {
@@ -29,35 +30,45 @@ export default class ScanView extends Component {
     }
   }
 
-  render() {
-    const { color, hideModal } = this.props
-    try {
-      return (
-        <View
-          style={{
-            backgroundColor: '#dedede',
-            position: 'absolute',
-            top: 0,
-            bottom: 0,
-            left: 0,
-            right: 0,
-            paddingTop: 32,
-          }}
-        >
-          <QRCodeScanner onRead={this.onRead} />
-          <View style={{ height: 40, marginBottom: 10 }}>
-            <TouchableOpacity
-              style={{ flex: 1, marginLeft: 64, marginRight: 64, marginBottom: 8 }}
-              onPress={hideModal}
-            >
-              <Text style={{ fontSize: 24, textAlign: 'center', color }}>{t('close')}</Text>
-            </TouchableOpacity>
-          </View>
+  try {
+    return (
+      <View style={s.main}>
+        <QRCodeScanner onRead={onRead} />
+        <View style={s.toggleRow}>
+          <Text style={s.toggleText}>{t('share_on_scan')}</Text>
+          <Switch value={sendOnScan} onValueChange={setSendOnScan} />
         </View>
-      )
-    } catch (e) {
-      console.log(e)
-      return null
-    }
+        <TouchableOpacity style={s.button} onPress={hideModal}>
+          <Text style={closeStyle}>{t('close')}</Text>
+        </TouchableOpacity>
+      </View>
+    )
+  } catch (e) {
+    return null
   }
 }
+
+const s = StyleSheet.create({
+  main: {
+    backgroundColor: '#dedede',
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingTop: 32,
+  },
+  toggleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 10,
+    backgroundColor: 'white',
+  },
+  toggleText: {
+    fontSize: 14,
+  },
+  button: { padding: 20, marginBottom: 30 },
+})
+
+export default ScanView

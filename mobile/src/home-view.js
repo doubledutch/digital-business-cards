@@ -49,14 +49,19 @@ class HomeView extends PureComponent {
     isLoggedIn: false,
     logInFailed: false,
     searchText: '',
+    sendOnScan: true,
   }
 
   cardsRef = () => this.props.fbc.database.private.userRef('cards')
 
   myCardRef = () => this.props.fbc.database.private.userRef('myCard')
 
-  leadStorageKey = () =>
-    `@DD:personal_leads_${this.state.currentEvent.id}_${this.state.currentUser.id}`
+  leadStorageKey = () => {
+    const { currentEvent, currentUser } = this.state
+    return `@DD:personal_leads_${currentEvent.id}_${currentUser.id}`
+  }
+
+  sendOnScanKey = () => `${this.leadStorageKey}_sendOnScan`
 
   componentDidMount() {
     const { fbc } = this.props
@@ -114,12 +119,26 @@ class HomeView extends PureComponent {
             })
           }
 
+          // Accept 2-way reciprocal scans when someone scans me.
+          fbc.database.private.userMessagesRef(currentUser.id).on('child_added', data => {
+            const senderId = data.key
+            const messages = data.val() || {}
+            Object.values(messages).forEach(card => {
+              this.addCard({ ...card, id: senderId })
+            })
+            data.ref.remove() // Done processing the reciprocal sharing of info. Delete message.
+          })
+
           this.hideLogInScreen = setTimeout(() => {
             this.setState({ isLoggedIn: true })
           }, 200)
         })
       })
       .catch(() => this.setState({ logInFailed: true }))
+
+    AsyncStorage.getItem(this.sendOnScanKey()).then(val =>
+      this.setState({ sendOnScan: val !== 'false' }),
+    )
   }
 
   render() {
@@ -134,6 +153,7 @@ class HomeView extends PureComponent {
       cards,
       searchText,
       selectedCard,
+      sendOnScan,
       showCode,
       showEditor,
       showScanner,
@@ -286,8 +306,10 @@ class HomeView extends PureComponent {
               <ScanView
                 {...this.state}
                 addCard={this.addCard}
-                hideModal={this.hideModal}
                 color={primaryColor}
+                hideModal={this.hideModal}
+                sendOnScan={sendOnScan}
+                setSendOnScan={this.setSendOnScan}
               />
             </Modal>
             <Modal animationType="slide" transparent visible={showEditor} onRequestClose={() => {}}>
@@ -389,9 +411,9 @@ class HomeView extends PureComponent {
   loadLocalCards() {
     return AsyncStorage.getItem(this.leadStorageKey()).then(value => {
       if (value) {
-        const parsed = JSON.parse(value)
-        this.setState(parsed)
-        return parsed
+        const { myCard, cards } = JSON.parse(value)
+        this.setState({ myCard, cards })
+        return { myCard, cards }
       }
       return null
     })
@@ -404,6 +426,11 @@ class HomeView extends PureComponent {
   showCode = () => this.setState({ showCode: true })
 
   scanCode = () => this.setState({ showScanner: true })
+
+  setSendOnScan = sendOnScan => {
+    this.setState({ sendOnScan })
+    AsyncStorage.setItem(this.sendOnScanKey(), sendOnScan ? 'true' : 'false')
+  }
 
   exportCards = () => {
     const { cards } = this.state
@@ -448,13 +475,18 @@ class HomeView extends PureComponent {
   }
 
   addCard = newCard => {
-    const { cards, myCard } = this.state
+    const { fbc } = this.props
+    const { cards, currentUser, myCard, sendOnScan } = this.state
     const isNew = !cards.find(card => card.id === newCard.id)
     if (newCard.firstName && newCard.lastName && isNew) {
       const newCards = [...cards, newCard]
       this.cardsRef().set(newCards)
-      this.saveLocalCards({ myCard, newCards })
+      this.saveLocalCards({ myCard, cards: newCards })
       this.setState({ cards: newCards, showScanner: false })
+
+      if (sendOnScan) {
+        fbc.database.private.userMessagesRef(newCard.id, currentUser.id).push(myCard)
+      }
     } else {
       Alert.alert(t('error'), t('newScan'), [{ text: 'OK' }], {
         cancelable: false,
