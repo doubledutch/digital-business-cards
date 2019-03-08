@@ -1,0 +1,70 @@
+/*
+ * Copyright 2018 DoubleDutch, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+ :root, body {
+  margin: 0;
+  padding: 0;
+}
+
+.App {
+  padding: 10px;
+}
+
+.App-intro {
+  font-size: large;
+  text-align: center;
+}
+
+.avatar {
+  width: 40px;
+}
+
+.container {
+  flex: 1;
+  box-sizing: border-box;
+  font-size: 14; 
+  margin: 20px 0px;
+  padding: 20px 20px 20px 20px;
+  border-radius: 5px;
+  border: 1px solid #E3ECF8;
+  background-color: #FFFFFF;
+}
+
+.row {
+  display: flex;
+  flex-flow: nowrap;
+  align-items: center;
+}
+
+.flex {
+  flex: 1
+}
+
+.csvButton{
+  float: right;
+  text-decoration: none;
+  border: 1px solid #73aaf3;
+  color: #73aaf3;
+  border-radius: 5px;
+  padding: 10px;
+  margin-left: 20px;
+  background-color: white;
+}
+
+.boxTitle {
+  font-weight: 300;
+  margin: 0px 20px 0px 0px;
+}
