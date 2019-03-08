@@ -38,6 +38,12 @@ import LoadingView from './LoadingView'
 
 useStrings(i18n)
 
+const leadStorageKey = (currentEvent, currentUser) =>
+  `@DD:personal_leads_${currentEvent.id}_${currentUser.id}`
+
+const sendOnScanKey = (currentEvent, currentUser) =>
+  `${leadStorageKey(currentEvent, currentUser)}_sendOnScan`
+
 class HomeView extends PureComponent {
   // Initially, create a blank state filled out only with the current user's id
   state = {
@@ -56,85 +62,82 @@ class HomeView extends PureComponent {
 
   myCardRef = () => this.props.fbc.database.private.userRef('myCard')
 
-  leadStorageKey = () => {
-    const { currentEvent, currentUser } = this.state
-    return `@DD:personal_leads_${currentEvent.id}_${currentUser.id}`
-  }
-
-  sendOnScanKey = () => `${this.leadStorageKey()}_sendOnScan`
-
   componentDidMount() {
     const { fbc } = this.props
     const signin = fbc.signin()
     signin.catch(err => console.log(err))
 
-    client.getCurrentEvent().then(currentEvent => this.setState({ currentEvent }))
     client.getPrimaryColor().then(primaryColor => this.setState({ primaryColor }))
     client
-      .getCurrentUser()
-      .then(currentUser => {
-        this.setState({
-          currentUser,
-          myCard: Object.assign(
-            { mobile: null, linkedin: null, twitter: null, leadNotes: null },
+      .getCurrentEvent()
+      .then(currentEvent => {
+        client.getCurrentUser().then(currentUser => {
+          this.setState({
+            currentEvent,
             currentUser,
-          ),
-        })
-
-        this.loadLocalCards().then(localCards => {
-          // Load current user data from api, but don't overwrite any local values.
-          client
-            .getAttendee(currentUser.id)
-            .then(data => {
-              this.setState(({ myCard }) => {
-                let card = myCard
-                ;[
-                  'firstName',
-                  'lastName',
-                  'title',
-                  'company',
-                  'email',
-                  'twitter',
-                  'linkedin',
-                ].forEach(field => {
-                  if (card[field] == null && data[field]) card = { ...card, [field]: data[field] }
-                })
-                return { myCard: card }
-              })
-            })
-            .catch(err => console.log('error fetching user from api', err))
-
-          // Load from DB only if local copy not found
-          if (!localCards) {
-            signin.then(() => {
-              this.myCardRef().on('value', data => {
-                const myCard = data.val()
-                if (myCard) this.setState({ myCard })
-              })
-              this.cardsRef().on('value', data => {
-                let cards = data.val() || []
-                cards = cards.sort((a, b) => a.lastName - b.lastName)
-                this.setState({ cards })
-              })
-            })
-          }
-
-          // Accept 2-way reciprocal scans when someone scans me.
-          fbc.database.private.userMessagesRef(currentUser.id).on('child_added', data => {
-            const senderId = data.key
-            const messages = data.val()
-            Object.values(messages || {}).forEach(card => {
-              this.addCard({ ...card, id: senderId })
-            })
-            if (messages) data.ref.remove() // Done processing the reciprocal sharing of info. Delete message.
+            myCard: {
+              mobile: null,
+              linkedin: null,
+              twitter: null,
+              leadNotes: null,
+              ...currentUser,
+            },
           })
 
-          this.hideLogInScreen = setTimeout(() => {
-            this.setState({ isLoggedIn: true })
-          }, 200)
+          this.loadLocalCards(currentEvent, currentUser).then(localCards => {
+            // Load current user data from api, but don't overwrite any local values.
+            client
+              .getAttendee(currentUser.id)
+              .then(data => {
+                this.setState(({ myCard }) => {
+                  let card = myCard
+                  ;[
+                    'firstName',
+                    'lastName',
+                    'title',
+                    'company',
+                    'email',
+                    'twitter',
+                    'linkedin',
+                  ].forEach(field => {
+                    if (card[field] == null && data[field]) card = { ...card, [field]: data[field] }
+                  })
+                  return { myCard: card }
+                })
+              })
+              .catch(err => console.log('error fetching user from api', err))
 
-          AsyncStorage.getItem(this.sendOnScanKey()).then(val => {
-            this.setState({ sendOnScan: val !== 'false' })
+            signin.then(() => {
+              // Load from DB only if local copy not found
+              if (!localCards) {
+                this.myCardRef().on('value', data => {
+                  const myCard = data.val()
+                  if (myCard) this.setState({ myCard })
+                })
+                this.cardsRef().on('value', data => {
+                  const cards = (data.val() || []).sort((a, b) => a.lastName - b.lastName)
+                  this.setState({ cards })
+                })
+              }
+
+              // Accept 2-way reciprocal scans when someone scans me.
+              fbc.database.private.userMessagesRef(currentUser.id).on('child_added', data => {
+                const senderId = data.key
+                const messages = data.val()
+                Object.values(messages || {}).forEach(card => {
+                  this.addCard({ ...card, id: senderId }, /* ignoreErrors: */ true)
+                })
+                if (messages) data.ref.remove() // Done processing the reciprocal sharing of info. Delete message.
+              })
+            })
+
+            this.hideLogInScreen = setTimeout(() => {
+              this.setState({ isLoggedIn: true })
+            }, 200)
+
+            AsyncStorage.getItem(sendOnScanKey(currentEvent, currentUser)).then(val => {
+              this.setState({ sendOnScan: val !== 'false' })
+            })
           })
         })
       })
@@ -377,16 +380,10 @@ class HomeView extends PureComponent {
 
   returnUpdatedList = search => {
     const { cards } = this.state
-    const queryResult = []
-    cards.forEach(lead => {
+    return cards.filter(lead => {
       const name = `${lead.firstName} ${lead.lastName}`
-      if (name) {
-        if (name.toLowerCase().indexOf(search.toLowerCase()) !== -1) {
-          queryResult.push(lead)
-        }
-      }
+      return name && name.toLowerCase().indexOf(search.toLowerCase()) > -1
     })
-    return queryResult
   }
 
   resetSearch = () => {
@@ -406,21 +403,29 @@ class HomeView extends PureComponent {
     )
   }
 
-  loadLocalCards() {
-    return AsyncStorage.getItem(this.leadStorageKey()).then(value => {
+  loadLocalCards(currentEvent, currentUser) {
+    return AsyncStorage.getItem(leadStorageKey(currentEvent, currentUser)).then(value => {
       if (value) {
         try {
-          const { myCard, cards } = JSON.parse(value)
+          const parsed = JSON.parse(value)
+          const cards = parsed.cards || []
+          const { myCard } = parsed
           this.setState({ myCard, cards })
           return { myCard, cards }
-        } catch (e) { /* Bad JSON data stored */ }
+        } catch (e) {
+          /* Bad JSON data stored */
+        }
       }
       return null
     })
   }
 
   saveLocalCards({ myCard, cards }) {
-    return AsyncStorage.setItem(this.leadStorageKey(), JSON.stringify({ myCard, cards }))
+    const { currentEvent, currentUser } = this.state
+    return AsyncStorage.setItem(
+      leadStorageKey(currentEvent, currentUser),
+      JSON.stringify({ myCard, cards }),
+    )
   }
 
   showCode = () => this.setState({ showCode: true })
@@ -429,7 +434,8 @@ class HomeView extends PureComponent {
 
   setSendOnScan = sendOnScan => {
     this.setState({ sendOnScan })
-    AsyncStorage.setItem(this.sendOnScanKey(), sendOnScan ? 'true' : 'false')
+    const { currentEvent, currentUser } = this.state
+    AsyncStorage.setItem(sendOnScanKey(currentEvent, currentUser), sendOnScan ? 'true' : 'false')
   }
 
   exportCards = () => {
@@ -474,21 +480,27 @@ class HomeView extends PureComponent {
     this.saveLocalCards({ myCard, cards })
   }
 
-  addCard = newCard => {
+  addCard = (newCard, ignoreErrors) => {
     const { fbc } = this.props
     const { cards, currentUser, myCard, sendOnScan } = this.state
     const isNew = !cards.find(card => card.id === newCard.id)
-    if (newCard.firstName && newCard.lastName && isNew) {
-      const newCards = [...cards, newCard]
-      this.cardsRef().set(newCards)
-      this.saveLocalCards({ myCard, cards: newCards })
-      this.setState({ cards: newCards, showScanner: false })
+    if (isNew) {
+      if (newCard.firstName && newCard.lastName) {
+        const newCards = [...cards, newCard]
+        this.cardsRef().set(newCards)
+        this.saveLocalCards({ myCard, cards: newCards })
+        this.setState({ cards: newCards, showScanner: false })
 
-      if (sendOnScan) {
-        fbc.database.private.userMessagesRef(newCard.id, currentUser.id).push(myCard)
+        if (sendOnScan) {
+          fbc.database.private.userMessagesRef(newCard.id, currentUser.id).push(myCard)
+        }
+      } else if (!ignoreErrors) {
+        Alert.alert(t('error'), t('newScan'), [{ text: 'OK' }], {
+          cancelable: false,
+        })
       }
-    } else {
-      Alert.alert(t('error'), t('newScan'), [{ text: 'OK' }], {
+    } else if (!ignoreErrors) {
+      Alert.alert(t('alreadyScanned'), t('newScan'), [{ text: 'OK' }], {
         cancelable: false,
       })
     }

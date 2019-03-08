@@ -21,6 +21,7 @@
   "notes": "Notes",
   "startConvo": "Start a Conversation",
   "error": "Unable to Read",
+  "alreadyScanned": "Attendee already scanned",
   "newScan": "Please scan a different code",
   "error_connecting": "Error connecting to database",
   "search": "Search"
