@@ -29,11 +29,7 @@ class App extends PureComponent {
   constructor(props) {
     super(props)
 
-    this.state = {
-      perUserInfo: null,
-      isExporting: false,
-      exportList: [],
-    }
+    this.state = { perUserInfo: null }
   }
 
   componentDidMount() {
@@ -50,17 +46,18 @@ class App extends PureComponent {
         'connections',
         this,
         'connections',
-        (userId, key, value) => key,
+        (_, key) => key,
         userId => userId,
       )
     })
   }
 
   render() {
+    const { perUserInfo } = this.state
     return (
       <div className="App">
         <h2 className="boxTitle">Digital Business Cards</h2>
-        <DailyChart perUserInfo={this.state.perUserInfo} />
+        <DailyChart perUserInfo={perUserInfo} />
       </div>
     )
   }
