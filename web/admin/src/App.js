@@ -38,7 +38,6 @@ class App extends PureComponent {
       const totalCardsRef = fbc.database.private.adminableUsersRef()
 
       totalCardsRef.on('value', data => {
-        // console.log(data.val())
         this.setState({ perUserInfo: data.val() || null })
       })
       mapPerUserPrivateAdminablePushedDataToStateObjects(

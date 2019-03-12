@@ -19,6 +19,16 @@ import client from '@doubledutch/admin-client'
 import { CSVDownload } from '@doubledutch/react-csv'
 import { Chart } from 'react-google-charts'
 
+function usersForCSV(user) {
+  const totalConnections = user.connections ? Object.keys(user.connections).length : 0
+  return {
+    First_Name: user.firstName,
+    Last_Name: user.lastName,
+    Email: user.email,
+    Connections: totalConnections,
+  }
+}
+
 class DailyChart extends PureComponent {
   constructor(props) {
     super(props)
@@ -30,8 +40,10 @@ class DailyChart extends PureComponent {
   }
 
   render() {
+    const { perUserInfo } = this.props
+    const { exportList, isExporting } = this.state
     const variables = [[{ type: 'date', label: 'Day' }, 'Total Networking Opportunities']]
-    const exportIsDisabled = !this.props.perUserInfo
+    const exportIsDisabled = !perUserInfo
     const origData = this.formatDataForDailyChart()
     const max = origData.length
       ? origData.reduce((a, b) => {
@@ -66,7 +78,7 @@ class DailyChart extends PureComponent {
     return (
       <div>
         <div className="container">
-          {this.props.perUserInfo && (
+          {perUserInfo && (
             <Chart
               chartType="Line"
               data={formattedData}
@@ -79,25 +91,23 @@ class DailyChart extends PureComponent {
           className="csvButton"
           onClick={this.formatDataForExport}
           disabled={exportIsDisabled}
+          type="button"
         >
           Export Per-User Totals
         </button>
-        {this.state.isExporting && this.state.exportList ? (
-          <CSVDownload
-            data={this.state.exportList}
-            filename="connections_report.csv"
-            target="_blank"
-          />
+        {isExporting && exportList ? (
+          <CSVDownload data={exportList} filename="connections_report.csv" target="_blank" />
         ) : null}
       </div>
     )
   }
 
   formatDataForDailyChart = () => {
-    const result = []
-    if (this.props.perUserInfo) {
-      const userIds = Object.keys(this.props.perUserInfo)
-      const connections = userIds.map(id => Object.keys(this.props.perUserInfo[id].connections))
+    const { perUserInfo } = this.props
+    let result = []
+    if (perUserInfo) {
+      const userIds = Object.keys(perUserInfo)
+      const connections = userIds.map(id => Object.keys(perUserInfo[id].connections))
       let exportReports = []
       connections.forEach(user => {
         exportReports = exportReports.concat(user)
@@ -114,30 +124,23 @@ class DailyChart extends PureComponent {
           sum[c[0]][1] += c[1]
         }
       }
-      const result = Object.keys(sum).map(function(val) {
-        return sum[val]
-      })
-      return result
+      result = Object.keys(sum).map(val => sum[val])
     }
     return result
   }
 
   addBlankDates = result => {
     const blankResults = result
-      .sort(function(a, b) {
-        return Date.parse(a[0]) - Date.parse(b[0])
-      })
+      .sort((a, b) => Date.parse(a[0]) - Date.parse(b[0]))
       .reduce(
-        (function(hash) {
-          return function(p, c) {
-            const missingDaysNo = (Date.parse(c[0]) - hash.prev) / (1000 * 3600 * 24)
-            if (hash.prev && missingDaysNo > 1) {
-              for (let i = 1; i < missingDaysNo; i++)
-                p.push(new Date(hash.prev + i * (1000 * 3600 * 24)))
-            }
-            hash.prev = Date.parse(c[0])
-            return p
+        (hash => (p, c) => {
+          const missingDaysNo = (Date.parse(c[0]) - hash.prev) / (1000 * 3600 * 24)
+          if (hash.prev && missingDaysNo > 1) {
+            for (let i = 1; i < missingDaysNo; i++)
+              p.push(new Date(hash.prev + i * (1000 * 3600 * 24)))
           }
+          hash.prev = Date.parse(c[0])
+          return p
         })(Object.create(null)),
         [],
       )
@@ -147,12 +150,13 @@ class DailyChart extends PureComponent {
   }
 
   formatDataForExport = () => {
-    const userIds = Object.keys(this.props.perUserInfo)
+    const { perUserInfo } = this.props
+    const userIds = Object.keys(perUserInfo)
     const attendeeQuestionPromises = userIds.map(id =>
       client
         .getAttendee(id)
-        .then(attendee => ({ ...this.props.perUserInfo[id], ...attendee }))
-        .catch(err => 'error'),
+        .then(attendee => ({ ...perUserInfo[id], ...attendee }))
+        .catch(() => 'error'),
     )
     Promise.all(attendeeQuestionPromises).then(results => {
       const users = results.filter(x => x !== 'error' && x)
@@ -160,16 +164,6 @@ class DailyChart extends PureComponent {
       this.setState({ exportList: resultsForExport, isExporting: true })
       setTimeout(() => this.setState({ isExporting: false }), 3000)
     })
-  }
-}
-
-function usersForCSV(user) {
-  const totalConnections = user.connections ? Object.keys(user.connections).length : 0
-  return {
-    First_Name: user.firstName,
-    Last_Name: user.lastName,
-    Email: user.email,
-    Connections: totalConnections,
   }
 }
 
