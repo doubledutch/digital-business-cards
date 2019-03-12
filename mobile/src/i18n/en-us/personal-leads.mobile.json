@@ -16,10 +16,12 @@
   "share": "Share My Info",
   "scan": "Scan Info",
   "exit": "Exit",
+  "share_on_scan": "Share my info at the time of scan",
   "close": "Close",
   "notes": "Notes",
   "startConvo": "Start a Conversation",
   "error": "Unable to Read",
+  "alreadyScanned": "Attendee already scanned",
   "newScan": "Please scan a different code",
   "error_connecting": "Error connecting to database",
   "search": "Search"
