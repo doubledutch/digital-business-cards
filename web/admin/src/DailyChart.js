@@ -16,8 +16,8 @@
 
 import React, { PureComponent } from 'react'
 import client from '@doubledutch/admin-client'
-import { CSVDownload } from '@doubledutch/react-csv'
 import { Chart } from 'react-google-charts'
+import ExportButton from './ExportButton'
 
 function usersForCSV(user) {
   const totalConnections = user.connections ? Object.keys(user.connections).length : 0
@@ -30,18 +30,8 @@ function usersForCSV(user) {
 }
 
 class DailyChart extends PureComponent {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      isExporting: false,
-      exportList: [],
-    }
-  }
-
   render() {
     const { perUserInfo } = this.props
-    const { exportList, isExporting } = this.state
     const variables = [[{ type: 'date', label: 'Day' }, 'Total Networking Opportunities']]
     const exportIsDisabled = !perUserInfo
     const origData = this.formatDataForDailyChart()
@@ -87,17 +77,9 @@ class DailyChart extends PureComponent {
             />
           )}
         </div>
-        <button
-          className="csvButton"
-          onClick={this.formatDataForExport}
-          disabled={exportIsDisabled}
-          type="button"
-        >
+        <ExportButton disabled={exportIsDisabled} getData={this.getCSVData}>
           Export Per-User Totals
-        </button>
-        {isExporting && exportList ? (
-          <CSVDownload data={exportList} filename="connections_report.csv" target="_blank" />
-        ) : null}
+        </ExportButton>
       </div>
     )
   }
@@ -149,20 +131,19 @@ class DailyChart extends PureComponent {
     return result.concat(blankResults).sort((a, b) => a[0] - b[0])
   }
 
-  formatDataForExport = () => {
+  getCSVData = () => {
     const { perUserInfo } = this.props
     const userIds = Object.keys(perUserInfo)
     const attendeeQuestionPromises = userIds.map(id =>
       client
         .getAttendee(id)
         .then(attendee => ({ ...perUserInfo[id], ...attendee }))
-        .catch(() => 'error'),
+        .catch(() => null),
     )
-    Promise.all(attendeeQuestionPromises).then(results => {
-      const users = results.filter(x => x !== 'error' && x)
+    return Promise.all(attendeeQuestionPromises).then(results => {
+      const users = results.filter(x => x)
       const resultsForExport = users.map(usersForCSV)
-      this.setState({ exportList: resultsForExport, isExporting: true })
-      setTimeout(() => this.setState({ isExporting: false }), 3000)
+      return resultsForExport
     })
   }
 }

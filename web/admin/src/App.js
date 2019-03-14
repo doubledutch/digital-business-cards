@@ -22,8 +22,33 @@ import {
   mapPerUserPrivateAdminablePushedDataToStateObjects,
 } from '@doubledutch/firebase-connector'
 import DailyChart from './DailyChart'
+import ExportButton from './ExportButton'
 
 import './App.css'
+
+function getQRCodeURLs() {
+  return client.getAttendees().then(attendees =>
+    attendees.map(a => {
+      const obj = {
+        firstName: a.firstName,
+        lastName: a.lastName,
+        title: a.title,
+        company: a.company,
+        email: a.email,
+        twitter: a.twitter,
+        linkedin: a.linkedin,
+      }
+      return {
+        'First Name': a.firstName,
+        'Last Name': a.lastName,
+        Email: a.email,
+        URL: `https://us-central1-bazaar-179323.cloudfunctions.net/qr?data=${encodeURIComponent(
+          JSON.stringify(obj),
+        )}`,
+      }
+    }),
+  )
+}
 
 class App extends PureComponent {
   constructor(props) {
@@ -57,6 +82,7 @@ class App extends PureComponent {
       <div className="App">
         <h2 className="boxTitle">Digital Business Cards</h2>
         <DailyChart perUserInfo={perUserInfo} />
+        <ExportButton getData={getQRCodeURLs}>Export attendee QR code URLs</ExportButton>
       </div>
     )
   }
