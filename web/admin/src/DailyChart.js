@@ -32,14 +32,11 @@ function usersForCSV(user) {
 class DailyChart extends PureComponent {
   render() {
     const { perUserInfo } = this.props
-    const variables = [[{ type: 'date', label: 'Day' }, 'Total Networking Opportunities']]
+    const variables = [[{ type: 'string', label: 'Day' }, 'Total Networking Opportunities']]
     const exportIsDisabled = !perUserInfo
     const origData = this.formatDataForDailyChart()
-    const max = origData.length
-      ? origData.reduce((a, b) => {
-          return Math.max(a[1], b[1])
-        })
-      : 0
+    const numbers = origData.map(item => (item[1] ? item[1] : 0))
+    const max = Math.max(...numbers)
     const formattedData = variables.concat(this.addBlankDates(origData))
     const options = {
       chart: {
@@ -128,7 +125,13 @@ class DailyChart extends PureComponent {
       )
       .map(date => [date, 0])
 
-    return result.concat(blankResults).sort((a, b) => a[0] - b[0])
+    return result
+      .concat(blankResults)
+      .sort((a, b) => a[0] - b[0])
+      .map(item => {
+        item[0] = item[0].toDateString()
+        return item
+      })
   }
 
   getCSVData = () => {
