@@ -17,7 +17,7 @@
 import React, { useState } from 'react'
 import { CSVDownload } from '@doubledutch/react-csv'
 
-const ExportButton = ({ children, getData, disabled }) => {
+const ExportButton = ({ children, filename, getData, disabled }) => {
   const [exportList, setExportList] = useState(null)
 
   function download() {
@@ -32,9 +32,7 @@ const ExportButton = ({ children, getData, disabled }) => {
       <button className="csvButton" onClick={download} disabled={disabled} type="button">
         {children}
       </button>
-      {exportList ? (
-        <CSVDownload data={exportList} filename="connections_report.csv" target="_blank" />
-      ) : null}
+      {exportList ? <CSVDownload data={exportList} filename={filename} target="_blank" /> : null}
     </div>
   )
 }

@@ -74,7 +74,11 @@ class DailyChart extends PureComponent {
             />
           )}
         </div>
-        <ExportButton disabled={exportIsDisabled} getData={this.getCSVData}>
+        <ExportButton
+          disabled={exportIsDisabled}
+          filename="connections_report.csv"
+          getData={this.getCSVData}
+        >
           Export Per-User Totals
         </ExportButton>
       </div>
