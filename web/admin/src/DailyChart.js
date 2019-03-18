@@ -144,9 +144,7 @@ class DailyChart extends PureComponent {
     const attendeeQuestionPromises = userIds.map(id =>
       client
         .getAttendee(id)
-        .then(attendee => {
-          if (attendee) return { ...perUserInfo[id], ...attendee }
-        })
+        .then(attendee => (attendee ? { ...perUserInfo[id], ...attendee } : null))
         .catch(() => null),
     )
     return Promise.all(attendeeQuestionPromises).then(results => {
