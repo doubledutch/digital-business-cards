@@ -144,11 +144,13 @@ class DailyChart extends PureComponent {
     const attendeeQuestionPromises = userIds.map(id =>
       client
         .getAttendee(id)
-        .then(attendee => ({ ...perUserInfo[id], ...attendee }))
+        .then(attendee => {
+          if (attendee) return { ...perUserInfo[id], ...attendee }
+        })
         .catch(() => null),
     )
     return Promise.all(attendeeQuestionPromises).then(results => {
-      const users = results.filter(x => x.id)
+      const users = results.filter(x => x)
       const resultsForExport = users.map(usersForCSV)
       return resultsForExport
     })
