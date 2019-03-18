@@ -26,10 +26,19 @@ import ExportButton from './ExportButton'
 
 import './App.css'
 
+function byName(a, b) {
+  if (a.lastName < b.lastName) return -1
+  if (a.lastName > b.lastName) return 1
+  if (a.firstName < b.firstName) return -1
+  if (a.firstName > b.firstName) return 1
+  return 0
+}
+
 function getQRCodeURLs() {
   return client.getAttendees().then(attendees =>
-    attendees.map(a => {
+    attendees.sort(byName).map(a => {
       const obj = {
+        id: a.id,
         firstName: a.firstName,
         lastName: a.lastName,
         title: a.title,
@@ -81,7 +90,9 @@ class App extends PureComponent {
       <div className="App">
         <h2 className="boxTitle">Digital Business Cards</h2>
         <DailyChart perUserInfo={perUserInfo} />
-        <ExportButton getData={getQRCodeURLs}>Export attendee QR code URLs</ExportButton>
+        <ExportButton filename="qr_codes.csv" getData={getQRCodeURLs}>
+          Export attendee QR code URLs
+        </ExportButton>
       </div>
     )
   }
