@@ -144,7 +144,7 @@ class DailyChart extends PureComponent {
         .catch(() => null),
     )
     return Promise.all(attendeeQuestionPromises).then(results => {
-      const users = results.filter(x => x)
+      const users = results.filter(x => x.id)
       const resultsForExport = users.map(usersForCSV)
       return resultsForExport
     })
