@@ -104,7 +104,7 @@ export default class CodeView extends Component {
               }}
             >
               <QRCode
-                value={JSON.stringify({ ...myCard, message })}
+                value={JSON.stringify(applyToValues(removeEmojis, { ...myCard, message }))}
                 size={256}
                 bgColor="black"
                 fgColor="white"
@@ -125,6 +125,20 @@ export default class CodeView extends Component {
       </View>
     )
   }
+}
+
+function removeEmojis(s) {
+  return s.replace(
+    /([\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g,
+    '',
+  )
+}
+
+function applyToValues(fn, obj) {
+  return Object.entries(obj).reduce((o, [key, val]) => {
+    o[key] = fn(val)
+    return o
+  }, {})
 }
 
 const titleAndCompany = (title, company) => [title, company].filter(x => x).join(', ')
