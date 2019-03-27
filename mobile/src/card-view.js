@@ -306,6 +306,7 @@ export class CardView extends Component {
               style={{
                 fontSize: 24,
                 fontWeight: '500',
+                marginRight: 120,
               }}
             >
               {this.props.firstName} {this.props.lastName}
