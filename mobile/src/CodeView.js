@@ -128,6 +128,7 @@ export default class CodeView extends Component {
 }
 
 function removeEmojis(s) {
+  if (!s || !s.substr) return s
   return s.replace(
     /([\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g,
     '',
