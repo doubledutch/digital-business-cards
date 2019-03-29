@@ -1,7 +1,7 @@
 {
   "name": "personalleads",
   "version": "1.3.0",
-  "baseBundleVersion": "0.59.1",
+  "baseBundleVersion": "0.59.2",
   "private": true,
   "scripts": {
     "start": "react-native start",
