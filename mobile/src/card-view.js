@@ -36,7 +36,7 @@ export class EditCardView extends Component {
       email: props.email || '',
       linkedin: props.linkedin || '',
       twitter: props.twitter || '',
-      isChanged: false
+      isChanged: false,
     }
   }
 
@@ -56,14 +56,14 @@ export class EditCardView extends Component {
       mobile: this.state.mobile.trim(),
       email: this.state.email.trim(),
       linkedin: this.state.linkedin.trim(),
-      twitter: this.state.twitter.trim()
+      twitter: this.state.twitter.trim(),
     }
     this.props.updateCard(trimmedState)
   }
 
   render() {
     const { primaryColor } = this.props
-    const color = this.isButtonDisabled() ? "gray" : primaryColor
+    const color = this.isButtonDisabled() ? 'gray' : primaryColor
     return (
       <View
         style={{
@@ -221,7 +221,7 @@ export class EditCardView extends Component {
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                height: 45
+                height: 45,
               }}
             >
               <Text
@@ -250,7 +250,7 @@ export class EditCardView extends Component {
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
-                height: 45
+                height: 45,
               }}
               disabled={this.isButtonDisabled()}
             >
@@ -275,14 +275,17 @@ export class EditCardView extends Component {
   }
 
   isButtonDisabled = () => {
-    if (this.state.firstName.trim().length === 0 || this.state.lastName.trim().length === 0 || !this.state.isChanged || this.state.mobile.match(/[a-z~`!#()$%\^&@*+=\-\[\]\\';,/{}|\\":<>\?]/i)){
+    if (
+      this.state.firstName.trim().length === 0 ||
+      this.state.lastName.trim().length === 0 ||
+      !this.state.isChanged ||
+      this.state.mobile.match(/[a-z~`!#()$%\^&@*+=\-\[\]\\';,/{}|\\":<>\?]/i)
+    ) {
       return true
     }
     return false
   }
-
 }
-
 
 export class CardView extends Component {
   render() {
@@ -298,8 +301,14 @@ export class CardView extends Component {
           }}
         >
           <Avatar user={this.props.user} client={client} size={64} style={{ marginRight: 8 }} />
-          <View style={{ flexDirection: 'column', flex: 1 }}>
-            <Text style={{ fontSize: 24, fontWeight: '500' }}>
+          <View style={{ flexDirection: 'column' }}>
+            <Text
+              style={{
+                fontSize: 24,
+                fontWeight: '500',
+                marginRight: 120,
+              }}
+            >
               {this.props.firstName} {this.props.lastName}
             </Text>
             <Text style={{ fontSize: 18 }}>
@@ -313,12 +322,12 @@ export class CardView extends Component {
 }
 
 export class CardListView extends Component {
-  state = { notes: this.props.notes || '', isFocused: false, inputHeight: 0, isEdit: false}
+  state = { notes: this.props.notes || '', isFocused: false, inputHeight: 0, isEdit: false }
 
   updateLead = () => {
     this.props.onUpdateNotes(this.state.notes)
     this.onBlur()
-    this.setState({isEdit: false})
+    this.setState({ isEdit: false })
   }
 
   onFocus = () => {
@@ -360,8 +369,18 @@ export class CardListView extends Component {
               {t('cancel')}
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={this.updateLead} style={{ height: 16, paddingLeft: 15 }} disabled={!this.state.isEdit}>
-            <Text style={{ fontSize: 14, textAlign: 'right', color: this.state.isEdit ? primaryColor : "gray"}}>
+          <TouchableOpacity
+            onPress={this.updateLead}
+            style={{ height: 16, paddingLeft: 15 }}
+            disabled={!this.state.isEdit}
+          >
+            <Text
+              style={{
+                fontSize: 14,
+                textAlign: 'right',
+                color: this.state.isEdit ? primaryColor : 'gray',
+              }}
+            >
               {t('save')}
             </Text>
           </TouchableOpacity>
@@ -396,9 +415,9 @@ export class CardListView extends Component {
             </Text>
             <View style={{ marginTop: 5, margin: 2 }}>
               {this.props.email ? (
-                <View style={{flexDirection: 'row'}}>
+                <View style={{ flexDirection: 'row' }}>
                   <TouchableOpacity
-                    style={{ flexDirection: 'row', marginTop: 5}}
+                    style={{ flexDirection: 'row', marginTop: 5 }}
                     onPress={() => Linking.openURL(`mailto:${this.props.email}`)}
                   >
                     <Image
@@ -409,13 +428,13 @@ export class CardListView extends Component {
                       {this.props.email}
                     </Text>
                   </TouchableOpacity>
-                  <View style={{flex: 1}}/>
+                  <View style={{ flex: 1 }} />
                 </View>
               ) : null}
               {this.props.mobile ? (
-                <View style={{flexDirection: 'row'}}>
+                <View style={{ flexDirection: 'row' }}>
                   <TouchableOpacity
-                    style={{ flexDirection: 'row', marginTop: 5}}
+                    style={{ flexDirection: 'row', marginTop: 5 }}
                     onPress={() => Linking.openURL(`tel:${this.props.mobile}`)}
                   >
                     <Image
@@ -426,8 +445,8 @@ export class CardListView extends Component {
                       {this.props.mobile}
                     </Text>
                   </TouchableOpacity>
-                <View style={{flex: 1}}/>
-              </View>
+                  <View style={{ flex: 1 }} />
+                </View>
               ) : null}
               {this.props.twitter ? (
                 <View style={{ flexDirection: 'row', marginTop: 5 }}>
