@@ -222,7 +222,6 @@ class HomeView extends PureComponent {
                 data={leads}
                 renderItem={({ item, index }) => (
                   <CardListItem
-                    key={index}
                     showExpanded={index === selectedCard}
                     showCard={() => this.showCard(index)}
                     showAlert={() => this.showAlert()}
@@ -232,6 +231,7 @@ class HomeView extends PureComponent {
                     {...item}
                   />
                 )}
+                keyExtractor={keyExtractor}
               />
             </KeyboardAwareScrollView>
             <View style={{ flexDirection: 'row', padding: 2, marginBottom: 20, marginTop: 20 }}>
@@ -522,6 +522,10 @@ class HomeView extends PureComponent {
     this.saveLocalCards({ myCard, cards: newCards })
     this.hideModal()
   }
+}
+
+function keyExtractor(user) {
+  return user.id
 }
 
 export default provideFirebaseConnectorToReactComponent(
