@@ -26,6 +26,7 @@ import {
   View,
   TextInput,
   Platform,
+  FlatList,
 } from 'react-native'
 import client, { TitleBar, useStrings, translate as t } from '@doubledutch/rn-client'
 import { provideFirebaseConnectorToReactComponent } from '@doubledutch/firebase-connector'
@@ -217,18 +218,21 @@ class HomeView extends PureComponent {
               </View>
               {this.renderSearch()}
               {leads.length === 0 && <Text style={s.noConnections}>{t('no_connections')}</Text>}
-              {leads.map((card, index) => (
-                <CardListItem
-                  key={index}
-                  showExpanded={index === selectedCard}
-                  showCard={() => this.showCard(index)}
-                  showAlert={() => this.showAlert()}
-                  onUpdateNotes={notes => this.updateScannedCard(index, { ...card, notes })}
-                  user={card}
-                  primaryColor={primaryColor}
-                  {...card}
-                />
-              ))}
+              <FlatList
+                data={leads}
+                renderItem={({ item, index }) => (
+                  <CardListItem
+                    showExpanded={index === selectedCard}
+                    showCard={() => this.showCard(index)}
+                    showAlert={() => this.showAlert()}
+                    onUpdateNotes={notes => this.updateScannedCard(index, { ...item, notes })}
+                    user={item}
+                    primaryColor={primaryColor}
+                    {...item}
+                  />
+                )}
+                keyExtractor={keyExtractor}
+              />
             </KeyboardAwareScrollView>
             <View style={{ flexDirection: 'row', padding: 2, marginBottom: 20, marginTop: 20 }}>
               <TouchableOpacity
@@ -518,6 +522,10 @@ class HomeView extends PureComponent {
     this.saveLocalCards({ myCard, cards: newCards })
     this.hideModal()
   }
+}
+
+function keyExtractor(user) {
+  return user.id
 }
 
 export default provideFirebaseConnectorToReactComponent(

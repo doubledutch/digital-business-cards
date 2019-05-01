@@ -301,12 +301,11 @@ export class CardView extends Component {
           }}
         >
           <Avatar user={this.props.user} client={client} size={64} style={{ marginRight: 8 }} />
-          <View style={{ flexDirection: 'column' }}>
+          <View style={{ flexDirection: 'column', flex: 1, marginRight: 60 }}>
             <Text
               style={{
                 fontSize: 24,
                 fontWeight: '500',
-                marginRight: 120,
               }}
             >
               {this.props.firstName} {this.props.lastName}
