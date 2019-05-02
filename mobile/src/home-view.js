@@ -218,21 +218,25 @@ class HomeView extends PureComponent {
               </View>
               {this.renderSearch()}
               {leads.length === 0 && <Text style={s.noConnections}>{t('no_connections')}</Text>}
-              <FlatList
-                data={leads}
-                renderItem={({ item, index }) => (
-                  <CardListItem
-                    showExpanded={index === selectedCard}
-                    showCard={() => this.showCard(index)}
-                    showAlert={() => this.showAlert()}
-                    onUpdateNotes={notes => this.updateScannedCard(index, { ...item, notes })}
-                    user={item}
-                    primaryColor={primaryColor}
-                    {...item}
-                  />
-                )}
-                keyExtractor={keyExtractor}
-              />
+              <View style={{ height: 100 }}>
+                <FlatList
+                  data={leads}
+                  ListFooterComponent={<View style={{ height: 20 }} />}
+                  extraData={selectedCard}
+                  renderItem={({ item, index }) => (
+                    <CardListItem
+                      showExpanded={index === selectedCard}
+                      showCard={() => this.showCard(index)}
+                      showAlert={() => this.showAlert()}
+                      onUpdateNotes={notes => this.updateScannedCard(index, { ...item, notes })}
+                      user={item}
+                      primaryColor={primaryColor}
+                      {...item}
+                    />
+                  )}
+                  keyExtractor={keyExtractor}
+                />
+              </View>
             </KeyboardAwareScrollView>
             <View style={{ flexDirection: 'row', padding: 2, marginBottom: 20, marginTop: 20 }}>
               <TouchableOpacity
