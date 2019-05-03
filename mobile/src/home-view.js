@@ -23,7 +23,6 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  KeyboardAvoidingView,
   View,
   TextInput,
   Platform,
@@ -527,21 +526,6 @@ class HomeView extends PureComponent {
     this.hideModal()
   }
 }
-
-const testLeads = [
-  { firstName: 'Joe', lastName: 'Smith', title: 'CEO', company: 'Google', id: '123443' },
-  { firstName: 'Joe', lastName: 'Smith', title: 'CEO', company: 'Google', id: '123443' },
-  { firstName: 'Joe', lastName: 'Smith', title: 'CEO', company: 'Google', id: '123443' },
-  { firstName: 'Joe', lastName: 'Smith', title: 'CEO', company: 'Google', id: '123443' },
-  { firstName: 'Joe', lastName: 'Smith', title: 'CEO', company: 'Google', id: '123443' },
-  { firstName: 'Joe', lastName: 'Smith', title: 'CEO', company: 'Google', id: '123443' },
-  { firstName: 'Joe', lastName: 'Smith', title: 'CEO', company: 'Google', id: '123443' },
-  { firstName: 'Joe', lastName: 'Smith', title: 'CEO', company: 'Google', id: '123443' },
-  { firstName: 'Joe', lastName: 'Smith', title: 'CEO', company: 'Google', id: '123443' },
-  { firstName: 'Joe', lastName: 'Smith', title: 'CEO', company: 'Google', id: '123443' },
-  { firstName: 'Joe', lastName: 'Smith', title: 'CEO', company: 'Google', id: '123443' },
-  { firstName: 'Joe', lastName: 'Smith', title: 'CEO', company: 'Google', id: '123443' },
-]
 
 function keyExtractor(user) {
   return user.id
