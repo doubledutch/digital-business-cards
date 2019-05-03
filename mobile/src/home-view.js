@@ -23,6 +23,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  KeyboardAvoidingView,
   View,
   TextInput,
   Platform,
@@ -184,20 +185,13 @@ class HomeView extends PureComponent {
                 </Text>
               </View>
             </TouchableOpacity>
-            <KeyboardAwareScrollView
-              style={s.scroll}
-              viewIsInsideTabBar
-              enableAutomaticScroll
-              extraScrollHeight={200}
-              keyboardShouldPersistTaps="always"
-            >
+            <View style={s.scroll}>
               <View
                 style={{
                   backgroundColor: 'white',
                   height: 41,
                   borderBottomColor: '#E8E8EE',
                   borderBottomWidth: 1,
-                  flex: 1,
                   flexDirection: 'row',
                 }}
               >
@@ -218,7 +212,13 @@ class HomeView extends PureComponent {
               </View>
               {this.renderSearch()}
               {leads.length === 0 && <Text style={s.noConnections}>{t('no_connections')}</Text>}
-              <View style={{ height: 100 }}>
+              <KeyboardAwareScrollView
+                style={{ flex: 1, paddingBottom: 200 }}
+                viewIsInsideTabBar
+                enableAutomaticScroll
+                extraScrollHeight={200}
+                keyboardShouldPersistTaps="always"
+              >
                 <FlatList
                   data={leads}
                   ListFooterComponent={<View style={{ height: 20 }} />}
@@ -236,8 +236,8 @@ class HomeView extends PureComponent {
                   )}
                   keyExtractor={keyExtractor}
                 />
-              </View>
-            </KeyboardAwareScrollView>
+              </KeyboardAwareScrollView>
+            </View>
             <View style={{ flexDirection: 'row', padding: 2, marginBottom: 20, marginTop: 20 }}>
               <TouchableOpacity
                 onPress={this.showCode}
@@ -528,6 +528,21 @@ class HomeView extends PureComponent {
   }
 }
 
+const testLeads = [
+  { firstName: 'Joe', lastName: 'Smith', title: 'CEO', company: 'Google', id: '123443' },
+  { firstName: 'Joe', lastName: 'Smith', title: 'CEO', company: 'Google', id: '123443' },
+  { firstName: 'Joe', lastName: 'Smith', title: 'CEO', company: 'Google', id: '123443' },
+  { firstName: 'Joe', lastName: 'Smith', title: 'CEO', company: 'Google', id: '123443' },
+  { firstName: 'Joe', lastName: 'Smith', title: 'CEO', company: 'Google', id: '123443' },
+  { firstName: 'Joe', lastName: 'Smith', title: 'CEO', company: 'Google', id: '123443' },
+  { firstName: 'Joe', lastName: 'Smith', title: 'CEO', company: 'Google', id: '123443' },
+  { firstName: 'Joe', lastName: 'Smith', title: 'CEO', company: 'Google', id: '123443' },
+  { firstName: 'Joe', lastName: 'Smith', title: 'CEO', company: 'Google', id: '123443' },
+  { firstName: 'Joe', lastName: 'Smith', title: 'CEO', company: 'Google', id: '123443' },
+  { firstName: 'Joe', lastName: 'Smith', title: 'CEO', company: 'Google', id: '123443' },
+  { firstName: 'Joe', lastName: 'Smith', title: 'CEO', company: 'Google', id: '123443' },
+]
+
 function keyExtractor(user) {
   return user.id
 }
@@ -572,6 +587,10 @@ const s = StyleSheet.create({
   noConnections: {
     color: '#aaa',
     margin: 10,
+  },
+  inner: {
+    flex: 1,
+    justifyContent: 'flex-end',
   },
   circleBoxMargin: {
     marginTop: 10,
