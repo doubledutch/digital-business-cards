@@ -572,10 +572,6 @@ const s = StyleSheet.create({
     color: '#aaa',
     margin: 10,
   },
-  inner: {
-    flex: 1,
-    justifyContent: 'flex-end',
-  },
   circleBoxMargin: {
     marginTop: 10,
     marginRight: 10,
