@@ -184,20 +184,13 @@ class HomeView extends PureComponent {
                 </Text>
               </View>
             </TouchableOpacity>
-            <KeyboardAwareScrollView
-              style={s.scroll}
-              viewIsInsideTabBar
-              enableAutomaticScroll
-              extraScrollHeight={200}
-              keyboardShouldPersistTaps="always"
-            >
+            <View style={s.scroll}>
               <View
                 style={{
                   backgroundColor: 'white',
                   height: 41,
                   borderBottomColor: '#E8E8EE',
                   borderBottomWidth: 1,
-                  flex: 1,
                   flexDirection: 'row',
                 }}
               >
@@ -218,22 +211,32 @@ class HomeView extends PureComponent {
               </View>
               {this.renderSearch()}
               {leads.length === 0 && <Text style={s.noConnections}>{t('no_connections')}</Text>}
-              <FlatList
-                data={leads}
-                renderItem={({ item, index }) => (
-                  <CardListItem
-                    showExpanded={index === selectedCard}
-                    showCard={() => this.showCard(index)}
-                    showAlert={() => this.showAlert()}
-                    onUpdateNotes={notes => this.updateScannedCard(index, { ...item, notes })}
-                    user={item}
-                    primaryColor={primaryColor}
-                    {...item}
-                  />
-                )}
-                keyExtractor={keyExtractor}
-              />
-            </KeyboardAwareScrollView>
+              <KeyboardAwareScrollView
+                style={{ flex: 1, paddingBottom: 200 }}
+                viewIsInsideTabBar
+                enableAutomaticScroll
+                extraScrollHeight={200}
+                keyboardShouldPersistTaps="always"
+              >
+                <FlatList
+                  data={leads}
+                  ListFooterComponent={<View style={{ height: 20 }} />}
+                  extraData={selectedCard}
+                  renderItem={({ item, index }) => (
+                    <CardListItem
+                      showExpanded={index === selectedCard}
+                      showCard={() => this.showCard(index)}
+                      showAlert={() => this.showAlert()}
+                      onUpdateNotes={notes => this.updateScannedCard(index, { ...item, notes })}
+                      user={item}
+                      primaryColor={primaryColor}
+                      {...item}
+                    />
+                  )}
+                  keyExtractor={keyExtractor}
+                />
+              </KeyboardAwareScrollView>
+            </View>
             <View style={{ flexDirection: 'row', padding: 2, marginBottom: 20, marginTop: 20 }}>
               <TouchableOpacity
                 onPress={this.showCode}
