@@ -275,11 +275,14 @@ export class EditCardView extends Component {
   }
 
   isButtonDisabled = () => {
+    const origString = this.state.mobile.slice(1)
+    const firstCharacter = this.state.mobile.slice(0, 1)
     if (
       this.state.firstName.trim().length === 0 ||
       this.state.lastName.trim().length === 0 ||
       !this.state.isChanged ||
-      this.state.mobile.match(/[a-z~`!#()$%\^&@*+=\-\[\]\\';,/{}|\\":<>\?]/i)
+      origString.match(/[a-z~`!#()$%\^&@*+=\-\[\]\\';,/{}|\\":<>\?]/i) ||
+      firstCharacter.match(/[a-z~`!#()$%\^&@*=\-\[\]\\';,/{}|\\":<>\?]/i)
     ) {
       return true
     }
