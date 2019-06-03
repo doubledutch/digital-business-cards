@@ -470,7 +470,7 @@ class HomeView extends PureComponent {
   }
 
   editCard = () => {
-    this.setState({ showEditor: true })
+    this.setState({ showEditor: true, searchText: '' })
   }
 
   updateCard = myCard => {
