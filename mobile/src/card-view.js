@@ -279,7 +279,7 @@ export class EditCardView extends Component {
       this.state.firstName.trim().length === 0 ||
       this.state.lastName.trim().length === 0 ||
       !this.state.isChanged ||
-      this.state.mobile.match(/[a-z~`!#()$%\^&@*+=\-\[\]\\';,/{}|\\":<>\?]/i)
+      !this.state.mobile.match(/^[0-9a-z\s+\(\)\-]{0,50}$/i)
     ) {
       return true
     }
