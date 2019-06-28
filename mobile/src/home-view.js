@@ -237,68 +237,70 @@ class HomeView extends PureComponent {
                 />
               </KeyboardAwareScrollView>
             </View>
-            <View style={{ flexDirection: 'row', padding: 2, marginBottom: 20, marginTop: 20 }}>
-              <TouchableOpacity
-                onPress={this.showCode}
-                style={{
-                  flex: 1,
-                  marginLeft: 10,
-                  marginRight: 5,
-                  borderColor: primaryColor,
-                  backgroundColor: 'white',
-                  borderWidth: 1,
-                  borderRadius: 20,
-                  height: 45,
-                }}
-              >
-                <Text
+            {selectedCard == null && (
+              <View style={{ flexDirection: 'row', padding: 2, marginBottom: 20, marginTop: 20 }}>
+                <TouchableOpacity
+                  onPress={this.showCode}
                   style={{
-                    color: primaryColor,
-                    textAlign: 'center',
                     flex: 1,
-                    flexDirection: 'column',
-                    fontSize: 18,
-                    marginTop: 10,
                     marginLeft: 10,
-                    marginBottom: 10,
-                    marginRight: 10,
-                    height: 21,
+                    marginRight: 5,
+                    borderColor: primaryColor,
+                    backgroundColor: 'white',
+                    borderWidth: 1,
+                    borderRadius: 20,
+                    height: 45,
                   }}
                 >
-                  {t('share')}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={this.scanCode}
-                style={{
-                  flex: 1,
-                  marginLeft: 5,
-                  marginRight: 10,
-                  borderColor: primaryColor,
-                  backgroundColor: primaryColor,
-                  borderWidth: 1,
-                  height: 45,
-                  borderRadius: 20,
-                }}
-              >
-                <Text
+                  <Text
+                    style={{
+                      color: primaryColor,
+                      textAlign: 'center',
+                      flex: 1,
+                      flexDirection: 'column',
+                      fontSize: 18,
+                      marginTop: 10,
+                      marginLeft: 10,
+                      marginBottom: 10,
+                      marginRight: 10,
+                      height: 21,
+                    }}
+                  >
+                    {t('share')}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={this.scanCode}
                   style={{
-                    color: 'white',
-                    textAlign: 'center',
                     flex: 1,
-                    flexDirection: 'column',
-                    marginTop: 10,
-                    marginLeft: 10,
-                    marginBottom: 10,
+                    marginLeft: 5,
                     marginRight: 10,
-                    fontSize: 18,
-                    height: 21,
+                    borderColor: primaryColor,
+                    backgroundColor: primaryColor,
+                    borderWidth: 1,
+                    height: 45,
+                    borderRadius: 20,
                   }}
                 >
-                  {t('scan')}
-                </Text>
-              </TouchableOpacity>
-            </View>
+                  <Text
+                    style={{
+                      color: 'white',
+                      textAlign: 'center',
+                      flex: 1,
+                      flexDirection: 'column',
+                      marginTop: 10,
+                      marginLeft: 10,
+                      marginBottom: 10,
+                      marginRight: 10,
+                      fontSize: 18,
+                      height: 21,
+                    }}
+                  >
+                    {t('scan')}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
             <Modal animationType="slide" transparent visible={showCode} onRequestClose={() => {}}>
               <CodeView
                 {...this.state}
