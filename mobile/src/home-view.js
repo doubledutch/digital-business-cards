@@ -523,7 +523,7 @@ class HomeView extends PureComponent {
     const { cards, myCard, selectedCard } = this.state
     const newCards = cards.filter((_, i) => i !== selectedCard)
     this.cardsRef().set(newCards)
-    this.setState({ cards: newCards })
+    this.setState({ cards: newCards, selectedCard: null })
     this.saveLocalCards({ myCard, cards: newCards })
     this.hideModal()
   }
