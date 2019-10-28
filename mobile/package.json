@@ -13,7 +13,7 @@
     "react-native": "0.59.4",
     "react-native-camera": "2.5.0",
     "react-native-keyboard-aware-scroll-view": "^0.3.0",
-    "react-native-qrcode": "^0.2.6",
+    "@doubledutch/react-native-qrcode": "^1.0.0",
     "react-native-qrcode-scanner": "0.0.28",
     "react-native-video": "4.4.1",
     "react-native-youtube": "1.1.0",

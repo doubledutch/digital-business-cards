@@ -16,7 +16,7 @@
 
 import React, { Component } from 'react'
 import { Image, Text, TouchableOpacity, View } from 'react-native'
-import QRCode from 'react-native-qrcode'
+import QRCode from '@doubledutch/react-native-qrcode'
 import client, { Avatar, translate as t } from '@doubledutch/rn-client'
 import { envelopeIcon, linkedinIcon, telephoneIcon, twitterIcon } from './icon'
 
