@@ -210,7 +210,12 @@ class HomeView extends PureComponent {
                 )}
               </View>
               {this.renderSearch()}
-              {leads.length === 0 && <Text style={s.noConnections}>{t('no_connections')}</Text>}
+              {leads.length === 0 && !searchText && (
+                <Text style={s.noConnections}>{t('no_connections')}</Text>
+              )}
+              {leads.length === 0 && !!searchText && (
+                <Text style={s.noConnections}>{t('no_connections_found')}</Text>
+              )}
               <KeyboardAwareScrollView
                 style={{ flex: 1, paddingBottom: 200 }}
                 viewIsInsideTabBar

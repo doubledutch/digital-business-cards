@@ -10,6 +10,7 @@
   "save": "Save",
   "remove_lead": "Remove Lead",
   "no_connections": "No connections scanned yet.",
+  "no_connections_found": "No connections found.",
   "export": "Export All",
   "edit_info": "Edit Info",
   "my_connections": "My Connections",
